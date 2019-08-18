@@ -7,8 +7,7 @@ class SendDebug():
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         self.address = ('127.0.0.1',50001)
-        self.debug_type = 'ppt'
-        #self.debug_type = {'Debug_Type': 'LINE', 'Color': 'yellow'}
+        self.debug_type = 'LINE'
         self.debug_msg = {'start_x':0, 'start_y':0, 'end_x':10, 'end_y':10,
                           }
 
