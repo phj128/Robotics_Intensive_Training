@@ -19,24 +19,127 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='zss_debug.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x0fzss_debug.proto\"5\n\rRobots_Status\x12$\n\rrobots_status\x18\x01 \x03(\x0b\x32\r.Robot_Status\"X\n\x0cRobot_Status\x12\x10\n\x08robot_id\x18\x01 \x02(\x05\x12\x10\n\x08infrared\x18\x02 \x02(\x08\x12\x11\n\tflat_kick\x18\x03 \x02(\x08\x12\x11\n\tchip_kick\x18\x04 \x02(\x08\"@\n\x0eRobots_Command\x12\x1f\n\x07\x63ommand\x18\x01 \x03(\x0b\x32\x0e.Robot_Command\x12\r\n\x05\x64\x65lay\x18\x02 \x01(\x05\"\xbe\x01\n\rRobot_Command\x12\x10\n\x08robot_id\x18\x01 \x02(\x05\x12\x12\n\nvelocity_x\x18\x02 \x02(\x02\x12\x12\n\nvelocity_y\x18\x03 \x02(\x02\x12\x12\n\nvelocity_r\x18\x04 \x02(\x02\x12\x0c\n\x04kick\x18\x05 \x02(\x08\x12\r\n\x05power\x18\x06 \x02(\x02\x12\x15\n\rdribbler_spin\x18\x07 \x02(\x02\x12\x15\n\rcurrent_angle\x18\x08 \x01(\x02\x12\x14\n\x0ctarget_angle\x18\t \x01(\x02')
+  serialized_pb=_b('\n\x0fzss_debug.proto\"\x1d\n\x05Point\x12\t\n\x01x\x18\x01 \x02(\x02\x12\t\n\x01y\x18\x02 \x02(\x02\";\n\tRectangle\x12\x16\n\x06point1\x18\x01 \x02(\x0b\x32\x06.Point\x12\x16\n\x06point2\x18\x02 \x02(\x0b\x32\x06.Point\"/\n\x0b\x44\x65\x62ug_Robot\x12\x13\n\x03pos\x18\x01 \x02(\x0b\x32\x06.Point\x12\x0b\n\x03\x64ir\x18\x02 \x02(\x02\"W\n\nDebug_Line\x12\x15\n\x05start\x18\x01 \x02(\x0b\x32\x06.Point\x12\x13\n\x03\x65nd\x18\x02 \x02(\x0b\x32\x06.Point\x12\x0f\n\x07\x46ORWARD\x18\x03 \x02(\x08\x12\x0c\n\x04\x42\x41\x43K\x18\x04 \x02(\x08\"T\n\tDebug_Arc\x12\x1d\n\trectangle\x18\x01 \x02(\x0b\x32\n.Rectangle\x12\r\n\x05start\x18\x02 \x02(\x02\x12\x0b\n\x03\x65nd\x18\x03 \x02(\x02\x12\x0c\n\x04\x46ILL\x18\x04 \x02(\x08\"5\n\rDebug_Polygon\x12\x16\n\x06vertex\x18\x01 \x03(\x0b\x32\x06.Point\x12\x0c\n\x04\x46ILL\x18\x02 \x02(\x08\"/\n\nDebug_Text\x12\x13\n\x03pos\x18\x01 \x02(\x0b\x32\x06.Point\x12\x0c\n\x04text\x18\x02 \x02(\t\"?\n\x0c\x44\x65\x62ug_Curve_\x12\x0b\n\x03num\x18\x01 \x02(\x02\x12\x10\n\x08maxLimit\x18\x02 \x02(\x02\x12\x10\n\x08minLimit\x18\x03 \x02(\x02\"a\n\x0b\x44\x65\x62ug_Curve\x12\x15\n\x05start\x18\x01 \x02(\x0b\x32\x06.Point\x12\x12\n\x02p1\x18\x02 \x02(\x0b\x32\x06.Point\x12\x12\n\x02p2\x18\x03 \x02(\x0b\x32\x06.Point\x12\x13\n\x03\x65nd\x18\x04 \x02(\x0b\x32\x06.Point\"%\n\x0c\x44\x65\x62ug_Points\x12\x15\n\x05point\x18\x01 \x03(\x0b\x32\x06.Point\"\xea\x03\n\tDebug_Msg\x12#\n\x04type\x18\x01 \x02(\x0e\x32\x15.Debug_Msg.Debug_Type\x12\x1f\n\x05\x63olor\x18\x02 \x02(\x0e\x32\x10.Debug_Msg.Color\x12\x17\n\x03\x61rc\x18\x03 \x01(\x0b\x32\n.Debug_Arc\x12\x19\n\x04line\x18\x04 \x01(\x0b\x32\x0b.Debug_Line\x12\x19\n\x04text\x18\x05 \x01(\x0b\x32\x0b.Debug_Text\x12\x1b\n\x05robot\x18\x06 \x01(\x0b\x32\x0c.Debug_Robot\x12\x1c\n\x05\x63urve\x18\x07 \x01(\x0b\x32\r.Debug_Curve_\x12\x1f\n\x07polygon\x18\x08 \x01(\x0b\x32\x0e.Debug_Polygon\x12\x1d\n\x06points\x18\t \x01(\x0b\x32\r.Debug_Points\"X\n\nDebug_Type\x12\x07\n\x03\x41RC\x10\x00\x12\x08\n\x04LINE\x10\x01\x12\x08\n\x04TEXT\x10\x02\x12\t\n\x05ROBOT\x10\x03\x12\t\n\x05\x43URVE\x10\x04\x12\x0b\n\x07POLYGON\x10\x05\x12\n\n\x06Points\x10\x06\"s\n\x05\x43olor\x12\t\n\x05WHITE\x10\x00\x12\x07\n\x03RED\x10\x01\x12\n\n\x06ORANGE\x10\x02\x12\n\n\x06YELLOW\x10\x03\x12\t\n\x05GREEN\x10\x04\x12\x08\n\x04\x43YAN\x10\x05\x12\x08\n\x04\x42LUE\x10\x06\x12\n\n\x06PURPLE\x10\x07\x12\x08\n\x04GRAY\x10\x08\x12\t\n\x05\x42LACK\x10\t\"&\n\nDebug_Msgs\x12\x18\n\x04msgs\x18\x01 \x03(\x0b\x32\n.Debug_Msg\"/\n\x0b\x44\x65\x62ug_Score\x12\r\n\x05\x63olor\x18\x01 \x02(\x05\x12\x11\n\x01p\x18\x02 \x03(\x0b\x32\x06.Point\",\n\x0c\x44\x65\x62ug_Scores\x12\x1c\n\x06scores\x18\x01 \x03(\x0b\x32\x0c.Debug_Score')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
+_DEBUG_MSG_DEBUG_TYPE = _descriptor.EnumDescriptor(
+  name='Debug_Type',
+  full_name='Debug_Msg.Debug_Type',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='ARC', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LINE', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TEXT', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ROBOT', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CURVE', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='POLYGON', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Points', index=6, number=6,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=928,
+  serialized_end=1016,
+)
+_sym_db.RegisterEnumDescriptor(_DEBUG_MSG_DEBUG_TYPE)
 
-_ROBOTS_STATUS = _descriptor.Descriptor(
-  name='Robots_Status',
-  full_name='Robots_Status',
+_DEBUG_MSG_COLOR = _descriptor.EnumDescriptor(
+  name='Color',
+  full_name='Debug_Msg.Color',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='WHITE', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='RED', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ORANGE', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='YELLOW', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GREEN', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CYAN', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='BLUE', index=6, number=6,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PURPLE', index=7, number=7,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GRAY', index=8, number=8,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='BLACK', index=9, number=9,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1018,
+  serialized_end=1133,
+)
+_sym_db.RegisterEnumDescriptor(_DEBUG_MSG_COLOR)
+
+
+_POINT = _descriptor.Descriptor(
+  name='Point',
+  full_name='Point',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='robots_status', full_name='Robots_Status.robots_status', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='x', full_name='Point.x', index=0,
+      number=1, type=2, cpp_type=6, label=2,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='y', full_name='Point.y', index=1,
+      number=2, type=2, cpp_type=6, label=2,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -53,40 +156,116 @@ _ROBOTS_STATUS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=72,
+  serialized_end=48,
 )
 
 
-_ROBOT_STATUS = _descriptor.Descriptor(
-  name='Robot_Status',
-  full_name='Robot_Status',
+_RECTANGLE = _descriptor.Descriptor(
+  name='Rectangle',
+  full_name='Rectangle',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='robot_id', full_name='Robot_Status.robot_id', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
+      name='point1', full_name='Rectangle.point1', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='infrared', full_name='Robot_Status.infrared', index=1,
-      number=2, type=8, cpp_type=7, label=2,
-      has_default_value=False, default_value=False,
+      name='point2', full_name='Rectangle.point2', index=1,
+      number=2, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=50,
+  serialized_end=109,
+)
+
+
+_DEBUG_ROBOT = _descriptor.Descriptor(
+  name='Debug_Robot',
+  full_name='Debug_Robot',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pos', full_name='Debug_Robot.pos', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='flat_kick', full_name='Robot_Status.flat_kick', index=2,
+      name='dir', full_name='Debug_Robot.dir', index=1,
+      number=2, type=2, cpp_type=6, label=2,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=111,
+  serialized_end=158,
+)
+
+
+_DEBUG_LINE = _descriptor.Descriptor(
+  name='Debug_Line',
+  full_name='Debug_Line',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='start', full_name='Debug_Line.start', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='end', full_name='Debug_Line.end', index=1,
+      number=2, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='FORWARD', full_name='Debug_Line.FORWARD', index=2,
       number=3, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='chip_kick', full_name='Robot_Status.chip_kick', index=3,
+      name='BACK', full_name='Debug_Line.BACK', index=3,
       number=4, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -104,115 +283,163 @@ _ROBOT_STATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=74,
-  serialized_end=162,
+  serialized_start=160,
+  serialized_end=247,
 )
 
 
-_ROBOTS_COMMAND = _descriptor.Descriptor(
-  name='Robots_Command',
-  full_name='Robots_Command',
+_DEBUG_ARC = _descriptor.Descriptor(
+  name='Debug_Arc',
+  full_name='Debug_Arc',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='command', full_name='Robots_Command.command', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='rectangle', full_name='Debug_Arc.rectangle', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='delay', full_name='Robots_Command.delay', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=164,
-  serialized_end=228,
-)
-
-
-_ROBOT_COMMAND = _descriptor.Descriptor(
-  name='Robot_Command',
-  full_name='Robot_Command',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='robot_id', full_name='Robot_Command.robot_id', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='velocity_x', full_name='Robot_Command.velocity_x', index=1,
+      name='start', full_name='Debug_Arc.start', index=1,
       number=2, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='velocity_y', full_name='Robot_Command.velocity_y', index=2,
+      name='end', full_name='Debug_Arc.end', index=2,
       number=3, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='velocity_r', full_name='Robot_Command.velocity_r', index=3,
-      number=4, type=2, cpp_type=6, label=2,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='kick', full_name='Robot_Command.kick', index=4,
-      number=5, type=8, cpp_type=7, label=2,
+      name='FILL', full_name='Debug_Arc.FILL', index=3,
+      number=4, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=249,
+  serialized_end=333,
+)
+
+
+_DEBUG_POLYGON = _descriptor.Descriptor(
+  name='Debug_Polygon',
+  full_name='Debug_Polygon',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
     _descriptor.FieldDescriptor(
-      name='power', full_name='Robot_Command.power', index=5,
-      number=6, type=2, cpp_type=6, label=2,
+      name='vertex', full_name='Debug_Polygon.vertex', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='FILL', full_name='Debug_Polygon.FILL', index=1,
+      number=2, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=335,
+  serialized_end=388,
+)
+
+
+_DEBUG_TEXT = _descriptor.Descriptor(
+  name='Debug_Text',
+  full_name='Debug_Text',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pos', full_name='Debug_Text.pos', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='Debug_Text.text', index=1,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=390,
+  serialized_end=437,
+)
+
+
+_DEBUG_CURVE_ = _descriptor.Descriptor(
+  name='Debug_Curve_',
+  full_name='Debug_Curve_',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='num', full_name='Debug_Curve_.num', index=0,
+      number=1, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='dribbler_spin', full_name='Robot_Command.dribbler_spin', index=6,
-      number=7, type=2, cpp_type=6, label=2,
+      name='maxLimit', full_name='Debug_Curve_.maxLimit', index=1,
+      number=2, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='current_angle', full_name='Robot_Command.current_angle', index=7,
-      number=8, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='target_angle', full_name='Robot_Command.target_angle', index=8,
-      number=9, type=2, cpp_type=6, label=1,
+      name='minLimit', full_name='Debug_Curve_.minLimit', index=2,
+      number=3, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -229,44 +456,421 @@ _ROBOT_COMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=231,
-  serialized_end=421,
+  serialized_start=439,
+  serialized_end=502,
 )
 
-_ROBOTS_STATUS.fields_by_name['robots_status'].message_type = _ROBOT_STATUS
-_ROBOTS_COMMAND.fields_by_name['command'].message_type = _ROBOT_COMMAND
-DESCRIPTOR.message_types_by_name['Robots_Status'] = _ROBOTS_STATUS
-DESCRIPTOR.message_types_by_name['Robot_Status'] = _ROBOT_STATUS
-DESCRIPTOR.message_types_by_name['Robots_Command'] = _ROBOTS_COMMAND
-DESCRIPTOR.message_types_by_name['Robot_Command'] = _ROBOT_COMMAND
 
-Robots_Status = _reflection.GeneratedProtocolMessageType('Robots_Status', (_message.Message,), dict(
-  DESCRIPTOR = _ROBOTS_STATUS,
-  __module__ = 'zss_debug_pb2'
-  # @@protoc_insertion_point(class_scope:Robots_Status)
-  ))
-_sym_db.RegisterMessage(Robots_Status)
+_DEBUG_CURVE = _descriptor.Descriptor(
+  name='Debug_Curve',
+  full_name='Debug_Curve',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='start', full_name='Debug_Curve.start', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='p1', full_name='Debug_Curve.p1', index=1,
+      number=2, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='p2', full_name='Debug_Curve.p2', index=2,
+      number=3, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='end', full_name='Debug_Curve.end', index=3,
+      number=4, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=504,
+  serialized_end=601,
+)
 
-Robot_Status = _reflection.GeneratedProtocolMessageType('Robot_Status', (_message.Message,), dict(
-  DESCRIPTOR = _ROBOT_STATUS,
-  __module__ = 'zss_debug_pb2'
-  # @@protoc_insertion_point(class_scope:Robot_Status)
-  ))
-_sym_db.RegisterMessage(Robot_Status)
 
-Robots_Command = _reflection.GeneratedProtocolMessageType('Robots_Command', (_message.Message,), dict(
-  DESCRIPTOR = _ROBOTS_COMMAND,
-  __module__ = 'zss_debug_pb2'
-  # @@protoc_insertion_point(class_scope:Robots_Command)
-  ))
-_sym_db.RegisterMessage(Robots_Command)
+_DEBUG_POINTS = _descriptor.Descriptor(
+  name='Debug_Points',
+  full_name='Debug_Points',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='point', full_name='Debug_Points.point', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=603,
+  serialized_end=640,
+)
 
-Robot_Command = _reflection.GeneratedProtocolMessageType('Robot_Command', (_message.Message,), dict(
-  DESCRIPTOR = _ROBOT_COMMAND,
+
+_DEBUG_MSG = _descriptor.Descriptor(
+  name='Debug_Msg',
+  full_name='Debug_Msg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='type', full_name='Debug_Msg.type', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='color', full_name='Debug_Msg.color', index=1,
+      number=2, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='arc', full_name='Debug_Msg.arc', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='line', full_name='Debug_Msg.line', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='Debug_Msg.text', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='robot', full_name='Debug_Msg.robot', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='curve', full_name='Debug_Msg.curve', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='polygon', full_name='Debug_Msg.polygon', index=7,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='points', full_name='Debug_Msg.points', index=8,
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _DEBUG_MSG_DEBUG_TYPE,
+    _DEBUG_MSG_COLOR,
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=643,
+  serialized_end=1133,
+)
+
+
+_DEBUG_MSGS = _descriptor.Descriptor(
+  name='Debug_Msgs',
+  full_name='Debug_Msgs',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='msgs', full_name='Debug_Msgs.msgs', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1135,
+  serialized_end=1173,
+)
+
+
+_DEBUG_SCORE = _descriptor.Descriptor(
+  name='Debug_Score',
+  full_name='Debug_Score',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='color', full_name='Debug_Score.color', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='p', full_name='Debug_Score.p', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1175,
+  serialized_end=1222,
+)
+
+
+_DEBUG_SCORES = _descriptor.Descriptor(
+  name='Debug_Scores',
+  full_name='Debug_Scores',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='scores', full_name='Debug_Scores.scores', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1224,
+  serialized_end=1268,
+)
+
+_RECTANGLE.fields_by_name['point1'].message_type = _POINT
+_RECTANGLE.fields_by_name['point2'].message_type = _POINT
+_DEBUG_ROBOT.fields_by_name['pos'].message_type = _POINT
+_DEBUG_LINE.fields_by_name['start'].message_type = _POINT
+_DEBUG_LINE.fields_by_name['end'].message_type = _POINT
+_DEBUG_ARC.fields_by_name['rectangle'].message_type = _RECTANGLE
+_DEBUG_POLYGON.fields_by_name['vertex'].message_type = _POINT
+_DEBUG_TEXT.fields_by_name['pos'].message_type = _POINT
+_DEBUG_CURVE.fields_by_name['start'].message_type = _POINT
+_DEBUG_CURVE.fields_by_name['p1'].message_type = _POINT
+_DEBUG_CURVE.fields_by_name['p2'].message_type = _POINT
+_DEBUG_CURVE.fields_by_name['end'].message_type = _POINT
+_DEBUG_POINTS.fields_by_name['point'].message_type = _POINT
+_DEBUG_MSG.fields_by_name['type'].enum_type = _DEBUG_MSG_DEBUG_TYPE
+_DEBUG_MSG.fields_by_name['color'].enum_type = _DEBUG_MSG_COLOR
+_DEBUG_MSG.fields_by_name['arc'].message_type = _DEBUG_ARC
+_DEBUG_MSG.fields_by_name['line'].message_type = _DEBUG_LINE
+_DEBUG_MSG.fields_by_name['text'].message_type = _DEBUG_TEXT
+_DEBUG_MSG.fields_by_name['robot'].message_type = _DEBUG_ROBOT
+_DEBUG_MSG.fields_by_name['curve'].message_type = _DEBUG_CURVE_
+_DEBUG_MSG.fields_by_name['polygon'].message_type = _DEBUG_POLYGON
+_DEBUG_MSG.fields_by_name['points'].message_type = _DEBUG_POINTS
+_DEBUG_MSG_DEBUG_TYPE.containing_type = _DEBUG_MSG
+_DEBUG_MSG_COLOR.containing_type = _DEBUG_MSG
+_DEBUG_MSGS.fields_by_name['msgs'].message_type = _DEBUG_MSG
+_DEBUG_SCORE.fields_by_name['p'].message_type = _POINT
+_DEBUG_SCORES.fields_by_name['scores'].message_type = _DEBUG_SCORE
+DESCRIPTOR.message_types_by_name['Point'] = _POINT
+DESCRIPTOR.message_types_by_name['Rectangle'] = _RECTANGLE
+DESCRIPTOR.message_types_by_name['Debug_Robot'] = _DEBUG_ROBOT
+DESCRIPTOR.message_types_by_name['Debug_Line'] = _DEBUG_LINE
+DESCRIPTOR.message_types_by_name['Debug_Arc'] = _DEBUG_ARC
+DESCRIPTOR.message_types_by_name['Debug_Polygon'] = _DEBUG_POLYGON
+DESCRIPTOR.message_types_by_name['Debug_Text'] = _DEBUG_TEXT
+DESCRIPTOR.message_types_by_name['Debug_Curve_'] = _DEBUG_CURVE_
+DESCRIPTOR.message_types_by_name['Debug_Curve'] = _DEBUG_CURVE
+DESCRIPTOR.message_types_by_name['Debug_Points'] = _DEBUG_POINTS
+DESCRIPTOR.message_types_by_name['Debug_Msg'] = _DEBUG_MSG
+DESCRIPTOR.message_types_by_name['Debug_Msgs'] = _DEBUG_MSGS
+DESCRIPTOR.message_types_by_name['Debug_Score'] = _DEBUG_SCORE
+DESCRIPTOR.message_types_by_name['Debug_Scores'] = _DEBUG_SCORES
+
+Point = _reflection.GeneratedProtocolMessageType('Point', (_message.Message,), dict(
+  DESCRIPTOR = _POINT,
   __module__ = 'zss_debug_pb2'
-  # @@protoc_insertion_point(class_scope:Robot_Command)
+  # @@protoc_insertion_point(class_scope:Point)
   ))
-_sym_db.RegisterMessage(Robot_Command)
+_sym_db.RegisterMessage(Point)
+
+Rectangle = _reflection.GeneratedProtocolMessageType('Rectangle', (_message.Message,), dict(
+  DESCRIPTOR = _RECTANGLE,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Rectangle)
+  ))
+_sym_db.RegisterMessage(Rectangle)
+
+Debug_Robot = _reflection.GeneratedProtocolMessageType('Debug_Robot', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_ROBOT,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Robot)
+  ))
+_sym_db.RegisterMessage(Debug_Robot)
+
+Debug_Line = _reflection.GeneratedProtocolMessageType('Debug_Line', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_LINE,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Line)
+  ))
+_sym_db.RegisterMessage(Debug_Line)
+
+Debug_Arc = _reflection.GeneratedProtocolMessageType('Debug_Arc', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_ARC,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Arc)
+  ))
+_sym_db.RegisterMessage(Debug_Arc)
+
+Debug_Polygon = _reflection.GeneratedProtocolMessageType('Debug_Polygon', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_POLYGON,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Polygon)
+  ))
+_sym_db.RegisterMessage(Debug_Polygon)
+
+Debug_Text = _reflection.GeneratedProtocolMessageType('Debug_Text', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_TEXT,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Text)
+  ))
+_sym_db.RegisterMessage(Debug_Text)
+
+Debug_Curve_ = _reflection.GeneratedProtocolMessageType('Debug_Curve_', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_CURVE_,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Curve_)
+  ))
+_sym_db.RegisterMessage(Debug_Curve_)
+
+Debug_Curve = _reflection.GeneratedProtocolMessageType('Debug_Curve', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_CURVE,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Curve)
+  ))
+_sym_db.RegisterMessage(Debug_Curve)
+
+Debug_Points = _reflection.GeneratedProtocolMessageType('Debug_Points', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_POINTS,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Points)
+  ))
+_sym_db.RegisterMessage(Debug_Points)
+
+Debug_Msg = _reflection.GeneratedProtocolMessageType('Debug_Msg', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_MSG,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Msg)
+  ))
+_sym_db.RegisterMessage(Debug_Msg)
+
+Debug_Msgs = _reflection.GeneratedProtocolMessageType('Debug_Msgs', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_MSGS,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Msgs)
+  ))
+_sym_db.RegisterMessage(Debug_Msgs)
+
+Debug_Score = _reflection.GeneratedProtocolMessageType('Debug_Score', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_SCORE,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Score)
+  ))
+_sym_db.RegisterMessage(Debug_Score)
+
+Debug_Scores = _reflection.GeneratedProtocolMessageType('Debug_Scores', (_message.Message,), dict(
+  DESCRIPTOR = _DEBUG_SCORES,
+  __module__ = 'zss_debug_pb2'
+  # @@protoc_insertion_point(class_scope:Debug_Scores)
+  ))
+_sym_db.RegisterMessage(Debug_Scores)
 
 
 # @@protoc_insertion_point(module_scope)
