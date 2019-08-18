@@ -44,17 +44,18 @@ class Receive():
             for robot in robots_yellow:
                 if robot.robot_id == id:
                     self.convert_info(robot)
-
+                    break
         else:
             for robot in robots_blue:
                 if robot.robot_id == id:
                     self.convert_info(robot)
+                    break
 
 
 if __name__ == "__main__":
     while True:
         receive = Receive()
-        receive.get_info('yellow', 0)
+        receive.get_info('yellow', 4)
         print(receive.robot_info)
         sleep(1)
 
