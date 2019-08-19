@@ -1,10 +1,10 @@
-
 from send import Send
 from time import sleep
 from receive import Receive
 import math
 import numpy as np
 from myRRT_static import RRT
+from myRRTstar import RRT as RRT_STAR
 from send_debug import SendDebug
 import time
 
@@ -33,7 +33,7 @@ receive.get_info('blue', robot_id)
 now_x = receive.robot_info['x']
 now_y = receive.robot_info['y']
 tree = path
-import ipdb; ipdb.set_trace()
+# import ipdb; ipdb.set_trace()
 # tree = [[now_x, now_y], [now_x, now_y + 10]]
 send = Send()
 print(len(tree))
@@ -78,11 +78,9 @@ for i in range(len(tree)-1):
         zt.append(now_ori)
         while abs(radians_now) > 0.1:
             orientation_need_now = -math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
-            r_v = abs(radians_now)
+            r_v = radians_now
             print(r_v)
         # import ipdb;ipdb.set_trace()
-            if radians_now < 0:
-                r_v = r_v
             send.send_msg(robot_id, 0, 0, r_v)
             s = time.time()
             sleep(0.1)
