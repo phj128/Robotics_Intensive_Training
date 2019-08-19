@@ -26,8 +26,8 @@ class Send():
         robot_cmd.current_angle = self.robot_cmd_dic['current_angle']
         robot_cmd.target_angle = self.robot_cmd_dic['target_angle']
 
-        senddata = robots_cmd.SerializeToString()
-        self.sock.sendto(senddata, self.address)
+        send_data = robots_cmd.SerializeToString()
+        self.sock.sendto(send_data, self.address)
 
 
 if __name__ == "__main__":
