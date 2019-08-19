@@ -1,4 +1,3 @@
-
 import numpy as np
 from send_debug import SendDebug
 import random
@@ -9,7 +8,7 @@ from receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=450, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=30, limitation=10000):
 
         self. lines = []
 
@@ -31,7 +30,7 @@ class RRT:
         self.goalNode[3] = 0  # if find a path, update parent index
 
         self.barrierId = barrierId
-        self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x,y,r,v_x,v_y
+        self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
         self.tree = []
         self.tree.append(self.startNode)
         self.Update_Barrier_Info()  # update the information of barriers
@@ -39,7 +38,7 @@ class RRT:
     # function: generate a random node in the map
     def Generate_Qrand(self):
         Qrand = [0, 0]
-        if random.randint(0, 5) == 0:
+        if random.randint(0, 5) > 2:
             Qrand[0] = self.goalNode[0]
             Qrand[1] = self.goalNode[1]
         else:
@@ -105,8 +104,9 @@ class RRT:
 
         #self.Update_Barrier_Info()#update the information of barriers
         for index in range(len(self.barrierInfo)):
-            barrier=self.barrierInfo[index]
-            distance=self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
+            barrier = self.barrierInfo[index]
+            # import ipdb;ipdb.set_trace()
+            distance = self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
             if distance < self.inflateRadius:
                 return False
 
@@ -172,7 +172,9 @@ if __name__ == '__main__':
     path, path_lines = my_rrt.Get_Path()
 
     time_end = time.time()
-    print('totally cost', time_end - time_start)
+    print('path cost:', time_end - time_start)
 
     send_tree = SendDebug('LINE', [lines, path_lines])
     send_tree.send()
+    end = time.time()
+    print('total cost:', end - time_start)

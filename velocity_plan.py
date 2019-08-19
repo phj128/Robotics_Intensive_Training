@@ -10,7 +10,7 @@ rotate_velocity = 40 #1 radians / second
 dt = 5
 robot_id = 0
 for point in tree:
-    count = count+1
+    count = count + 1
 
 send = Send()
 receive = Receive()

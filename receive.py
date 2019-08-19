@@ -13,8 +13,8 @@ class Receive():
 
 
     def convert_info(self, robot):
-        self.robot_info['x'] = robot.x
-        self.robot_info['y'] = robot.y
+        self.robot_info['x'] = robot.x / 10
+        self.robot_info['y'] = -robot.y / 10
         self.robot_info['ori'] = robot.orientation
         self.robot_info['vx'] = robot.vel_x
         self.robot_info['vy'] = robot.vel_y
@@ -56,6 +56,7 @@ if __name__ == "__main__":
     while True:
         receive = Receive()
         receive.get_info('yellow', 4)
+        # import ipdb;ipdb.set_trace()
         print(receive.robot_info)
         sleep(1)
 
