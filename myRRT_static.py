@@ -88,50 +88,31 @@ class RRT:
                 self.goalNode[3] = Qnext[2]
                 self.tree.append(self.goalNode)
                 return True
-
         return False
-
-    # function: shave the path
-    def shave_rrt(self, Qnext):
-        index = -1
-        radius = 15
-        maxvalue = 2000
-        for i in range(len(self.tree)):
-            distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.tree[i][0], self.tree[i][1])
-            if distance < radius and self.tree[i][4]+distance < maxvalue:
-                maxvalue = self.tree[i][4]+distance
-                index=i
-        if index != -1:  # 应该判断一下两点之间有无障碍物,这个函数还没写
-            Qnext[4] = maxvalue
-            Qnext[3] = self.tree[index][2]  # 把最近点的节点编号记为Qnext的父节点，即改变父亲
-
-
 
     # function: update barrier status
     # suppose that all barrier robots is yellow
     # todo
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
-        receive = self.receive
-        # receive = Receive()
+        receive = Receive()
 
         for index in range(len(self.barrierId)):
-            receive.get_info(self.barrierId[index][0], self.barrierId[index][1])
+            receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
             self.barrierInfo[index][0] = receive.robot_info['x']
             self.barrierInfo[index][1] = receive.robot_info['y']
 
 
     # function: check new node status
     def CheckStatus(self, Qnext):
-
-        #self.Update_Barrier_Info()#update the information of barriers
+        '''
+        Update_Barrier_Info()#update the information of barriers
         for index in range(len(self.barrierInfo)):
-            barrier = self.barrierInfo[index]
-            # import ipdb;ipdb.set_trace()
-            distance = self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
+            barrier=self.barrierInfo[index]
+            distance=self.Calculate_Distance(Qnext[0],Qnext[1],barrier[0], barrier[1])
             if distance < self.inflateRadius:
                 return False
-
+        '''
         return True
 
     # function: check if we find the goal
@@ -139,6 +120,21 @@ class RRT:
         distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.goalNode[0], self.goalNode[1])
         if distance < self.inflateRadius:
             return True
+
+    # function: RRT path planning again
+    def Reset(self, start_x, start_y, goal_x, goal_y, barrier_num):
+        self.startNode[0] = start_x
+        self.startNode[1] = start_y
+        self.startNode[2] = 0
+        self.startNode[3] = -1
+
+        self.goalNode[0] = goal_x
+        self.goalNode[1] = goal_y
+        self.goalNode[2] = 3000  # the max number of nodes
+        self.goalNode[3] = 0  # if find a path, update parent index
+
+        self.tree = []
+        self.tree.append(self.startNode)
 
     def Generate_Path(self):
         i = 0
@@ -170,20 +166,15 @@ class RRT:
         return path[::-1], path_lines[::-1]
 
 if __name__ == '__main__':
-    time_start = time.time()
-    receive = Receive()
+    myrrt=RRT(0, 0, 200, 200, [0, 1, 2, 3, 4, 5, 6, 7])
+    status, tree, lines = myrrt.Generate_Path()
+    path, path_lines = myrrt.Get_Path()
+    # send_tree = SendDebug('LINE', lines)
+    # send_tree.send()
+    # import ipdb;ipdb.set_trace()
+    # sleep(1)
+    send_path = SendDebug('LINE', [lines, path_lines])
+    send_path.send()
+    # print(tree)
 
-    my_rrt = RRT(0, 0, 200, 200, receive,
-              [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
-               ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
-    status, tree, lines = my_rrt.Generate_Path()
-    path, path_lines = my_rrt.Get_Path()
-
-    time_end = time.time()
-    print('path cost:', time_end - time_start)
-
-    send_tree = SendDebug('LINE', [lines, path_lines])
-    send_tree.send()
-    end = time.time()
-    print('total cost:', end - time_start)
-    print(path)
+    
