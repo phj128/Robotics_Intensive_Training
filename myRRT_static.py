@@ -15,18 +15,20 @@ class RRT:
         self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes
 
-        self.startNode = [0, 0, 0, 0]  # x, y, index, parentIndex
-        self.goalNode = [0, 0, 0, 0]
+        self.startNode = [0, 0, 0, 0, 0]  # x, y, index, parentIndex, depth
+        self.goalNode = [0, 0, 0, 0, 0]
 
         self.startNode[0] = start_x
         self.startNode[1] = start_y
         self.startNode[2] = 0
         self.startNode[3] = -1
+        self.startNode[4] = 0
 
         self.goalNode[0] = goal_x
         self.goalNode[1] = goal_y
         self.goalNode[2] = self.limitation
         self.goalNode[3] = 0  # if find a path, update parent index
+        self.goalNode[4] = 0
 
         self.barrierId = barrierId
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
@@ -66,14 +68,16 @@ class RRT:
 
     # function: generate Qnext and add it into the tree
     def BornQnext(self, Qrand, Qnear):
-        Qnext = [0, 0, 0, 0]
+        Qnext = [0, 0, 0, 0, 0]
         theta = np.arctan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
         Qnext[0] = Qnear[0] + self.step * np.cos(theta)
         Qnext[1] = Qnear[1] + self.step * np.sin(theta)
         Qnext[2] = len(self.tree)
         Qnext[3] = Qnear[2]
+        Qnext[4] = Qnear[4]+self.Calculate_Distance(Qnext[0], Qnext[1], Qnear[0], Qnear[1])
 
         if self.CheckStatus(Qnext) is True:
+            self.shave_rrt(Qnext)
             self.tree.append(Qnext)
             # draw a line
             line = [Qnear[0], Qnear[1], Qnext[0], Qnext[1]]
@@ -84,7 +88,24 @@ class RRT:
                 self.goalNode[3] = Qnext[2]
                 self.tree.append(self.goalNode)
                 return True
+
         return False
+
+    # function: shave the path
+    def shave_rrt(self, Qnext):
+        index = -1
+        radius = 15
+        maxvalue = 2000
+        for i in range(len(self.tree)):
+            distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.tree[i][0], self.tree[i][1])
+            if distance < radius and self.tree[i][4]+distance < maxvalue:
+                maxvalue = self.tree[i][4]+distance
+                index=i
+        if index != -1:  # 应该判断一下两点之间有无障碍物,这个函数还没写
+            Qnext[4] = maxvalue
+            Qnext[3] = self.tree[index][2]  # 把最近点的节点编号记为Qnext的父节点，即改变父亲
+
+
 
     # function: update barrier status
     # suppose that all barrier robots is yellow
@@ -117,21 +138,6 @@ class RRT:
         distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.goalNode[0], self.goalNode[1])
         if distance < self.inflateRadius:
             return True
-
-    # function: RRT path planning again
-    def Reset(self, start_x, start_y, goal_x, goal_y, barrier_num):
-        self.startNode[0] = start_x
-        self.startNode[1] = start_y
-        self.startNode[2] = 0
-        self.startNode[3] = -1
-
-        self.goalNode[0] = goal_x
-        self.goalNode[1] = goal_y
-        self.goalNode[2] = 3000  # the max number of nodes
-        self.goalNode[3] = 0  # if find a path, update parent index
-
-        self.tree = []
-        self.tree.append(self.startNode)
 
     def Generate_Path(self):
         i = 0
