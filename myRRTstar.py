@@ -155,13 +155,13 @@ class RRT:
         path = []
         path_lines = []
         point = self.tree[-1]
-        parent_x, parent_y, _, parent_id = point
+        parent_x, parent_y, _, parent_id, _ = point
         path.append([parent_x, parent_y])
         for i in range(len(self.tree)):
             if parent_id == -1:
                 break
             point = self.tree[parent_id]
-            x, y, _, parent_id = point
+            x, y, _, parent_id, _ = point
             path.append([x, y])
             path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
@@ -172,7 +172,7 @@ if __name__ == '__main__':
     time_start = time.time()
     receive = Receive()
 
-    my_rrt = RRT(0, 0, 200, 200, receive,
+    my_rrt = RRT(-290, -220, 290, 220, receive,
               [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
     status, tree, lines = my_rrt.Generate_Path()
