@@ -9,7 +9,7 @@ from receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=100, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=450, limitation=10000):
 
         self. lines = []
 
@@ -106,7 +106,7 @@ class RRT:
         #self.Update_Barrier_Info()#update the information of barriers
         for index in range(len(self.barrierInfo)):
             barrier=self.barrierInfo[index]
-            distance=self.Calculate_Distance(Qnext[0],Qnext[1],barrier[0], barrier[1])
+            distance=self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
             if distance < self.inflateRadius:
                 return False
 
