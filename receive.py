@@ -3,6 +3,7 @@ from time import sleep
 import proto.vision_detection_pb2 as detection
 
 
+
 class Receive():
     def __init__(self):
         self.robot_info = {'x': 0, 'y': 0, 'ori': 0, 'vx': 0, 'vy': 0, 'w': 0, 'ax': 0, 'ay': 0,
