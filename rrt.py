@@ -3,7 +3,7 @@ from debugModule import DebugModule
 import random
 from time import sleep
 from receive import Receive
-
+from send_debug import SendDebug
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step, inflateRadius, limitation):

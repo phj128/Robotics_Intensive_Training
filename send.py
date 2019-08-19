@@ -2,6 +2,7 @@ import socket
 from time import sleep
 import proto.zss_cmd_pb2 as control
 
+
 class Send():
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
