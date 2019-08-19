@@ -53,10 +53,10 @@ class Receive():
 
 
 if __name__ == "__main__":
+    receive = Receive()
     while True:
-        receive = Receive()
-        receive.get_info('yellow', 4)
+        receive.get_info('blue', 0)
         # import ipdb;ipdb.set_trace()
-        print(receive.robot_info)
+        print(receive.robot_info['ori'])
         sleep(1)
 

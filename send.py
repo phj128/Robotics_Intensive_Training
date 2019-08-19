@@ -34,15 +34,17 @@ class Send():
 
 
 if __name__ == "__main__":
-    vx = 100
-    vy = 100
+    vx = 0
+    vy = 0
     robot_id = 0
+    w = 1
     while True:
         send = Send()
-        send.send_msg(robot_id, vx, vy, 3)
+        send.send_msg(robot_id, vx, vy, w)
         sleep(1)
         vx /= 2
         vy /= 2
+        w = 0
 '''
 
 package = control.Robots_Status.robots_status

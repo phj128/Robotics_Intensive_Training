@@ -13,7 +13,7 @@ class SendDebug():
         '''
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.address = ('127.0.0.1', 50001)
+        self.address = ('127.0.0.1', 20001)
         self.debug_type = type
         self.color = color
         self.num = len(lines[0]) + len(lines[1])

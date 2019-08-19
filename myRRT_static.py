@@ -8,8 +8,7 @@ from receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=30, limitation=10000):
-
+    def __init__(self, start_x, start_y, goal_x, goal_y, receive, barrierId, step=10, inflateRadius=30, limitation=10000):
         self. lines = []
 
         self.step = step
@@ -33,6 +32,7 @@ class RRT:
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
         self.tree = []
         self.tree.append(self.startNode)
+        self.receive = receive
         self.Update_Barrier_Info()  # update the information of barriers
 
     # function: generate a random node in the map
@@ -91,7 +91,7 @@ class RRT:
     # todo
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
-        receive = Receive()
+        receive = self.receive
 
         for index in range(len(self.barrierId)):
             receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
@@ -164,8 +164,9 @@ class RRT:
 
 if __name__ == '__main__':
     time_start = time.time()
+    receive = Receive()
 
-    my_rrt = RRT(0, 0, 200, 200,
+    my_rrt = RRT(0, 0, 200, 200, receive,
               [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
     status, tree, lines = my_rrt.Generate_Path()
@@ -178,3 +179,4 @@ if __name__ == '__main__':
     send_tree.send()
     end = time.time()
     print('total cost:', end - time_start)
+    print(path)
