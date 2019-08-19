@@ -22,12 +22,18 @@ send_tree = SendDebug('LINE', [lines, path_lines])
 send_tree.send()
 end = time.time()
 print('total cost:', end - time_start)
-tree = path
+
 rotate_velocity_ = 1 #1 radians / second
 #dt = 1
 v_x = 100
 robot_id = 0
 
+receive.get_info('blue', robot_id)
+now_x = receive.robot_info['x']
+now_y = receive.robot_info['y']
+tree = path
+import ipdb; ipdb.set_trace()
+# tree = [[now_x, now_y], [now_x, now_y + 10]]
 send = Send()
 print(len(tree))
 rt = []
@@ -57,31 +63,41 @@ for i in range(len(tree)-1):
     # sleep(dt)
     # send.send_msg(robot_id,0,0,0)
 
-    receive.get_info('blue',robot_id)
+    receive.get_info('blue', robot_id)
     now_x = receive.robot_info['x']
     now_y = receive.robot_info['y']
     now_ori = receive.robot_info['ori']
     error = np.sqrt(np.square(now_x - tree[i+1][0])+np.square(now_y - tree[i+1][1]))
+    print(now_ori)
 
-    if error > 15:
-        orientation_need_now = math.atan2((tree[i+1][1] - now_y), (tree[i+1][0] - now_x))
+    if error > 10:
+        orientation_need_now = math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
         radians_now = now_ori - orientation_need_now
-        rotate_time_now = radians_now/rotate_velocity_
-        # import ipdb;ipdb.set_trace()
-        if radians_now > 0:
-            rotate_velocity = abs(rotate_velocity_)
-        else:
-            rotate_velocity = -abs(rotate_velocity_)
-
-        dt_now = error / v_x
-
-        send.send_msg(robot_id, 0, 0, rotate_velocity)
-        sleep(abs(rotate_time_now))
-        send.send_msg(robot_id, v_x, 0, 0)
-        sleep(dt_now)
-        rt.append(orientation_need_now)
-        vt.append(radians_now)
         zt.append(now_ori)
+        while abs(radians_now) > 0.1:
+            orientation_need_now = math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
+            r_v = abs(radians_now)
+            print(r_v)
+        # import ipdb;ipdb.set_trace()
+            if radians_now < 0:
+                r_v = -r_v
+            send.send_msg(robot_id, 0, 0, r_v/5)
+            s = time.time()
+            sleep(1)
+            e = time.time()
+            print('time', e-s)
+            receive.get_info('blue', robot_id)
+            now_ori = receive.robot_info['ori']
+            radians_now = now_ori - orientation_need_now
+    while error > 10:
+        v_x = error
+        sleep(1)
+        send.send_msg(robot_id, v_x/5, 0, 0)
+        sleep(1)
+        receive.get_info('blue', robot_id)
+        now_x = receive.robot_info['x']
+        now_y = receive.robot_info['y']
+        error = np.sqrt(np.square(now_x - tree[i + 1][0]) + np.square(now_y - tree[i + 1][1]))
 
 
     print(i)

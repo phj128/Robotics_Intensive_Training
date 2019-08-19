@@ -5,9 +5,6 @@ import proto.vision_detection_pb2 as detection
 
 class Receive():
     def __init__(self):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.bind(("127.0.0.1", 23333))
         self.robot_info = {'x': 0, 'y': 0, 'ori': 0, 'vx': 0, 'vy': 0, 'w': 0, 'ax': 0, 'ay': 0,
                            'r_x': 0, 'r_y': 0, 'r_ori': 0, 'r_vx': 0, 'r_vy': 0, 'r_w': 0}
 
@@ -30,6 +27,9 @@ class Receive():
 
 
     def get_info(self, color, id):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(("127.0.0.1", 23333))
         data, address = self.sock.recvfrom(4096)
         sleep(0.001)
 
@@ -57,6 +57,6 @@ if __name__ == "__main__":
     while True:
         receive.get_info('blue', 0)
         # import ipdb;ipdb.set_trace()
-        print(receive.robot_info['ori'])
+        print(receive.robot_info['x'])
         sleep(1)
 

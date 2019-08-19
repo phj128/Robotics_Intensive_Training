@@ -92,9 +92,10 @@ class RRT:
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
         receive = self.receive
+        # receive = Receive()
 
         for index in range(len(self.barrierId)):
-            receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
+            receive.get_info(self.barrierId[index][0], self.barrierId[index][1])
             self.barrierInfo[index][0] = receive.robot_info['x']
             self.barrierInfo[index][1] = receive.robot_info['y']
 
