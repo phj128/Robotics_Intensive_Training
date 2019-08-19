@@ -1,13 +1,15 @@
+
 import numpy as np
 from send_debug import SendDebug
 import random
+import time
 from time import sleep
 from receive import Receive
 
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=10, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=100, limitation=10000):
 
         self. lines = []
 
@@ -32,6 +34,7 @@ class RRT:
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x,y,r,v_x,v_y
         self.tree = []
         self.tree.append(self.startNode)
+        self.Update_Barrier_Info()  # update the information of barriers
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
@@ -40,14 +43,15 @@ class RRT:
             Qrand[0] = self.goalNode[0]
             Qrand[1] = self.goalNode[1]
         else:
-            Qrand[0] = np.random.randint(-300, 300) 
-            Qrand[1] = np.random.randint(-225, 225) 
+            Qrand[0] = np.random.randint(-300, 300)
+            Qrand[1] = np.random.randint(-225, 225)
 
         return Qrand
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
     def Calculate_Distance(self, node1_x, node1_y, node2_x, node2_y):
         return np.sqrt((node1_x - node2_x) ** 2 + (node1_y - node2_y) ** 2)
+        #return abs(node1_x - node2_x)+abs(node1_y - node2_y)
 
     # function: find the nearest node to Qrand
     def Find_Qnear(self, Qrand):
@@ -72,10 +76,9 @@ class RRT:
 
         if self.CheckStatus(Qnext) is True:
             self.tree.append(Qnext)
-            #draw a line
-            line = [Qnear[0],Qnear[1] ,Qnext[0] ,Qnext[1]]
+            # draw a line
+            line = [Qnear[0], Qnear[1], Qnext[0], Qnext[1]]
             self.lines.append(line)
-            #self.debug.Set_Line(test[node][0], test[node][1], test[node][2], test[node][3])
 
             if self.CheckGoal(Qnext) is True:
                 self.goalNode[2] = len(self.tree)
@@ -99,14 +102,14 @@ class RRT:
 
     # function: check new node status
     def CheckStatus(self, Qnext):
-        '''
-        Update_Barrier_Info()#update the information of barriers
+
+        #self.Update_Barrier_Info()#update the information of barriers
         for index in range(len(self.barrierInfo)):
             barrier=self.barrierInfo[index]
             distance=self.Calculate_Distance(Qnext[0],Qnext[1],barrier[0], barrier[1])
             if distance < self.inflateRadius:
                 return False
-        '''
+
         return True
 
     # function: check if we find the goal
@@ -160,15 +163,16 @@ class RRT:
         return path[::-1], path_lines[::-1]
 
 if __name__ == '__main__':
-    myrrt=RRT(0, 0, 200, 200, [0, 1, 2, 3, 4, 5, 6, 7])
-    status, tree, lines = myrrt.Generate_Path()
-    path, path_lines = myrrt.Get_Path()
-    # send_tree = SendDebug('LINE', lines)
-    # send_tree.send()
-    # import ipdb;ipdb.set_trace()
-    # sleep(1)
-    send_path = SendDebug('LINE', [lines, path_lines])
-    send_path.send()
-    # print(tree)
+    time_start = time.time()
 
-    
+    my_rrt = RRT(0, 0, 200, 200,
+              [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+               ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
+    status, tree, lines = my_rrt.Generate_Path()
+    path, path_lines = my_rrt.Get_Path()
+
+    time_end = time.time()
+    print('totally cost', time_end - time_start)
+
+    send_tree = SendDebug('LINE', [lines, path_lines])
+    send_tree.send()
