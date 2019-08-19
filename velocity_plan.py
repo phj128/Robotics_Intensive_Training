@@ -12,7 +12,7 @@ import time
 time_start = time.time()
 receive = Receive()
 receive.get_info('blue', 0)
-my_rrt = RRT(receive.robot_info['x'], receive.robot_info['y'], 200, 200, receive,
+my_rrt = RRT_STAR(receive.robot_info['x'], receive.robot_info['y'], 200, 200, receive,
               [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
 status, tree1, lines = my_rrt.Generate_Path()
