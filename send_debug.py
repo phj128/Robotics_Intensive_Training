@@ -8,7 +8,7 @@ class SendDebug():
     def __init__(self, type, lines, color='YELLOW'):
         '''
         type: 'LINE', 'ARC', 'TEXT', 'ROBOT', 'CURVE', 'POLYGON', 'POINTS'
-        lines: a list of line, and the line in lines contain [start_x, start_y, end_x, end_y]
+        lines: lists of line, and the line in lines contain [start_x, start_y, end_x, end_y]
         color: 'WHITE', 'RED', 'ORANGE', 'YELLOW', 'GREEN', 'CYAN', 'BLUE', 'PURPLE', 'GRAY', "BLACK'
         '''
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -16,8 +16,9 @@ class SendDebug():
         self.address = ('127.0.0.1', 50001)
         self.debug_type = type
         self.color = color
-        self.num = len(lines)
-        self.lines = lines
+        self.num = len(lines[0]) + len(lines[1])
+        self.num_yellow = len(lines[0])
+        self.lines = lines[0] + lines[1]
         # import ipdb;ipdb.set_trace()
         self.debug_msg = {'start_x': 0, 'start_y': 0, 'end_x': 100, 'end_y': 100}
 
@@ -27,29 +28,32 @@ class SendDebug():
         msg = []
         for i in range(self.num):
             msg.append(package.msgs.add())
-
-            color = self.color
-            # choose a color
-            if color == 'WHITE':
-                msg[i].color = debug_info.Debug_Msg.WHITE
-            elif color == 'RED':
-                msg[i].color = debug_info.Debug_Msg.RED
-            elif color == 'ORANGE':
-                msg[i].color = debug_info.Debug_Msg.ORANGE
-            elif color == 'YELLOW':
+            if i < self.num_yellow:
                 msg[i].color = debug_info.Debug_Msg.YELLOW
-            elif color == 'GREEN':
-                msg[i].color = debug_info.Debug_Msg.GREEN
-            elif color == 'CYAN':
-                msg[i].color = debug_info.Debug_Msg.CYAN
-            elif color == 'BLUE':
-                msg[i].color = debug_info.Debug_Msg.BLUE
-            elif color == 'PURPLE':
-                msg[i].color = debug_info.Debug_Msg.PURPLE
-            elif color == 'GRAY':
-                msg[i].color = debug_info.Debug_Msg.GRAY
-            elif color == 'BLACK':
-                msg[i].color = debug_info.Debug_Msg.BLACK
+            else:
+                msg[i].color = debug_info.Debug_Msg.RED
+            # color = self.color
+            # # choose a color
+            # if color == 'WHITE':
+            #     msg[i].color = debug_info.Debug_Msg.WHITE
+            # elif color == 'RED':
+            #     msg[i].color = debug_info.Debug_Msg.RED
+            # elif color == 'ORANGE':
+            #     msg[i].color = debug_info.Debug_Msg.ORANGE
+            # elif color == 'YELLOW':
+            #     msg[i].color = debug_info.Debug_Msg.YELLOW
+            # elif color == 'GREEN':
+            #     msg[i].color = debug_info.Debug_Msg.GREEN
+            # elif color == 'CYAN':
+            #     msg[i].color = debug_info.Debug_Msg.CYAN
+            # elif color == 'BLUE':
+            #     msg[i].color = debug_info.Debug_Msg.BLUE
+            # elif color == 'PURPLE':
+            #     msg[i].color = debug_info.Debug_Msg.PURPLE
+            # elif color == 'GRAY':
+            #     msg[i].color = debug_info.Debug_Msg.GRAY
+            # elif color == 'BLACK':
+            #     msg[i].color = debug_info.Debug_Msg.BLACK
 
             # choose a debug type
             if self.debug_type == 'LINE':
