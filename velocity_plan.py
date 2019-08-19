@@ -72,33 +72,34 @@ for i in range(len(tree)-1):
     print(now_ori)
 
     if error > 10:
-        orientation_need_now = math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
+        step = 0
+        orientation_need_now = -math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
         radians_now = now_ori - orientation_need_now
         zt.append(now_ori)
         while abs(radians_now) > 0.1:
-            orientation_need_now = math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
+            orientation_need_now = -math.atan2((tree[i + 1][1] - now_y), (tree[i + 1][0] - now_x))
             r_v = abs(radians_now)
             print(r_v)
         # import ipdb;ipdb.set_trace()
             if radians_now < 0:
-                r_v = -r_v
-            send.send_msg(robot_id, 0, 0, r_v/5)
+                r_v = r_v
+            send.send_msg(robot_id, 0, 0, r_v)
             s = time.time()
-            sleep(1)
+            sleep(0.1)
             e = time.time()
             print('time', e-s)
             receive.get_info('blue', robot_id)
             now_ori = receive.robot_info['ori']
             radians_now = now_ori - orientation_need_now
-    while error > 10:
-        v_x = error
-        sleep(1)
-        send.send_msg(robot_id, v_x/5, 0, 0)
-        sleep(1)
-        receive.get_info('blue', robot_id)
-        now_x = receive.robot_info['x']
-        now_y = receive.robot_info['y']
-        error = np.sqrt(np.square(now_x - tree[i + 1][0]) + np.square(now_y - tree[i + 1][1]))
+        while error > 10 or step < 10:
+            v_x = error
+            send.send_msg(robot_id, v_x, 0, 0)
+            sleep(0.1)
+            receive.get_info('blue', robot_id)
+            now_x = receive.robot_info['x']
+            now_y = receive.robot_info['y']
+            error = np.sqrt(np.square(now_x - tree[i + 1][0]) + np.square(now_y - tree[i + 1][1]))
+            step += 1
 
 
     print(i)
