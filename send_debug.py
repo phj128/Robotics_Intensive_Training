@@ -8,6 +8,8 @@ class SendDebug():
     def __init__(self, type, lines, color='YELLOW'):
         '''
         type: 'LINE', 'ARC', 'TEXT', 'ROBOT', 'CURVE', 'POLYGON', 'POINTS'
+        lines: a list of line, and the line in lines contain [start_x, start_y, end_x, end_y]
+        color: 'WHITE', 'RED', 'ORANGE', 'YELLOW', 'GREEN', 'CYAN', 'BLUE', 'PURPLE', 'GRAY', "BLACK'
         '''
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -27,27 +29,29 @@ class SendDebug():
             msg.append(package.msgs.add())
 
             color = self.color
+            # choose a color
             if color == 'WHITE':
-                msg.color = debug_info.Debug_Msg.WHITE
+                msg[i].color = debug_info.Debug_Msg.WHITE
             elif color == 'RED':
-                msg.color = debug_info.Debug_Msg.RED
+                msg[i].color = debug_info.Debug_Msg.RED
             elif color == 'ORANGE':
-                msg.color = debug_info.Debug_Msg.ORANGE
+                msg[i].color = debug_info.Debug_Msg.ORANGE
             elif color == 'YELLOW':
                 msg[i].color = debug_info.Debug_Msg.YELLOW
             elif color == 'GREEN':
-                msg.color = debug_info.Debug_Msg.GREEN
+                msg[i].color = debug_info.Debug_Msg.GREEN
             elif color == 'CYAN':
-                msg.color = debug_info.Debug_Msg.CYAN
+                msg[i].color = debug_info.Debug_Msg.CYAN
             elif color == 'BLUE':
-                msg.color = debug_info.Debug_Msg.BLUE
+                msg[i].color = debug_info.Debug_Msg.BLUE
             elif color == 'PURPLE':
-                msg.color = debug_info.Debug_Msg.PURPLE
+                msg[i].color = debug_info.Debug_Msg.PURPLE
             elif color == 'GRAY':
-                msg.color = debug_info.Debug_Msg.GRAY
+                msg[i].color = debug_info.Debug_Msg.GRAY
             elif color == 'BLACK':
-                msg.color = debug_info.Debug_Msg.BLACK
+                msg[i].color = debug_info.Debug_Msg.BLACK
 
+            # choose a debug type
             if self.debug_type == 'LINE':
                 msg[i].type = debug_info.Debug_Msg.LINE
                 line = msg[i].line

@@ -4,9 +4,12 @@ import random
 from time import sleep
 from receive import Receive
 
+
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, step=10, inflateRadius=10, limitation=10000):
+
+        self. lines = []
 
         self.step = step
         self.inflateRadius = inflateRadius  # inflate radius
@@ -70,9 +73,8 @@ class RRT:
         if self.CheckStatus(Qnext) is True:
             self.tree.append(Qnext)
             #draw a line
-            type = 'LINE'
-            send_debug = SendDebug(type, Qnear[0],Qnear[1] ,Qnext[0] ,Qnext[1] )
-            send_debug.send()
+            line = [Qnear[0],Qnear[1] ,Qnext[0] ,Qnext[1]]
+            self.lines.append(line)
             #self.debug.Set_Line(test[node][0], test[node][1], test[node][2], test[node][3])
 
             if self.CheckGoal(Qnext) is True:
@@ -136,12 +138,37 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        return status, self.tree
-        
-        
+        return status, self.tree, self.lines
+
+
+    def Get_Path(self):
+        # get the final path, a list of points and a list of lines, from start to end
+        path = []
+        path_lines = []
+        point = self.tree[-1]
+        parent_x, parent_y, _, parent_id = point
+        path.append([parent_x, parent_y])
+        for i in range(len(self.tree)):
+            if parent_id == -1:
+                break
+            point = self.tree[parent_id]
+            x, y, _, parent_id = point
+            path.append([x, y])
+            path_lines.append([x, y, parent_x, parent_y])
+            parent_x = x
+            parent_y = y
+        return path[::-1], path_lines[::-1]
+
 if __name__ == '__main__':
-    myrrt=RRT(0, 0, 200, 200, [0 ,1 ,2, 3, 4, 5, 6, 7])
-    status, tree = myrrt.Generate_Path()
-    print(tree)
+    myrrt=RRT(0, 0, 200, 200, [0, 1, 2, 3, 4, 5, 6, 7])
+    status, tree, lines = myrrt.Generate_Path()
+    path, path_lines = myrrt.Get_Path()
+    send_tree = SendDebug('LINE', lines)
+    send_tree.send()
+    # import ipdb;ipdb.set_trace()
+    sleep(1)
+    send_path = SendDebug('LINE', path_lines, 'RED')
+    send_path.send()
+    # print(tree)
 
     

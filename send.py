@@ -14,6 +14,8 @@ class Send():
                           'kick': False,  'power': 1, 'dribbler_spin': 1, 'current_angle': 0, 'target_angle': 0}
 
     def send_msg(self, id_we_send, v_x, v_y, v_r, d=10000):
+        '''
+        '''
         robots_cmd = control.Robots_Command()
         robots_cmd.delay = d
         robot_cmd = robots_cmd.command.add()
