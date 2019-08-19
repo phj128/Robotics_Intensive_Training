@@ -15,20 +15,18 @@ class RRT:
         self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes
 
-        self.startNode = [0, 0, 0, 0, 0]  # x, y, index, parentIndex, depth
-        self.goalNode = [0, 0, 0, 0, 0]
+        self.startNode = [0, 0, 0, 0]  # x, y, index, parentIndex
+        self.goalNode = [0, 0, 0, 0]
 
         self.startNode[0] = start_x
         self.startNode[1] = start_y
         self.startNode[2] = 0
         self.startNode[3] = -1
-        self.startNode[4] = 0
 
         self.goalNode[0] = goal_x
         self.goalNode[1] = goal_y
         self.goalNode[2] = self.limitation
         self.goalNode[3] = 0  # if find a path, update parent index
-        self.goalNode[4] = 0
 
         self.barrierId = barrierId
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
@@ -68,16 +66,14 @@ class RRT:
 
     # function: generate Qnext and add it into the tree
     def BornQnext(self, Qrand, Qnear):
-        Qnext = [0, 0, 0, 0, 0]
+        Qnext = [0, 0, 0, 0]
         theta = np.arctan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
         Qnext[0] = Qnear[0] + self.step * np.cos(theta)
         Qnext[1] = Qnear[1] + self.step * np.sin(theta)
         Qnext[2] = len(self.tree)
         Qnext[3] = Qnear[2]
-        Qnext[4] = Qnear[4]+self.Calculate_Distance(Qnext[0], Qnext[1], Qnear[0], Qnear[1])
 
         if self.CheckStatus(Qnext) is True:
-            self.shave_rrt(Qnext)
             self.tree.append(Qnext)
             # draw a line
             line = [Qnear[0], Qnear[1], Qnext[0], Qnext[1]]
@@ -95,7 +91,7 @@ class RRT:
     # todo
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
-        receive = Receive()
+        receive = self.receive
 
         for index in range(len(self.barrierId)):
             receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
@@ -105,14 +101,15 @@ class RRT:
 
     # function: check new node status
     def CheckStatus(self, Qnext):
-        '''
-        Update_Barrier_Info()#update the information of barriers
+
+        #self.Update_Barrier_Info()#update the information of barriers
         for index in range(len(self.barrierInfo)):
-            barrier=self.barrierInfo[index]
-            distance=self.Calculate_Distance(Qnext[0],Qnext[1],barrier[0], barrier[1])
+            barrier = self.barrierInfo[index]
+            # import ipdb;ipdb.set_trace()
+            distance = self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
             if distance < self.inflateRadius:
                 return False
-        '''
+
         return True
 
     # function: check if we find the goal
@@ -166,15 +163,22 @@ class RRT:
         return path[::-1], path_lines[::-1]
 
 if __name__ == '__main__':
-    myrrt=RRT(0, 0, 200, 200, [0, 1, 2, 3, 4, 5, 6, 7])
-    status, tree, lines = myrrt.Generate_Path()
-    path, path_lines = myrrt.Get_Path()
-    # send_tree = SendDebug('LINE', lines)
-    # send_tree.send()
-    # import ipdb;ipdb.set_trace()
-    # sleep(1)
-    send_path = SendDebug('LINE', [lines, path_lines])
-    send_path.send()
-    # print(tree)
+    time_start = time.time()
+    receive = Receive()
+
+    my_rrt = RRT(0, 0, 200, 200, receive,
+              [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+               ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]])
+    status, tree, lines = my_rrt.Generate_Path()
+    path, path_lines = my_rrt.Get_Path()
+
+    time_end = time.time()
+    print('path cost:', time_end - time_start)
+
+    send_tree = SendDebug('LINE', [lines, path_lines])
+    send_tree.send()
+    end = time.time()
+    print('total cost:', end - time_start)
+    print(path)
 
     
