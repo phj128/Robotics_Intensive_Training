@@ -86,7 +86,7 @@ class APF():
     """
 
     def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80,
-                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50):
+                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30):
         """
         :param s_x, s_y: 起点
         :param g_x, g_y: 终点
@@ -98,10 +98,14 @@ class APF():
         :param max_iters: 最大迭代次数
         :param goal_threshold: 离目标点小于此值即认为到达目标点
         """
+        self.s_p = [s_x, s_y]
+        self.g_p = [g_x, g_y]
         self.start = Vector2d(s_x, s_y)
         self.current_pos = Vector2d(s_x, s_y)
         self.goal = Vector2d(g_x, g_y)
         obstacles = get_info(info, receive)
+        self.barrierInfo = np.array(obstacles)
+        self.dis_threshold = dis_threshold
         self.obstacles = [Vector2d(OB[0], OB[1]) for OB in obstacles]
         self.k_att = k_att
         self.k_rep = k_rep
@@ -151,6 +155,78 @@ class APF():
                 rep +=(rep_1+rep_2)
         return rep
 
+    def CheckTwoPoints(self, real_point1, real_point2):
+        point1 = real_point1.copy()
+        point2 = real_point2.copy()
+        for i in range(len(self.barrierInfo)):
+            center = [self.barrierInfo[i][0], self.barrierInfo[i][1]]
+            dx_1 = center[0] - point1[0]
+            dy_1 = center[1] - point1[1]
+            dx_2 = center[0] - point2[0]
+            dy_2 = center[1] - point2[1]
+            dx_0 = point1[0] - point2[0]
+            dy_0 = point1[1] - point2[1]
+            mul_1 = (dx_1) * (-dx_0) + (dy_1) * (-dy_0)
+            mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
+            if mul_1 > 0 and mul_2 > 0:
+                mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
+                dist = mid/(np.sqrt(np.square(-dx_0) + np.square(-dy_0)))
+            elif mul_1 == 0 and mul_2 != 0:
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+            elif mul_1 != 0 and mul_2 == 0:
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+            elif mul_1 == 0 and mul_2 == 0:
+                dist = 0
+            elif mul_1 < 0 and mul_2 > 0:
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+            elif mul_2 < 0 and mul_1 > 0:
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+            else:
+                dist = 0
+
+            if dist < self.dis_threshold:
+                return False
+
+        return True
+
+    def merge(self):
+        current = self.restree.shape[0] - 1
+        # import ipdb;ipdb.set_trace()
+        while current > 0:
+            for index_ in range(current-1):
+                index = current - index_ - 2
+                # print(self.check_two_points(self.restree[index], self.restree[current]))
+                if not self.CheckTwoPoints(self.restree[index], self.restree[current]):
+                    self.restree[current, 3] = index + 1
+                    break
+                self.restree[current, 3] = index
+            current = int(self.restree[current, 3].copy())
+        # import ipdb; ipdb.set_trace()
+
+        # current = self.restree.shape[0] - 1
+        # while current > 0:
+        #     index = current - 1
+        #     print(self.CheckTwoPoints(self.restree[index], self.restree[current]))
+        #     current -= 1
+
+        path = []
+        path_lines = []
+        point = self.restree[-1]
+        parent_x, parent_y, _, parent_id = point
+        path.append([parent_x, parent_y])
+        for i in range(len(self.restree)):
+            parent_id = int(parent_id)
+            if parent_id == -1:
+                break
+            point = self.restree[parent_id]
+            x, y, _, parent_id = point
+            path.append([x, y])
+            path_lines.append([x, y, parent_x, parent_y])
+            parent_x = x
+            parent_y = y
+        # import ipdb;ipdb.set_trace()
+        return path[::-1], path_lines[::-1]
+
     def Generate_Path(self):
         """
         path plan
@@ -161,18 +237,26 @@ class APF():
             self.current_pos += Vector2d(f_vec.direction[0], f_vec.direction[1]) * self.step_size
             self.iters += 1
             self.path.append([self.current_pos.deltaX, self.current_pos.deltaY])
+        if len(self.path) < 2:
+            self.path = [self.s_p, self.g_p]
 
         if (self.current_pos - self.goal).length <= self.goal_threashold:
             self.is_path_plan_success = True
-            return self.is_path_plan_success, [], []
+        return self.is_path_plan_success, [], []
 
     def Get_Path(self):
         # get the final path, a list of points and a list of lines, from start to end
         path_lines = []
-        for i in range(len(self.path) - 1):
+        path = []
+        num = len(self.path)
+        for i in range(num - 1):
             x, y = self.path[i].copy()
             x_, y_ = self.path[i + 1].copy()
             path_lines.append([x, y, x_, y_])
+            path.append([x, y, i, i - 1])
+        path.append([self.path[-1][0], self.path[-1][1], num-1, num-2])
+        self.restree = np.array(path)
+        # import ipdb;ipdb.set_trace()
         return np.array(self.path), path_lines
 
 

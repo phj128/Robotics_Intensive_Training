@@ -8,7 +8,7 @@ from message.receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=40, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=30, limitation=10000):
         self. lines = []
 
         self.step = step
@@ -71,29 +71,30 @@ class RRT:
     '''
     def CheckTwoPoints(self, real_point1, real_point2):
         point1 = real_point1.copy()
-        #point1[1] = -point1[1]
         point2 = real_point2.copy()
-        #point2[1] = -point2[1]
         for i in range(len(self.barrierInfo)):
             center = [self.barrierInfo[i][0], self.barrierInfo[i][1]]
-            mul_1 = (center[0] - point1[0]) * (point2[0] - point1[0]) + (center[1] - point1[1]) * (
-                        point2[1] - point1[1])
-            mul_2 = (center[0] - point2[0]) * (point1[0] - point2[0]) + (center[1] - point2[1]) * (
-                        point1[1] - point2[1])
+            dx_1 = center[0] - point1[0]
+            dy_1 = center[1] - point1[1]
+            dx_2 = center[0] - point2[0]
+            dy_2 = center[1] - point2[1]
+            dx_0 = point1[0] - point2[0]
+            dy_0 = point1[1] - point2[1]
+            mul_1 = (dx_1) * (-dx_0) + (dy_1) * (-dy_0)
+            mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
-                mid = abs((center[0] - point1[0]) * (point2[1] - point1[1]) - (point2[0] - point1[0]) * (
-                            center[1] - point1[1]))
-                dist = mid/(np.sqrt(np.square(point2[0] - point1[0]) + np.square(point2[1] - point1[1])))
+                mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
+                dist = mid/(np.sqrt(np.square(-dx_0) + np.square(-dy_0)))
             elif mul_1 == 0 and mul_2 != 0:
-                dist = np.sqrt(np.square(center[0] - point1[0]) + np.square(center[1] - point1[1]))
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
             elif mul_1 != 0 and mul_2 == 0:
-                dist = np.sqrt(np.square(center[0] - point2[0]) + np.square(center[1] - point2[1]))
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = np.sqrt(np.square(center[0] - point1[0]) + np.square(center[1] - point1[1]))
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
             elif mul_2 < 0 and mul_1 > 0:
-                dist = np.sqrt(np.square(center[0] - point2[0]) + np.square(center[1] - point2[1]))
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
             else:
                 dist = 0
 
@@ -102,6 +103,20 @@ class RRT:
 
         return True
 
+
+    def check_two_points(self, real_point1, real_point2):
+        num = 60
+        point1 = real_point1.copy()
+        point2 = real_point2.copy()
+        info = np.array(self.barrierInfo)[:, :2]
+        select_points = np.zeros([num, 2])
+        select_points[:, 0] = np.linspace(0, point2[0] - point1[0], num, endpoint=True)
+        select_points[:, 1] = np.linspace(0, point2[1] - point1[1], num, endpoint=True)
+        select_points[:, 0] += point1[0]
+        select_points[:, 1] += point1[1]
+        delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
+        dis = np.sqrt(np.sum(delta * delta, axis=2))
+        return (dis < self.dis_threshold).sum()
 
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
@@ -163,14 +178,23 @@ class RRT:
     def merge(self):
         current = self.restree.shape[0] - 1
         # import ipdb;ipdb.set_trace()
-        while self.restree[current, 3] != -1:
-            for index in range(current-1):
-                print(self.CheckTwoPoints(self.restree[index], self.restree[current]))
-                if self.CheckTwoPoints(self.restree[index], self.restree[current]):
-                    self.restree[current, 3] = self.restree[index, 2].copy()
+        while current > 0:
+            for index_ in range(current-1):
+                index = current - index_ - 2
+                # print(self.check_two_points(self.restree[index], self.restree[current]))
+                if not self.CheckTwoPoints(self.restree[index], self.restree[current]):
+                    self.restree[current, 3] = index + 1
                     break
+                self.restree[current, 3] = index
             current = int(self.restree[current, 3].copy())
         # import ipdb; ipdb.set_trace()
+
+        # current = self.restree.shape[0] - 1
+        # while current > 0:
+        #     index = current - 1
+        #     print(self.CheckTwoPoints(self.restree[index], self.restree[current]))
+        #     current -= 1
+
         path = []
         path_lines = []
         point = self.restree[-1]
@@ -186,6 +210,7 @@ class RRT:
             path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
             parent_y = y
+        # import ipdb;ipdb.set_trace()
         return path[::-1], path_lines[::-1]
 
 
