@@ -84,8 +84,8 @@ class APF():
     人工势场寻路
     """
 
-    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=0.2, k_rep=8, rr=300,
-                 step_size=10, max_iters=500, goal_threshold=10):
+    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80,
+                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50):
         """
         :param s_x, s_y: 起点
         :param g_x, g_y: 终点
@@ -96,7 +96,6 @@ class APF():
         :param step_size: 步长
         :param max_iters: 最大迭代次数
         :param goal_threshold: 离目标点小于此值即认为到达目标点
-        :param is_plot: 是否绘图
         """
         self.start = Vector2d(s_x, s_y)
         self.current_pos = Vector2d(s_x, s_y)
@@ -110,6 +109,7 @@ class APF():
         self.max_iters = max_iters
         self.iters = 0
         self.goal_threashold = goal_threshold
+        self.att_threshold = att_threshold
         self.path = list()
         self.is_path_plan_success = False
 
@@ -120,8 +120,16 @@ class APF():
         引力计算
         :return: 引力
         """
-        att = (self.goal - self.current_pos) * self.k_att  # 方向由机器人指向目标点
-        return att
+        if (self.goal - self.current_pos).length < self.att_threshold:
+            att = (self.goal - self.current_pos) * self.k_att  # 方向由机器人指向目标点
+            return att
+        else:
+            att = (self.goal - self.current_pos) * self.k_att
+            temp = self.att_threshold * (2*(self.goal - self.current_pos).length - self.att_threshold)
+            att.deltaX = att.deltaX * temp / att.length
+            att.deltaY = att.deltaY * temp / att.length
+            att.length = temp
+            return att
 
     def repulsion(self):
         """

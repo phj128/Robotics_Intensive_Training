@@ -11,7 +11,7 @@ from local_planner.xy_control import XY_control
 
 from time import sleep
 import math
-import numpy as np
+import numpy as npi
 import time
 
 
