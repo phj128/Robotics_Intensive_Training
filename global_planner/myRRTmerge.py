@@ -97,7 +97,7 @@ class RRT:
         Qnext[4] = Qnear[4]+self.Calculate_Distance(Qnext[0], Qnext[1], Qnear[0], Qnear[1])
 
         if self.CheckStatus(Qnext) is True:
-            self.shave_rrt(Qnext)  # 若追求效率，则可删掉这句话
+            # self.shave_rrt(Qnext)  # 若追求效率，则可删掉这句话
             self.tree.append(Qnext)
             # draw a line
             line = [Qnear[0], Qnear[1], Qnext[0], Qnext[1]]
