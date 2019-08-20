@@ -155,7 +155,7 @@ class RRT:
             distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.tree[i][0], self.tree[i][1])
             if distance < radius and self.tree[i][4]+distance < maxvalue:
                 maxvalue = self.tree[i][4]+distance
-                index=i
+                index = i
         if index != -1:  # 应该判断一下两点之间有无障碍物,这个函数还没写
             Qnext[4] = maxvalue
             Qnext[3] = self.tree[index][2]  # 把最近点的节点编号记为Qnext的父节点，即改变父亲

@@ -156,7 +156,6 @@ class APF():
         path plan
         :return:
         """
-        self.is_path_plan_success = False
         while (self.iters < self.max_iters and (self.current_pos - self.goal).length > self.goal_threashold):
             f_vec = self.attractive() + self.repulsion()
             self.current_pos += Vector2d(f_vec.direction[0], f_vec.direction[1]) * self.step_size

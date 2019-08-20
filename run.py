@@ -57,16 +57,19 @@ def run_while(color, robot_id, barriers, target_x, target_y,  global_p, local_p)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
         print('ori:', len(path))
-        path, path_lines = global_path.merge()
-        print('nodes:', len(path))
+        # path, path_lines = global_path.merge()
+        # print('nodes:', len(path))
         time_end = time.time()
         print('path cost:', time_end - time_start)
         debug_info = SendDebug('LINE', [lines, path_lines])
         debug_info.send()
         end = time.time()
         print('total cost:', end - time_start)
-        if distance(path[1], (target_x, target_y)) > 10:
+        if len(path) <= 2:
+            point = path[0]
+        else:
             point = path[1]
+        if distance(point, (target_x, target_y)) > 10:
             motion = local_planner()
             motion.point_control(point, robot_id, color, receive)
             control = Send()
@@ -84,7 +87,7 @@ if __name__ == '__main__':
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
     i = 0
-    global_p = RRT_MERGE
+    global_p = APF
     local_p = XY_control
 
     RUN = run_while
