@@ -49,7 +49,7 @@ class RRT:
             Qrand[1] = np.random.randint(-225, 225)
 
         return Qrand
-
+    '''
     def CheckTwoPoints(self, point1, point2):
         if point1[0] == point2[0]: #两点间无斜率
             A = -1/point1[0]
@@ -68,6 +68,41 @@ class RRT:
             if dist <= self.dis_threshold:
                 return False
         return True
+    '''
+    def CheckTwoPoints(self, real_point1, real_point2):
+        point1 = real_point1.copy()
+        #point1[1] = -point1[1]
+        point2 = real_point2.copy()
+        #point2[1] = -point2[1]
+        for i in range(len(self.barrierInfo)):
+            center = [self.barrierInfo[i][0], self.barrierInfo[i][1]]
+            mul_1 = (center[0] - point1[0]) * (point2[0] - point1[0]) + (center[1] - point1[1]) * (
+                        point2[1] - point1[1])
+            mul_2 = (center[0] - point2[0]) * (point1[0] - point2[0]) + (center[1] - point2[1]) * (
+                        point1[1] - point2[1])
+            if mul_1 > 0 and mul_2 > 0:
+                mid = abs((center[0] - point1[0]) * (point2[1] - point1[1]) - (point2[0] - point1[0]) * (
+                            center[1] - point1[1]))
+                dist = mid/(np.sqrt(np.square(point2[0] - point1[0]) + np.square(point2[1] - point1[1])))
+            elif mul_1 == 0 and mul_2 != 0:
+                dist = np.sqrt(np.square(center[0] - point1[0]) + np.square(center[1] - point1[1]))
+            elif mul_1 != 0 and mul_2 == 0:
+                dist = np.sqrt(np.square(center[0] - point2[0]) + np.square(center[1] - point2[1]))
+            elif mul_1 == 0 and mul_2 == 0:
+                dist = 0
+            elif mul_1 < 0 and mul_2 > 0:
+                dist = np.sqrt(np.square(center[0] - point1[0]) + np.square(center[1] - point1[1]))
+            elif mul_2 < 0 and mul_1 > 0:
+                dist = np.sqrt(np.square(center[0] - point2[0]) + np.square(center[1] - point2[1]))
+            else:
+                dist = 0
+
+            if dist < self.dis_threshold:
+                return False
+
+        return True
+
+
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
     def Calculate_Distance(self, node1_x, node1_y, node2_x, node2_y):
@@ -130,6 +165,7 @@ class RRT:
         # import ipdb;ipdb.set_trace()
         while self.restree[current, 3] != -1:
             for index in range(current-1):
+                print(self.CheckTwoPoints(self.restree[index], self.restree[current]))
                 if self.CheckTwoPoints(self.restree[index], self.restree[current]):
                     self.restree[current, 3] = self.restree[index, 2].copy()
                     break

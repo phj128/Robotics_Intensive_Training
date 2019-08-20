@@ -38,7 +38,7 @@ class XY_control():
             # self.send.send_msg(robot_id, v_x[i + 1], v_y[i + 1], 0)
             # sleep(tn)
 
-            #闭环检测部分
+            # 闭环检测部分
             receive.get_info(color, robot_id)
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
