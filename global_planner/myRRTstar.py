@@ -8,7 +8,7 @@ from message.receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, receive, barrierId, step=10, inflateRadius=30, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, limitation=10000):
         self. lines = []
 
         self.step = step

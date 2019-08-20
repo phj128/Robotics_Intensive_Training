@@ -3,8 +3,8 @@ lbx
 """
 import math
 import random
-from matplotlib import pyplot as plt
-from matplotlib.patches import Circle
+# from matplotlib import pyplot as plt
+# from matplotlib.patches import Circle
 import time
 
 
@@ -70,18 +70,26 @@ class Vector2d():
         return 'Vector deltaX:{}, deltaY:{}, length:{}, direction:{}'.format(self.deltaX, self.deltaY, self.length,
                                                                              self.direction)
 
+def get_info(info, receive):
+    obstacles = []
+    for index in range(len(info)):
+        receive.get_info(info[index][0], info[index][1])
+        x, y = receive.robot_info['x'], receive.robot_info['y']
+        obstacles.append([x, y])
+    return obstacles
+
 
 class APF():
     """
     人工势场寻路
     """
 
-    def __init__(self, start: (), goal: (), obstacles: [], k_att: float, k_rep: float, rr: float,
-                 step_size: float, max_iters: int, goal_threshold: float):
+    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=10, k_rep=8, rr=150,
+                 step_size=10, max_iters=500, goal_threshold=10):
         """
-        :param start: 起点
-        :param goal: 终点
-        :param obstacles: 障碍物列表，每个元素为Vector2d对象
+        :param s_x, s_y: 起点
+        :param g_x, g_y: 终点
+        :param info: 障碍物列表，会转化为每个元素为Vector2d对象
         :param k_att: 引力系数
         :param k_rep: 斥力系数
         :param rr: 斥力作用范围
@@ -90,9 +98,10 @@ class APF():
         :param goal_threshold: 离目标点小于此值即认为到达目标点
         :param is_plot: 是否绘图
         """
-        self.start = Vector2d(start[0], start[1])
-        self.current_pos = Vector2d(start[0], start[1])
-        self.goal = Vector2d(goal[0], goal[1])
+        self.start = Vector2d(s_x, s_y)
+        self.current_pos = Vector2d(s_x, s_y)
+        self.goal = Vector2d(g_x, g_y)
+        obstacles = get_info(info, receive)
         self.obstacles = [Vector2d(OB[0], OB[1]) for OB in obstacles]
         self.k_att = k_att
         self.k_rep = k_rep
@@ -133,7 +142,7 @@ class APF():
                 rep +=(rep_1+rep_2)
         return rep
 
-    def path_plan(self):
+    def Generate_Path(self):
         """
         path plan
         :return:
@@ -146,6 +155,16 @@ class APF():
 
         if (self.current_pos - self.goal).length <= self.goal_threashold:
             self.is_path_plan_success = True
+            return self.path
+
+    def Get_Lines(self):
+        # get the final path, a list of points and a list of lines, from start to end
+        path_lines = []
+        for i in range(len(self.path) - 1):
+            x, y = self.path[i].copy()
+            x_, y_ = self.path[i + 1].copy()
+            path_lines.append([x, y, x_, y_])
+        return path_lines
 
 
 if __name__ == '__main__':
@@ -167,7 +186,7 @@ if __name__ == '__main__':
 
     # 调用人工势场
     apf = APF(start, goal, obs, k_att, k_rep, rr, step_size, max_iters, goal_threashold)
-    apf.path_plan()
+    apf.generate_path()
     if apf.is_path_plan_success:
         path = apf.path
         path_ = []

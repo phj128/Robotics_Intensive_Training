@@ -7,6 +7,7 @@ from global_planner.myRRTstar import RRT as RRT_STAR
 
 from local_planner.velocity_plan import P_control
 
+from ArtificialPotentialFieldMethod.myAPF import APF
 from time import sleep
 import math
 import numpy as np
@@ -19,18 +20,21 @@ if __name__ == '__main__':
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
 
-    global_planner = RRT_STAR
+    global_planner = APF
     local_planner = P_control
 
     time_start = time.time()
     receive = Receive()
     receive.get_info(color, robot_id)
-    my_rrt = global_planner(receive.robot_info['x'], receive.robot_info['y'], 200, 200, receive, barriers)
-    status, tree1, lines = my_rrt.Generate_Path()
-    path, path_lines = my_rrt.Get_Path()
+    global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], 200, 200, barriers, receive)
+    path = global_path.Generate_Path()
+    path_lines = global_path.Get_Lines()
+    # import ipdb;ipdb.set_trace()
+    # status, tree1, lines = global_path.Generate_Path()
+    # path, path_lines = global_path.Get_Path()
     time_end = time.time()
     print('path cost:', time_end - time_start)
-    debug_info = SendDebug('LINE', [lines, path_lines])
+    debug_info = SendDebug('LINE', [[], path_lines])
     debug_info.send()
     end = time.time()
     print('total cost:', end - time_start)
