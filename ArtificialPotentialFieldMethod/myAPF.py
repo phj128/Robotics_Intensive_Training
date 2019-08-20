@@ -84,7 +84,7 @@ class APF():
     人工势场寻路
     """
 
-    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=10, k_rep=8, rr=150,
+    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=0.2, k_rep=8, rr=300,
                  step_size=10, max_iters=500, goal_threshold=10):
         """
         :param s_x, s_y: 起点
@@ -155,16 +155,16 @@ class APF():
 
         if (self.current_pos - self.goal).length <= self.goal_threashold:
             self.is_path_plan_success = True
-            return self.path
+            return self.is_path_plan_success, [], []
 
-    def Get_Lines(self):
+    def Get_Path(self):
         # get the final path, a list of points and a list of lines, from start to end
         path_lines = []
         for i in range(len(self.path) - 1):
             x, y = self.path[i].copy()
             x_, y_ = self.path[i + 1].copy()
             path_lines.append([x, y, x_, y_])
-        return path_lines
+        return self.path, path_lines
 
 
 if __name__ == '__main__':

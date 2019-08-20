@@ -20,18 +20,15 @@ if __name__ == '__main__':
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
 
-    global_planner = APF
+    global_planner = RRT_STAR
     local_planner = P_control
 
     time_start = time.time()
     receive = Receive()
     receive.get_info(color, robot_id)
     global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], 200, 200, barriers, receive)
-    path = global_path.Generate_Path()
-    path_lines = global_path.Get_Lines()
-    # import ipdb;ipdb.set_trace()
-    # status, tree1, lines = global_path.Generate_Path()
-    # path, path_lines = global_path.Get_Path()
+    status, tree, lines = global_path.Generate_Path()
+    path, path_lines = global_path.Get_Path()
     time_end = time.time()
     print('path cost:', time_end - time_start)
     debug_info = SendDebug('LINE', [[], path_lines])

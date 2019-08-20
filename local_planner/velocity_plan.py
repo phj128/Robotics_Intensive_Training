@@ -26,6 +26,11 @@ class P_control():
                 while abs(radians_now) > 0.1:
                     orientation_need_now = -math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                     r_v = radians_now
+                    if abs(r_v) < 1:
+                        r_v /= abs(r_v)
+                    if abs(r_v) < 3:
+                        r_v /= abs(r_v)
+                        r_v *= 3
                     self.send.send_msg(robot_id, 0, 0, r_v)
                     s = time.time()
                     sleep(0.1)
@@ -34,7 +39,9 @@ class P_control():
                     now_ori = receive.robot_info['ori']
                     radians_now = now_ori - orientation_need_now
                 while error > 10 or step < 10:
-                    v_x = error
+                    v_x = error * 2
+                    if abs(v_x) > 50:
+                        v_x = 50
                     self.send.send_msg(robot_id, v_x, 0, 0)
                     sleep(0.1)
                     receive.get_info('blue', robot_id)
