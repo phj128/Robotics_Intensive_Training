@@ -49,7 +49,6 @@ class XY_control():
             while error > 10 or index < 5:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
-                dt = error / 150
                 vx_now = 150 * math.cos(theta)
                 vy_now = 150 * math.sin(theta)
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
@@ -62,3 +61,26 @@ class XY_control():
                 index += 1
                 # self.send.send_msg(robot_id, v_x[i+1], v_y[i+1], 0)
                 # sleep(T/100)
+
+
+    def point_control(self, point, robot_id, color, receive):
+        receive.get_info(color, robot_id)
+        now_x = receive.robot_info['x']
+        now_y = receive.robot_info['y']
+        now_ori = receive.robot_info['ori']
+        error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
+        print('error:', error)
+        index = 0
+        while error > 10 or index < 5:
+            orientation_need_now = math.atan2((point[1] - now_y), (point[0] - now_x))
+            theta = now_ori + orientation_need_now
+            vx_now = 150 * math.cos(theta)
+            vy_now = 150 * math.sin(theta)
+            self.send.send_msg(robot_id, vx_now, vy_now, 0)
+            sleep(0.01)
+            receive.get_info(color, robot_id)
+            now_x = receive.robot_info['x']
+            now_y = receive.robot_info['y']
+            now_ori = receive.robot_info['ori']
+            error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
+            index += 1
