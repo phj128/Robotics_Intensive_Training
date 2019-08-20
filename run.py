@@ -17,19 +17,14 @@ import numpy as npi
 import time
 
 
-if __name__ == '__main__':
-    color = 'blue'
-    robot_id = 0
-    barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
-                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
-
-    global_planner = RRT_MERGE
-    local_planner = XY_control
+def run(color, robot_id, barriers, target_x, target_y, global_p, local_p):
+    global_planner = global_p
+    local_planner = local_p
 
     time_start = time.time()
     receive = Receive()
     receive.get_info(color, robot_id)
-    global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], 200, 200, barriers, receive)
+    global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive)
     status, tree, lines = global_path.Generate_Path()
     path, path_lines = global_path.Get_Path()
     print('ori:', len(path))
@@ -46,3 +41,17 @@ if __name__ == '__main__':
     motion.path_control(path, robot_id, color, receive)
     control = Send()
     control.send_msg(robot_id, 0, 0, 0)
+
+
+if __name__ == '__main__':
+    color = 'blue'
+    robot_id = 0
+    barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
+    i = 0
+    while True:
+        if i % 2 == 0:
+            run(color, robot_id, barriers, 200, 200, RRT_MERGE, XY_control)
+        else:
+            run(color, robot_id, barriers, -200, -200, RRT_MERGE, XY_control)
+        i += 1
