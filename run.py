@@ -4,6 +4,8 @@ from message.receive import Receive
 
 from global_planner.myRRT_static import RRT
 from global_planner.myRRTstar import RRT as RRT_STAR
+from global_planner.myRRTmerge import RRT as RRT_MERGE
+
 from ArtificialPotentialFieldMethod.myAPF import APF
 
 from local_planner.p_control import P_control
@@ -21,7 +23,7 @@ if __name__ == '__main__':
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
 
-    global_planner = RRT_STAR
+    global_planner = RRT_MERGE
     local_planner = XY_control
 
     time_start = time.time()
@@ -30,6 +32,9 @@ if __name__ == '__main__':
     global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], 200, 200, barriers, receive)
     status, tree, lines = global_path.Generate_Path()
     path, path_lines = global_path.Get_Path()
+    print('ori:', len(path))
+    path, path_lines = global_path.merge()
+    print('nodes:', len(path))
     time_end = time.time()
     print('path cost:', time_end - time_start)
     debug_info = SendDebug('LINE', [lines, path_lines])

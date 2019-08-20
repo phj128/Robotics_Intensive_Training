@@ -8,7 +8,7 @@ from message.receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=20, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=40, limitation=10000):
         self. lines = []
 
         self.step = step
@@ -125,30 +125,32 @@ class RRT:
             Qnext[4] = maxvalue
             Qnext[3] = self.tree[index][2]  # 把最近点的节点编号记为Qnext的父节点，即改变父亲
 
-    def opt_rrt(self):
-        current = len(self.restree)-1
-        while self.restree[current][3] != -1:
+    def merge(self):
+        current = self.restree.shape[0] - 1
+        # import ipdb;ipdb.set_trace()
+        while self.restree[current, 3] != -1:
             for index in range(current-1):
                 if self.CheckTwoPoints(self.restree[index], self.restree[current]):
-                    self.restree[current][3] = self.restree[index][2]
+                    self.restree[current, 3] = self.restree[index, 2].copy()
                     break
-            current = self.restree[current][3]
+            current = int(self.restree[current, 3])
+        # import ipdb; ipdb.set_trace()
         path = []
+        path_lines = []
         point = self.restree[-1]
-        parent_x, parent_y, _, parent_id, _ = point
+        parent_x, parent_y, _, parent_id = point
         path.append([parent_x, parent_y])
         for i in range(len(self.restree)):
+            parent_id = int(parent_id)
             if parent_id == -1:
                 break
             point = self.restree[parent_id]
-            x, y, _, parent_id, _ = point
+            x, y, _, parent_id = point
             path.append([x, y])
+            path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
             parent_y = y
-        path = path[::-1]
-        return path
-
-
+        return path[::-1], path_lines[::-1]
 
 
     # function: update barrier status
@@ -210,9 +212,11 @@ class RRT:
             path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
             parent_y = y
-
-        self.restree=path[::-1]
-        return path[::-1], path_lines[::-1]
+        path = path[::-1]
+        id = np.arange(0, len(path))
+        p_id = np.arange(-1, len(path)-1)
+        self.restree = np.concatenate((np.array(path), id[:, np.newaxis], p_id[:, np.newaxis]), axis=1)
+        return path, path_lines[::-1]
 
 if __name__ == '__main__':
     time_start = time.time()
