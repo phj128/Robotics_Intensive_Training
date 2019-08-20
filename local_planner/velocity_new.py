@@ -65,6 +65,26 @@ for i in range(len(tree)):
     #直线运动阶段
     send.send_msg(robot_id, v_x[i + 1], v_y[i + 1], 0)
     sleep(tn)
+    #闭环检测部分
+    receive.get_info('blue', robot_id)
+    now_x = receive.robot_info['x']
+    now_y = receive.robot_info['y']
+    now_ori = receive.robot_info['ori']
+    error = np.sqrt(np.square(now_x - tree[i + 1][0]) + np.square(now_y - tree[i + 1][1]))
+    print(error)
+    if error > 10:
+        x_dist = tree[i+1][0] - now_x
+        y_dist = tree[i+1][1] - now_y
+        vx_now = (v_x[i+1] * abs(x_dist/v_x[i+1])) / (x_dist/v_x[i+1])
+        vy_now = (v_y[i+1] * abs(y_dist/v_y[i+1])) / (y_dist/v_y[i+1])
+        tx_now = abs(x_dist/vx_now)
+        ty_now = abs(y_dist/vy_now)
+        send.send_msg(robot_id, vx_now, 0, 0)
+        sleep(tx_now-0.08)
+        send.send_msg(robot_id, 0, vy_now, 0)
+        sleep(ty_now-0.08)
+        send.send_msg(robot_id, v_x[i+1], v_y[i+1], 0)
+        sleep(0.08)
 
 
 '''
