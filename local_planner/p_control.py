@@ -35,7 +35,7 @@ class P_control():
                     s = time.time()
                     sleep(0.1)
                     e = time.time()
-                    receive.get_info('blue', robot_id)
+                    receive.get_info(color, robot_id)
                     now_ori = receive.robot_info['ori']
                     radians_now = now_ori - orientation_need_now
                 while error > 10 or step < 10:
@@ -44,7 +44,7 @@ class P_control():
                         v_x = 50
                     self.send.send_msg(robot_id, v_x, 0, 0)
                     sleep(0.1)
-                    receive.get_info('blue', robot_id)
+                    receive.get_info(color, robot_id)
                     now_x = receive.robot_info['x']
                     now_y = receive.robot_info['y']
                     error = np.sqrt(np.square(now_x - path[i + 1][0]) + np.square(now_y - path[i + 1][1]))
