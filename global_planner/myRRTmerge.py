@@ -169,7 +169,7 @@ class RRT:
                 if self.CheckTwoPoints(self.restree[index], self.restree[current]):
                     self.restree[current, 3] = self.restree[index, 2].copy()
                     break
-            current = int(self.restree[current, 3])
+            current = int(self.restree[current, 3].copy())
         # import ipdb; ipdb.set_trace()
         path = []
         path_lines = []

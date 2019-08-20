@@ -30,8 +30,8 @@ def run(color, robot_id, barriers, target_x, target_y, global_p, local_p):
     status, tree, lines = global_path.Generate_Path()
     path, path_lines = global_path.Get_Path()
     print('ori:', len(path))
-    path, path_lines = global_path.merge()
-    print('nodes:', len(path))
+    # path, path_lines = global_path.merge()
+    # print('nodes:', len(path))
     time_end = time.time()
     print('path cost:', time_end - time_start)
     debug_info = SendDebug('LINE', [lines, path_lines])
@@ -53,13 +53,12 @@ def run_while(color, robot_id, barriers, target_x, target_y,  global_p, local_p)
     while True:
         time_start = time.time()
         receive.get_info(color, robot_id)
-        global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers,
-                                     receive)
+        global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
         print('ori:', len(path))
-        path, path_lines = global_path.merge()
-        print('nodes:', len(path))
+        # path, path_lines = global_path.merge()
+        # print('nodes:', len(path))
         time_end = time.time()
         print('path cost:', time_end - time_start)
         debug_info = SendDebug('LINE', [lines, path_lines])
@@ -85,9 +84,13 @@ if __name__ == '__main__':
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
     i = 0
+    global_p = RRT_MERGE
+    local_p = XY_control
+
+    RUN = run_while
     while True:
         if i % 2 == 0:
-            run_while(color, robot_id, barriers, 200, 200, RRT_MERGE, XY_control)
+            RUN(color, robot_id, barriers, 200, 200, global_p, local_p)
         else:
-            run_while(color, robot_id, barriers, -200, -200, RRT_MERGE, XY_control)
+            RUN(color, robot_id, barriers, -200, -200, global_p, local_p)
         i += 1

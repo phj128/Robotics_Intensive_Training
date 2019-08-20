@@ -5,6 +5,7 @@ import math
 import random
 # from matplotlib import pyplot as plt
 # from matplotlib.patches import Circle
+import numpy as np
 import time
 
 
@@ -155,6 +156,7 @@ class APF():
         path plan
         :return:
         """
+        self.is_path_plan_success = False
         while (self.iters < self.max_iters and (self.current_pos - self.goal).length > self.goal_threashold):
             f_vec = self.attractive() + self.repulsion()
             self.current_pos += Vector2d(f_vec.direction[0], f_vec.direction[1]) * self.step_size
@@ -172,7 +174,7 @@ class APF():
             x, y = self.path[i].copy()
             x_, y_ = self.path[i + 1].copy()
             path_lines.append([x, y, x_, y_])
-        return self.path, path_lines
+        return np.array(self.path), path_lines
 
 
 if __name__ == '__main__':
