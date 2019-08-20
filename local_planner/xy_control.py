@@ -70,9 +70,11 @@ class XY_control():
         error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
         print('error:', error)
         index = 0
-        while error > 10 or index < 5:
+        while error > 10:
             orientation_need_now = math.atan2((point[1] - now_y), (point[0] - now_x))
             theta = now_ori + orientation_need_now
+            if error < 20:
+                v = 100
             vx_now = v * math.cos(theta)
             vy_now = v * math.sin(theta)
             self.send.send_msg(robot_id, vx_now, vy_now, 0)

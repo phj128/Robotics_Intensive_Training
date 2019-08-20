@@ -210,7 +210,6 @@ class RRT:
             path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
             parent_y = y
-        # import ipdb;ipdb.set_trace()
         return path[::-1], path_lines[::-1]
 
 

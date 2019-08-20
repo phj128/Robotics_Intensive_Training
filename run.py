@@ -69,8 +69,10 @@ def run_while(color, robot_id, barriers, target_x, target_y,  global_p, local_p)
             point = path[0]
         else:
             point = path[1]
+        receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
+        # import ipdb;ipdb.set_trace()
         if distance((now_x, now_y), (target_x, target_y)) > 10:
             motion = local_planner()
             motion.point_control(point, robot_id, color, receive)
