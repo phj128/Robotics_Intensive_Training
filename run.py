@@ -5,7 +5,7 @@ from message.receive import Receive
 from global_planner.myRRT_static import RRT
 from global_planner.myRRTstar import RRT as RRT_STAR
 
-from local_planner.velocity_plan import P_control
+from local_planner.p_control import P_control
 
 from ArtificialPotentialFieldMethod.myAPF import APF
 from time import sleep
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     path, path_lines = global_path.Get_Path()
     time_end = time.time()
     print('path cost:', time_end - time_start)
-    debug_info = SendDebug('LINE', [[], path_lines])
+    debug_info = SendDebug('LINE', [lines, path_lines])
     debug_info.send()
     end = time.time()
     print('total cost:', end - time_start)
