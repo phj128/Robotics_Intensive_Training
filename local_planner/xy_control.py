@@ -12,7 +12,7 @@ class XY_control():
         self.debug = SendDebug()
 
 
-    def path_control(self, path, robot_id, color, receive):
+    def path_control(self, path, robot_id, color, receive, v=150):
         #一开始车头朝向右边，x正方向，所以v_x对应x_path, v_y对应y_path
         T = 0.05
         ta = T / 10  # 固定加速时间
@@ -49,10 +49,9 @@ class XY_control():
             while error > 10 or index < 5:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
-                vx_now = 150 * math.cos(theta)
-                vy_now = 150 * math.sin(theta)
+                vx_now = v * math.cos(theta)
+                vy_now = v * math.sin(theta)
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
-                sleep(0.01)
                 receive.get_info(color, robot_id)
                 now_x = receive.robot_info['x']
                 now_y = receive.robot_info['y']
@@ -63,7 +62,7 @@ class XY_control():
                 # sleep(T/100)
 
 
-    def point_control(self, point, robot_id, color, receive):
+    def point_control(self, point, robot_id, color, receive, v=150):
         receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
@@ -74,10 +73,9 @@ class XY_control():
         while error > 10 or index < 5:
             orientation_need_now = math.atan2((point[1] - now_y), (point[0] - now_x))
             theta = now_ori + orientation_need_now
-            vx_now = 150 * math.cos(theta)
-            vy_now = 150 * math.sin(theta)
+            vx_now = v * math.cos(theta)
+            vy_now = v * math.sin(theta)
             self.send.send_msg(robot_id, vx_now, vy_now, 0)
-            sleep(0.01)
             receive.get_info(color, robot_id)
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
