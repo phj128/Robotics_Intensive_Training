@@ -49,11 +49,54 @@ def interpolate_point(point1, point2, d=30):
     return np.concatenate((np.array(point1)[np.newaxis, :], points, np.array(point2)[np.newaxis, :]), axis=0)
 
 
+def check_path_l(receive, point, path, barrierId, color='blue', id=0):
+    # import ipdb;ipdb.set_trace()
+    dis_threshold = 20
+    infos = receive.get_infos(color, id)
+    point1 = point.copy()
+    point2 = path[0].copy()
+    N = len(path)
+    for i in range(N):
+        for index in range(len(infos)):
+            center = infos[index]
+            dx_1 = center[0] - point1[0]
+            dy_1 = center[1] - point1[1]
+            dx_2 = center[0] - point2[0]
+            dy_2 = center[1] - point2[1]
+            dx_0 = point1[0] - point2[0]
+            dy_0 = point1[1] - point2[1]
+            mul_1 = (dx_1) * (-dx_0) + (dy_1) * (-dy_0)
+            mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
+            if mul_1 > 0 and mul_2 > 0:
+                mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
+                dist = mid / np.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+            elif mul_1 == 0 and mul_2 != 0:
+                dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            elif mul_1 != 0 and mul_2 == 0:
+                dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            elif mul_1 == 0 and mul_2 == 0:
+                dist = 0
+            elif mul_1 < 0 and mul_2 > 0:
+                dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            elif mul_2 < 0 and mul_1 > 0:
+                dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            else:
+                dist = 0
+
+            if dist < dis_threshold:
+                return False
+        point1 = path[i].copy()
+        if i == N-1:
+            return True
+        point2 = path[i+1].copy()
+    return True
+
+
 def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0):
     # import ipdb;ipdb.set_trace()
     dis_threshold = 20
     infos = receive.get_infos(color, id)
-    for index in range(len(barrierId)):
+    for index in range(len(infos)):
         center = infos[index]
         dx_1 = center[0] - point1[0]
         dy_1 = center[1] - point1[1]

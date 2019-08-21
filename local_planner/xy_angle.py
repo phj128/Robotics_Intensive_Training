@@ -4,7 +4,7 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path, check_two_points_l
+from utils import distance, interpolate_path, check_two_points_l, check_path_l
 
 
 PI = 3.1415926
@@ -138,7 +138,7 @@ class XY_angle():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_two_points_l(receive, point_now, path[i+1], info)
+                    status = check_path_l(receive, point_now, path[i+1:], info)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)
