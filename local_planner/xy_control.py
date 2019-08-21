@@ -4,13 +4,14 @@ from time import sleep
 import math
 import numpy as np
 import time
+from utils import distance, interpolate_path
 
 
 class XY_control():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 150
+        self.v = 300
 
 
     def path_control(self, path, robot_id, color, receive):
@@ -22,7 +23,7 @@ class XY_control():
         # y_path = np.array(path)[:, 1]
         # v_x = np.concatenate(([0.0], (x_path[1:] - x_path[:-1]) / T, [0.0]))
         # v_y = np.concatenate(([0.0], (y_path[1:] - y_path[:-1]) / T, [0.0]))
-
+        # path = interpolate_path(path)
         #得到匀速运动段的速度
         for i in range(len(path)-1):
             # #加速阶段
@@ -46,8 +47,7 @@ class XY_control():
             now_ori = receive.robot_info['ori']
             error = np.sqrt(np.square(now_x - path[i + 1][0]) + np.square(now_y - path[i + 1][1]))
             print('error:', error)
-            index = 0
-            while error > 10 or index < 5:
+            while error > 10:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
                 vx_now = self.v * math.cos(theta)
@@ -58,9 +58,9 @@ class XY_control():
                 now_y = receive.robot_info['y']
                 now_ori = receive.robot_info['ori']
                 error = np.sqrt(np.square(now_x - path[i + 1][0]) + np.square(now_y - path[i + 1][1]))
-                index += 1
                 # self.send.send_msg(robot_id, v_x[i+1], v_y[i+1], 0)
                 # sleep(T/100)
+            i += 1
 
 
     def point_control(self, point, robot_id, color, receive):

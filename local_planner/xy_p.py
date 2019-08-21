@@ -4,9 +4,10 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, min_dis_index, interpolate_path
+from utils import distance, interpolate_path
 
-class XY_near():
+
+class XY_p():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
@@ -22,13 +23,9 @@ class XY_near():
         # y_path = np.array(path)[:, 1]
         # v_x = np.concatenate(([0.0], (x_path[1:] - x_path[:-1]) / T, [0.0]))
         # v_y = np.concatenate(([0.0], (y_path[1:] - y_path[:-1]) / T, [0.0]))
-
-
+        # path = interpolate_path(path)
         #得到匀速运动段的速度
-        path = interpolate_path(path)
-        num = len(path)
-        i = 1
-        while True:
+        for i in range(len(path)-1):
             # #加速阶段
             # self.send.send_msg(robot_id, 0.75 * v_x[i] + 0.25 * v_x[i + 1], 0.75 * v_y[i] + 0.25 * v_y[i + 1], 0)
             # sleep(ta/4)
@@ -47,36 +44,30 @@ class XY_near():
             receive.get_info(color, robot_id)
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
+            point = [now_x, now_y]
             now_ori = receive.robot_info['ori']
-            point = np.array([now_x, now_y])
-            i = min_dis_index(point, path[i:], i) - 1
-            error = distance(point, path[i + 1])
-            # import ipdb;ipdb.set_trace()
+            error = distance(point, path[i+1])
+            error_max = distance(path[i], path[i+1])
             print('error:', error)
             while error > 10:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
-                vx_now = self.v * math.cos(theta)
-                vy_now = self.v * math.sin(theta)
+                p = error/error_max
+                if p < 0.5:
+                    p = 0.5
+                vx_now = self.v * math.cos(theta) * p
+                vy_now = self.v * math.sin(theta) * p
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
                 receive.get_info(color, robot_id)
                 now_x = receive.robot_info['x']
                 now_y = receive.robot_info['y']
                 now_ori = receive.robot_info['ori']
-                point = np.array([now_x, now_y])
-                error = distance(point, path[i + 1])
-                print('error:', error)
-                i = min_dis_index(point, path[i:], i)
-                if distance(point, path[-1]) < 10:
-                    return
-                if i >= num - 1:
-                    i = num - 2
-
+                point = [now_x, now_y]
+                error = distance(point, path[i+1])
+                print(error)
                 # self.send.send_msg(robot_id, v_x[i+1], v_y[i+1], 0)
                 # sleep(T/100)
-            # i += 1
-            if distance(point, path[-1]) < 10:
-                return
+
 
 
     def point_control(self, point, robot_id, color, receive):
