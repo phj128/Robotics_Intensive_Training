@@ -122,6 +122,7 @@ class XY_p():
                 vx_now = self.v * math.cos(theta) * p
                 vy_now = self.v * math.sin(theta) * p
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
+                receive.get_info(color, robot_id)
                 now_x = receive.robot_info['x']
                 now_y = receive.robot_info['y']
                 now_ori = receive.robot_info['ori']
@@ -130,7 +131,7 @@ class XY_p():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_two_points_l(receive, point_now, path[i+1], info)
+                    status = check_two_points(receive, point_now, path[i+1], info)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)

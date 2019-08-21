@@ -94,7 +94,6 @@ def check_two_points(receive, point1, point2, barrierId):
     select_points = interpolate_point(point1, point2)
     delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
     dis = np.sqrt(np.sum(delta * delta, axis=2))
-    import ipdb;ipdb.set_trace()
     if (dis < dis_threshold).sum():
         return False
     else:
