@@ -91,7 +91,9 @@ if __name__ == '__main__':
     color = 'blue'
     robot_id = 0
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
-                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]]
+                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
+                ['blue', 1], ['blue', 2], ['blue', 3], ['blue', 4],
+                ['blue', 5], ['blue', 6], ['blue', 7]]
 
     # barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
     #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]

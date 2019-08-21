@@ -12,6 +12,7 @@ class XY_p():
         self.send = Send()
         self.debug = SendDebug()
         self.v = 300
+        self.threshold = 0.5
 
 
     def path_control(self, path, robot_id, color, receive):
@@ -53,8 +54,8 @@ class XY_p():
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
                 p = error/error_max
-                if p < 0.5:
-                    p = 0.5
+                if p < self.threshold:
+                    p = self.threshold
                 vx_now = self.v * math.cos(theta) * p
                 vy_now = self.v * math.sin(theta) * p
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
