@@ -9,8 +9,8 @@ from message.receive import Receive
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=30, limitation=10000):
-        self. lines = []
-
+        self.lines = []
+        self.draw = False
         self.step = step
         self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes
@@ -152,6 +152,15 @@ class RRT:
             # draw a line
             line = [Qnear[0], Qnear[1], Qnext[0], Qnext[1]]
             self.lines.append(line)
+            # import ipdb;ipdb.set_trace()
+            if self.draw:
+                if len(self.lines) == 1:
+                    send_tree = SendDebug('LINE', self.lines)
+                    send_tree.send()
+                else:
+                    # import ipdb;ipdb.set_trace()
+                    send_tree = SendDebug('LINE', [self.lines, []])
+                    send_tree.send()
 
             if self.CheckGoal(Qnext) is True:
                 self.goalNode[2] = len(self.tree)
@@ -244,6 +253,7 @@ class RRT:
         distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.goalNode[0], self.goalNode[1])
         if distance < self.inflateRadius:
             return True
+
 
     def Generate_Path(self):
         i = 0

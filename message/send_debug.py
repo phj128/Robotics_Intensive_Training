@@ -66,6 +66,7 @@ class SendDebug():
                 line = msg[i].line
                 line.FORWARD = True
                 line.BACK = False
+                # import ipdb;ipdb.set_trace()
                 line.start.x = self.lines[i][0]
                 line.start.y = self.lines[i][1]
                 line.end.x = self.lines[i][2]
