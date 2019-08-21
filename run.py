@@ -12,6 +12,7 @@ from local_planner.p_control import P_control
 from local_planner.xy_control import XY_control
 from local_planner.xy_near import XY_near
 from local_planner.xy_p import XY_p
+from local_planner.xy_angle import XY_angle
 
 from utils import distance
 
@@ -24,27 +25,29 @@ import time
 def run(color, robot_id, barriers, target_x, target_y, global_p, local_p):
     global_planner = global_p
     local_planner = local_p
-
-    time_start = time.time()
+    status = False
     receive = Receive()
-    receive.get_info(color, robot_id)
-    global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive)
-    status, tree, lines = global_path.Generate_Path()
-    path, path_lines = global_path.Get_Path()
-    print('ori:', len(path))
-    path, path_lines = global_path.merge()
-    print('nodes:', len(path))
-    time_end = time.time()
-    print('path cost:', time_end - time_start)
-    debug_info = SendDebug('LINE', [lines, path_lines])
-    debug_info.send()
-    end = time.time()
-    print('total cost:', end - time_start)
+    while not status:
+        time_start = time.time()
+        receive.get_info(color, robot_id)
+        global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive)
+        status, tree, lines = global_path.Generate_Path()
+        path, path_lines = global_path.Get_Path()
+        print('ori:', len(path))
+        path, path_lines = global_path.merge()
+        print('nodes:', len(path))
+        time_end = time.time()
+        print('path cost:', time_end - time_start)
+        debug_info = SendDebug('LINE', [lines, path_lines])
+        debug_info.send()
+        end = time.time()
+        print('total cost:', end - time_start)
 
-    motion = local_planner()
-    motion.path_control(path, robot_id, color, receive)
-    control = Send()
-    control.send_msg(robot_id, 0, 0, 0)
+        motion = local_planner()
+        motion.path_control(path, robot_id, color, receive)
+        control = Send()
+        control.send_msg(robot_id, 0, 0, 0)
+        print(status)
 
 
 def run_while(color, robot_id, barriers, target_x, target_y,  global_p, local_p):
@@ -100,7 +103,7 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_p
+    local_p = XY_angle
     RUN = run
 
     while True:

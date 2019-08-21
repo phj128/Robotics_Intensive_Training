@@ -8,9 +8,9 @@ from message.receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=30, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=30, limitation=500):
         self.lines = []
-        self.draw = False
+        self.draw = True
         self.step = step
         self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes
