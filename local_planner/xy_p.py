@@ -4,7 +4,7 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path
+from utils import distance, interpolate_path, check_two_points
 
 
 class XY_p():
@@ -97,3 +97,42 @@ class XY_p():
             now_ori = receive.robot_info['ori']
             error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
             index += 1
+
+
+    def line_control(self, path, robot_id, color, receive, info=None):
+        for i in range(len(path) - 1):
+            receive.get_info(color, robot_id)
+            now_x = receive.robot_info['x']
+            now_y = receive.robot_info['y']
+            now_ori = receive.robot_info['ori']
+            point_now = [now_x, now_y]
+            error = distance(point_now, path[i+1])
+            error_max = distance(point_now, path[i+1])
+            print('error:', error)
+            while error > 10:
+                orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
+                theta = now_ori + orientation_need_now
+                # p = error/error_max
+                # if p < self.threshold:
+                #     p = self.threshold
+                p = 1
+                if error < error_max * self.threshold:
+                    p = error / (self.threshold * error_max) * math.log(2)
+                    p = math.exp(p) - 1
+                vx_now = self.v * math.cos(theta) * p
+                vy_now = self.v * math.sin(theta) * p
+                self.send.send_msg(robot_id, vx_now, vy_now, 0)
+                now_x = receive.robot_info['x']
+                now_y = receive.robot_info['y']
+                now_ori = receive.robot_info['ori']
+                point_now = [now_x, now_y]
+                error = distance(point_now, path[i+1])
+                print('error:', error)
+                if info is not None:
+                    start = time.time()
+                    status = check_two_points(receive, point_now, path[i+1], info)
+                    end = time.time()
+                    print("time:", end - start)
+                    if not status:
+                        return False
+        return True

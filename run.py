@@ -106,19 +106,17 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
         debug_info.send()
         end = time.time()
         print('total cost:', end - time_start)
-        if len(path) < 2:
-            point = path[0]
-        else:
-            point = path[1]
         receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
         # import ipdb;ipdb.set_trace()
         if distance((now_x, now_y), (target_x, target_y)) > 10:
             motion = local_planner()
-            motion.line_control(point, robot_id, color, receive, barriers)
-            control = Send()
-            control.send_msg(robot_id, 0, 0, 0)
+            if motion.line_control(path, robot_id, color, receive, barriers):
+                control = Send()
+                control.send_msg(robot_id, 0, 0, 0)
+            else:
+                continue
         else:
             control = Send()
             control.send_msg(robot_id, 0, 0, 0)
