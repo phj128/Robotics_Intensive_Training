@@ -4,14 +4,14 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path, check_two_points
+from utils import distance, interpolate_path, check_two_points, check_two_points_l
 
 
 class XY_p():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 100
         self.threshold = 0.5
 
 
@@ -130,9 +130,11 @@ class XY_p():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_two_points(receive, point_now, path[i+1], info)
+                    status = check_two_points_l(receive, point_now, path[i+1], info)
+                    # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)
                     if not status:
+                        print(status)
                         return False
         return True

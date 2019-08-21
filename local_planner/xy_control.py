@@ -4,7 +4,7 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path, check_two_points
+from utils import distance, interpolate_path, check_two_points, check_two_points_l
 
 
 class XY_control():
@@ -110,6 +110,7 @@ class XY_control():
             if info is not None:
                 start = time.time()
                 status = check_two_points(receive, point_now, point, info)
+                # import ipdb;ipdb.set_trace()
                 end = time.time()
                 print("time:", end - start)
                 if not status:

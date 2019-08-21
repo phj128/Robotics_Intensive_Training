@@ -35,7 +35,22 @@ def interpolate_path(path, d=80):
     return np.concatenate(path_, axis=0)
 
 
-def check_two_points(receive, point1, point2, barrierId):
+def interpolate_point(point1, point2, d=30):
+    x1, y1 = point1
+    x2, y2 = point2
+    dis = distance(point1, point2)
+    if dis <= 2 * d:
+        return np.array([point1, point2])
+    else:
+        n = int(dis / d)
+        x_add = np.linspace(x1, x2, num=2 + n, endpoint=True)
+        y_add = np.linspace(y1, y2, num=2 + n, endpoint=True)
+        points = np.concatenate((x_add[:, np.newaxis], y_add[:, np.newaxis]), axis=1)
+    return np.concatenate((np.array(point1)[np.newaxis, :], points, np.array(point2)[np.newaxis, :]), axis=0)
+
+
+def check_two_points_l(receive, point1, point2, barrierId):
+    # import ipdb;ipdb.set_trace()
     dis_threshold = 30
     for index in range(len(barrierId)):
         receive.get_info(barrierId[index][0], barrierId[index][1])
@@ -67,5 +82,22 @@ def check_two_points(receive, point1, point2, barrierId):
         if dist < dis_threshold:
             return False
     return True
+
+
+def check_two_points(receive, point1, point2, barrierId):
+    dis_threshold = 30
+    info = []
+    for index in range(len(barrierId)):
+        receive.get_info(barrierId[index][0], barrierId[index][1])
+        info.append([receive.robot_info['x'], receive.robot_info['y']])
+    info = np.array(info)[:, :2]
+    select_points = interpolate_point(point1, point2)
+    delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
+    dis = np.sqrt(np.sum(delta * delta, axis=2))
+    import ipdb;ipdb.set_trace()
+    if (dis < dis_threshold).sum():
+        return False
+    else:
+        return True
 
 
