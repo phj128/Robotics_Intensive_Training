@@ -4,9 +4,9 @@ from time import sleep
 import math
 import numpy as np
 import time
+from utils import distance, min_dis_index
 
-
-class XY_control():
+class XY_near():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
@@ -24,7 +24,9 @@ class XY_control():
         # v_y = np.concatenate(([0.0], (y_path[1:] - y_path[:-1]) / T, [0.0]))
 
         #得到匀速运动段的速度
-        for i in range(len(path)-1):
+        num = len(path)
+        i = 1
+        while True:
             # #加速阶段
             # self.send.send_msg(robot_id, 0.75 * v_x[i] + 0.25 * v_x[i + 1], 0.75 * v_y[i] + 0.25 * v_y[i + 1], 0)
             # sleep(ta/4)
@@ -44,10 +46,12 @@ class XY_control():
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
             now_ori = receive.robot_info['ori']
-            error = np.sqrt(np.square(now_x - path[i + 1][0]) + np.square(now_y - path[i + 1][1]))
+            point = np.array([now_x, now_y])
+            i = min_dis_index(point, path[i:], i) - 1
+            error = distance(point, path[i + 1])
+            # import ipdb;ipdb.set_trace()
             print('error:', error)
-            index = 0
-            while error > 10 or index < 5:
+            while error > 10:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
                 vx_now = self.v * math.cos(theta)
@@ -57,10 +61,20 @@ class XY_control():
                 now_x = receive.robot_info['x']
                 now_y = receive.robot_info['y']
                 now_ori = receive.robot_info['ori']
-                error = np.sqrt(np.square(now_x - path[i + 1][0]) + np.square(now_y - path[i + 1][1]))
-                index += 1
+                point = np.array([now_x, now_y])
+                error = distance(point, path[i + 1])
+                print('error:', error)
+                i = min_dis_index(point, path[i:], i)
+                if distance(point, path[-1]) < 10:
+                    return
+                if i >= num - 1:
+                    i = num - 2
+
                 # self.send.send_msg(robot_id, v_x[i+1], v_y[i+1], 0)
                 # sleep(T/100)
+            # i += 1
+            if distance(point, path[-1]) < 10:
+                return
 
 
     def point_control(self, point, robot_id, color, receive):

@@ -10,6 +10,7 @@ from ArtificialPotentialFieldMethod.myAPF import APF
 
 from local_planner.p_control import P_control
 from local_planner.xy_control import XY_control
+from local_planner.xy_near import XY_near
 
 from utils import distance
 
@@ -96,8 +97,8 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_control
-    RUN = run_while
+    local_p = XY_near
+    RUN = run
 
     while True:
         if i % 2 == 0:
