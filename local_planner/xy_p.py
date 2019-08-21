@@ -53,9 +53,13 @@ class XY_p():
             while error > 10:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
-                p = error/error_max
-                if p < self.threshold:
-                    p = self.threshold
+                # p = error/error_max
+                # if p < self.threshold:
+                #     p = self.threshold
+                p = 1
+                if error < error_max * self.threshold:
+                    p = error / (self.threshold * error_max) * math.log(2)
+                    p = math.exp(p) - 1
                 vx_now = self.v * math.cos(theta) * p
                 vy_now = self.v * math.sin(theta) * p
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)
