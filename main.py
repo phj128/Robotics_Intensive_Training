@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_p
+    local_p = XY_angle
     RUN = run_line
 
     receive = Receive()

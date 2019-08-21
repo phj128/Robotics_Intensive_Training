@@ -4,7 +4,7 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path
+from utils import distance, interpolate_path, check_two_points_l
 
 
 PI = 3.1415926
@@ -14,7 +14,7 @@ class XY_angle():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 100
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -94,7 +94,8 @@ class XY_angle():
 
 
     def line_control(self, path, robot_id, color, receive, info=None):
-        for i in range(len(path) - 1):
+        N = len(path)
+        for i in range(N - 1):
             receive.get_info(color, robot_id)
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
