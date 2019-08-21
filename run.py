@@ -94,7 +94,7 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
     while True:
         time_start = time.time()
         receive.get_info(color, robot_id)
-        global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive)
+        global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers, receive, color=color, id=robot_id)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
         print('ori:', len(path))

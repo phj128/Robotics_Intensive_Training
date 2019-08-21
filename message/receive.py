@@ -12,7 +12,7 @@ class Receive():
 
     def convert_info(self, robot):
         self.robot_info['x'] = robot.x / 10
-        self.robot_info['y'] = -robot.y / 10
+        self.robot_info['y'] = robot.y / 10
         self.robot_info['ori'] = robot.orientation
         self.robot_info['vx'] = robot.vel_x
         self.robot_info['vy'] = robot.vel_y
@@ -30,13 +30,13 @@ class Receive():
     def change_info_yellow(self, robot, color, id):
         if color == 'yellow' and id == robot.robot_id:
             return
-        self.infos.append([robot.x/10, -robot.y/10])
+        self.infos.append([robot.x/10, robot.y/10])
 
 
     def change_info_blue(self, robot, color, id):
         if color == 'blue' and id == robot.robot_id:
             return
-        self.infos.append([robot.x/10, -robot.y/10])
+        self.infos.append([robot.x/10, robot.y/10])
 
 
     def get_info(self, color, id):

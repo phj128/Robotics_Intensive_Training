@@ -14,7 +14,7 @@ class XY_angle():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 100
+        self.v = 300
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -106,7 +106,7 @@ class XY_angle():
             print('error:', error)
             while error > 30:
                 orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
-                theta = now_ori + orientation_need_now
+                theta = now_ori - orientation_need_now
                 p = 1
                 if error < error_max * self.threshold:
                     if i < N - 2:

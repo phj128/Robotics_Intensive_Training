@@ -68,9 +68,9 @@ class SendDebug():
                 line.BACK = False
                 # import ipdb;ipdb.set_trace()
                 line.start.x = self.lines[i][0]
-                line.start.y = -self.lines[i][1]
+                line.start.y = self.lines[i][1]
                 line.end.x = self.lines[i][2]
-                line.end.y = -self.lines[i][3]
+                line.end.y = self.lines[i][3]
             elif self.debug_type == 'ARC':
                 msg.type = debug_info.Debug_Msg.ARC
                 arc = msg.arc
