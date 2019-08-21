@@ -4,14 +4,14 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path
+from utils import distance, interpolate_path, check_two_points
 
 
 class XY_control():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 100
+        self.v = 300
 
 
     def path_control(self, path, robot_id, color, receive):
@@ -63,19 +63,17 @@ class XY_control():
             i += 1
 
 
-    def point_control(self, point, robot_id, color, receive):
+    def point_control(self, point, robot_id, color, receive, info=None):
         receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
         now_ori = receive.robot_info['ori']
-        error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
+        point_now = [now_x, now_y]
+        error = distance(point_now, point)
         print('error:', error)
-        index = 0
         while error > 10:
             orientation_need_now = math.atan2((point[1] - now_y), (point[0] - now_x))
             theta = now_ori + orientation_need_now
-            if error < 20:
-                v = 100
             vx_now = self.v * math.cos(theta)
             vy_now = self.v * math.sin(theta)
             self.send.send_msg(robot_id, vx_now, vy_now, 0)
@@ -83,5 +81,39 @@ class XY_control():
             now_x = receive.robot_info['x']
             now_y = receive.robot_info['y']
             now_ori = receive.robot_info['ori']
-            error = np.sqrt(np.square(now_x - point[0]) + np.square(now_y - point[1]))
-            index += 1
+            point_now = [now_x, now_y]
+            error = distance(point_now, point)
+            print('error:', error)
+
+
+    def line_control(self, point, robot_id, color, receive, info=None):
+        receive.get_info(color, robot_id)
+        now_x = receive.robot_info['x']
+        now_y = receive.robot_info['y']
+        now_ori = receive.robot_info['ori']
+        point_now = [now_x, now_y]
+        error = distance(point_now, point)
+        print('error:', error)
+        while error > 10:
+            orientation_need_now = math.atan2((point[1] - now_y), (point[0] - now_x))
+            theta = now_ori + orientation_need_now
+            vx_now = self.v * math.cos(theta)
+            vy_now = self.v * math.sin(theta)
+            self.send.send_msg(robot_id, vx_now, vy_now, 0)
+            receive.get_info(color, robot_id)
+            now_x = receive.robot_info['x']
+            now_y = receive.robot_info['y']
+            now_ori = receive.robot_info['ori']
+            point_now = [now_x, now_y]
+            error = distance(point_now, point)
+            print('error:', error)
+            if info is not None:
+                start = time.time()
+                status = check_two_points(receive, point_now, point, info)
+                end = time.time()
+                print("time:", end - start)
+                if not status:
+                    return
+
+
+

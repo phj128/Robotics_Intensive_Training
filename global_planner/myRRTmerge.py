@@ -29,7 +29,7 @@ class RRT:
         self.goalNode[2] = self.limitation
         self.goalNode[3] = 0  # if find a path, update parent index
         self.goalNode[4] = 0
-        self.dis_threshold=dis_threshold
+        self.dis_threshold = dis_threshold
         self.barrierId = barrierId
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
         self.tree = []
