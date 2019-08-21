@@ -138,7 +138,7 @@ class XY_angle():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_path_l(receive, point_now, path[i+1:], info)
+                    status = check_path_l(receive, point_now, path[i+1:], info, color=color, id=robot_id)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)
