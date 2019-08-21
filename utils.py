@@ -49,12 +49,12 @@ def interpolate_point(point1, point2, d=30):
     return np.concatenate((np.array(point1)[np.newaxis, :], points, np.array(point2)[np.newaxis, :]), axis=0)
 
 
-def check_two_points_l(receive, point1, point2, barrierId):
+def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0):
     # import ipdb;ipdb.set_trace()
-    dis_threshold = 30
+    dis_threshold = 20
+    infos = receive.get_infos(color, id)
     for index in range(len(barrierId)):
-        receive.get_info(barrierId[index][0], barrierId[index][1])
-        center = [receive.robot_info['x'], receive.robot_info['y']]
+        center = infos[index]
         dx_1 = center[0] - point1[0]
         dy_1 = center[1] - point1[1]
         dx_2 = center[0] - point2[0]

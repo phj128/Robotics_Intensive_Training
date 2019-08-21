@@ -1,11 +1,8 @@
-
 import random
 import math
 import copy
 import time
-
-
-
+from message.receive import Receive
 
 class Node(object):
     """
@@ -23,16 +20,28 @@ class RRT(object):
     Class for RRT Planning
     """
 
-    def __init__(self, start, goal, obstacle_list, rand_area):
-        self.start = Node(start[0], start[1])
-        self.end = Node(goal[0], goal[1])
+    def __init__(self, s_x, s_y, g_x, g_y, barrierId, receive, rand_area=[300, 225]):
+        self.start = Node(s_x, s_y)
+        self.end = Node(g_x, g_y)
         self.chang_rand = rand_area[0]
         self.kuan_rand = rand_area[1]
-        self.expandDis = 10
+        self.expandDis = 30
         self.goalSampleRate = 0.3
-        self.maxIter = 10000
-        self.obstacleList = obstacle_list
+        self.maxIter = 500
+        self.barrierId = barrierId
+        self.receive = receive
+        self.color = 'blue'
+        self.robot_id = 0
+        self.obstacleList = self.Update_Barrier_Info()
         self.nodeList = [self.start]
+        self.size = 30
+
+
+    def Update_Barrier_Info(self):
+        # 只需要barrierTd不包含自身ID即可，？？？可能包含也可以
+        receive = self.receive
+        obstacle_list = self.receive.get_infos(self.color, self.robot_id)
+        return obstacle_list
 
     def random_node(self):
         """
@@ -58,8 +67,9 @@ class RRT(object):
 
     @staticmethod
     def collision_check(new_node, obstacle_list):
+        size = 30
         a = 1
-        for (ox, oy, size) in obstacle_list:
+        for (ox, oy) in obstacle_list:
             dx = ox - new_node.x
             dy = oy - new_node.y
             d = math.sqrt(dx * dx + dy * dy)
@@ -68,8 +78,9 @@ class RRT(object):
 
         return a  # safe
 
-    def planning(self):
-
+    def Generate_Path(self):
+        status = True
+        i = 0
         while True:
             # Random Sampling
             if random.random() > self.goalSampleRate:
@@ -104,18 +115,26 @@ class RRT(object):
             if d <= self.expandDis:
                 print("Goal!!")
                 break
+            i += 1
+            if i > self.maxIter:
+                status = False
+                break
 
-
-
+        lines = []
         path = [[self.end.x, self.end.y]]
-        last_index = len(self.nodeList) - 1
+        s_node = self.end
+        last_index = -1
         while self.nodeList[last_index].parent is not None:
             node = self.nodeList[last_index]
             path.append([node.x, node.y])
             last_index = node.parent
+            lines.append([node.x, node.y, s_node.x, s_node.y])
+            s_node = node
         path.append([self.start.x, self.start.y])
-
-        return path
+        lines.append([self.start.x, self.start.y, node.x, node.y])
+        if not status:
+            return status, path[::-1][:-1], lines[::-1][:-1]
+        return status, path[::-1], lines[::-1]
 
 
 if __name__ == '__main__':
@@ -128,10 +147,16 @@ if __name__ == '__main__':
         (1, 1, 2),
         (3, 5, 2),
         (9, 5, 2)]
+    obstacle_list = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
+                ['blue', 1], ['blue', 2], ['blue', 3], ['blue', 4],
+                ['blue', 5], ['blue', 6], ['blue', 7]]
+    receive = Receive()
     start = time.time()
     # Set Initial parameters
-    rrt = RRT(start=[0, 0], goal=[200, 200], rand_area=[300, 225], obstacle_list = obstacle_list)
-    path = rrt.planning()
+    rrt = RRT(0,0, 200,200, rand_area=[300, 225], barrierId = obstacle_list, receive=receive)
+    status, path, lines = rrt.Generate_Path()
+    # import ipdb;ipdb.set_trace()
     end = time.time()
     print("cost", end - start)
     print(path)

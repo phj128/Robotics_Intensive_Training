@@ -17,6 +17,7 @@ from local_planner.xy_angle import XY_angle
 from run import run
 from run import run_while
 from run import run_line
+from run import run_p
 import time
 
 if __name__ == '__main__':

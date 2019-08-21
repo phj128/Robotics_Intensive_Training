@@ -8,7 +8,9 @@ from message.receive import Receive
 
 class RRT:
     # get the start node and the final node
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, step=10, inflateRadius=30, dis_threshold=30, limitation=500):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, color='blue', id=0, step=10, inflateRadius=20, dis_threshold=30, limitation=500):
+        self.color = color
+        self.robot_id = id
         self.lines = []
         self.draw = False
         self.step = step
@@ -41,7 +43,7 @@ class RRT:
     # function: generate a random node in the map
     def Generate_Qrand(self):
         Qrand = [0, 0]
-        if random.randint(0, 5) > 2:
+        if random.randint(0, 5) > 3:
             Qrand[0] = self.goalNode[0]
             Qrand[1] = self.goalNode[1]
         else:
@@ -228,11 +230,11 @@ class RRT:
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
         receive = self.receive
-
-        for index in range(len(self.barrierId)):
-            receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
-            self.barrierInfo[index][0] = receive.robot_info['x']
-            self.barrierInfo[index][1] = receive.robot_info['y']
+        self.barrierInfo = receive.get_infos(self.color, self.robot_id)
+        # for index in range(len(self.barrierId)):
+        #     receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
+        #     self.barrierInfo[index][0] = receive.robot_info['x']
+        #     self.barrierInfo[index][1] = receive.robot_info['y']
 
 
     # function: check new node status
