@@ -11,7 +11,7 @@ class XY_p():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 100
+        self.v = 280
         self.threshold = 0.5
 
 
@@ -109,7 +109,7 @@ class XY_p():
             error = distance(point_now, path[i+1])
             error_max = distance(point_now, path[i+1])
             print('error:', error)
-            while error > 10:
+            while error > 30:
                 orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
                 theta = now_ori + orientation_need_now
                 # p = error/error_max
@@ -131,7 +131,7 @@ class XY_p():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_two_points(receive, point_now, path[i+1], info)
+                    status = check_two_points_l(receive, point_now, path[i+1], info)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)

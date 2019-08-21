@@ -110,7 +110,7 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
         # import ipdb;ipdb.set_trace()
-        if distance((now_x, now_y), (target_x, target_y)) > 20:
+        if distance((now_x, now_y), (target_x, target_y)) > 30:
             motion = local_planner()
             if not motion.line_control(path, robot_id, color, receive, barriers):
                 control = Send()
