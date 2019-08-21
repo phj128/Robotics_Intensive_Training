@@ -15,9 +15,9 @@ class XY_angle():
         self.send = Send()
         self.debug = SendDebug()
         self.v = 300
-        self.threshold = 0.5
+        self.threshold = 0.4
         self.time_turn = 0.3
-        self.angle_threshold = 3 * PI / 4
+        self.angle_threshold = 5 * PI / 6
 
 
     def path_control(self, path, robot_id, color, receive):

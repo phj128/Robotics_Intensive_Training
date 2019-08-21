@@ -11,7 +11,7 @@ class XY_control():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 100
 
 
     def path_control(self, path, robot_id, color, receive):
