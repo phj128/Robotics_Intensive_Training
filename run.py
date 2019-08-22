@@ -99,7 +99,7 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
         print('ori:', len(path))
-        path, path_lines = global_path.merge()
+        #path, path_lines = global_path.merge()
         print('nodes:', len(path))
         time_end = time.time()
         print('path cost:', time_end - time_start)

@@ -24,7 +24,9 @@ class AStar:
             self.g = g
             self.h = (abs(endPoint.x - point.x) + abs(endPoint.y - point.y)) * 10
 
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 1, offset_y = 1, step=10, inflateRadius=30, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=30, limitation=10000):
+        self.color = color
+        self.robot_id = id
         self.barrierId = barrierId
         self.barrierInfo = np.zeros((len(self.barrierId), 5))  # x, y, r, v_x, v_y
         self.receive = receive
@@ -32,7 +34,6 @@ class AStar:
 
         self.startpoint = Point(start_x, start_y)
         self.endpoint = Point(goal_x, goal_y)
-        #Node = self.Node(self.startpoint, self.endpoint)
         self.openlist = []
         self.closelist = []
         self.inflateRadius = inflateRadius
@@ -46,7 +47,7 @@ class AStar:
         '''
         currentNode = self.openlist[0]
         for node in self.openlist:
-            if node.g + node.h < currentNode.g + currentNode.h:
+            if (node.g + node.h) < (currentNode.g + currentNode.h):
                 currentNode = node
         return currentNode
 
@@ -64,7 +65,8 @@ class AStar:
 
     def endPointInCloseList(self):
         for node in self.closelist:
-            if node.point == self.endpoint:
+            dist =  np.sqrt(np.square(node.point.x-self.endpoint.x) + np.square(node.point.y - self.endpoint.y))
+            if dist < 40:
                 return node
         return None
 
@@ -76,11 +78,14 @@ class AStar:
         :param offsetY: 坐标偏移量
         :return:
         '''
+        print('searching')
         #越界检测
         if minF.point.x + offsetX <= -300 or minF.point.x + offsetX >= 300 or minF.point.y + offsetY <= -200 or minF.point.y + offsetY >=200:
+            print('越界')
             return
         #如果是障碍，则不管
         if self.checkIfObstacle(minF) == True:
+            print('遇到障碍')
             return
         #如果在closelist中，则忽略
         currentpoint = Point(minF.point.x + offsetX, minF.point.y + offsetY)
@@ -103,7 +108,7 @@ class AStar:
             currentNode.g = minF.g + step
             currentNode.father = minF
 
-    def Get_Path(self):
+    def Generate_Path(self):
         startnode = AStar.Node(self.startpoint, self.endpoint)
 
         self.openlist.append(startnode)
@@ -113,6 +118,7 @@ class AStar:
             #print(minF)
             self.closelist.append(minF)
             self.openlist.remove(minF)
+            #print(self.openlist)
             self.searchNear(minF, 0, -self.offsety)
             self.searchNear(minF, 0, self.offsety)
             self.searchNear(minF, -self.offsetx, 0)
@@ -132,18 +138,24 @@ class AStar:
                         pathlist.append([cPoint.point.x, cPoint.point.y])
                         cPoint = cPoint.father
                     else:
-                        return list(reversed(pathlist))
+                        pathlist.append([self.startpoint.x, self.startpoint.y])
+                        self.pathlist = list(reversed(pathlist))
+                        return True, self.pathlist, []
             if len(self.openlist) == 0:
-                return None
+                return False, [], []
+
+    def Get_Path(self):
+        return self.pathlist, []
 
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以
         receive = self.receive
+        self.barrierInfo = receive.get_infos(self.color, self.robot_id)
 
-        for index in range(len(self.barrierId)):
-            receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
-            self.barrierInfo[index][0] = receive.robot_info['x']
-            self.barrierInfo[index][1] = receive.robot_info['y']
+        # for index in range(len(self.barrierId)):
+        #     receive.get_info(self.barrierId[index][0],self.barrierId[index][1])
+        #     self.barrierInfo[index][0] = receive.robot_info['x']
+        #     self.barrierInfo[index][1] = receive.robot_info['y']
 
     def checkIfObstacle(self, node):
         for i in range(len(self.barrierInfo)):
@@ -158,7 +170,7 @@ if __name__ == "__main__":
                    ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7]], receive)
     s = time.time()
     print('now')
-    path = astar.Get_Path()
+    path = astar.Generate_Path()
     e = time.time()
     print('time cost:', e-s)
     print(path)
