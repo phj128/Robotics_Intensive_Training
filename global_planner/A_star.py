@@ -24,7 +24,7 @@ class AStar:
             self.g = g
             self.h = (abs(endPoint.x - point.x) + abs(endPoint.y - point.y)) * 10
 
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=30, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x=10, offset_y=10, color='blue', id=0, inflateRadius=30):
         self.width = 350
         self.height = 250
         self.color = color
@@ -39,6 +39,7 @@ class AStar:
         self.openlist = []
         self.closelist = []
         self.inflateRadius = inflateRadius
+        self.dis_threshold = inflateRadius
         self.offsetx = offset_x
         self.offsety = offset_y
 
@@ -160,9 +161,92 @@ class AStar:
     def Get_Path(self):
         try:
             self.pathlist = self.pathlist
+            path = self.pathlist.copy()
+            id = np.arange(0, len(path))
+            p_id = np.arange(-1, len(path) - 1)
+            self.restree = np.concatenate((np.array(path), id[:, np.newaxis], p_id[:, np.newaxis]), axis=1)
         except:
-            self.pathlist = []
+            return [], []
         return self.pathlist, []
+
+
+    def CheckTwoPoints(self, real_point1, real_point2):
+        point1 = real_point1.copy()
+        point2 = real_point2.copy()
+        for i in range(len(self.barrierInfo)):
+            center = [self.barrierInfo[i][0], self.barrierInfo[i][1]]
+            dx_1 = center[0] - point1[0]
+            dy_1 = center[1] - point1[1]
+            dx_2 = center[0] - point2[0]
+            dy_2 = center[1] - point2[1]
+            dx_0 = point1[0] - point2[0]
+            dy_0 = point1[1] - point2[1]
+            mul_1 = (dx_1) * (-dx_0) + (dy_1) * (-dy_0)
+            mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
+            if mul_1 > 0 and mul_2 > 0:
+                mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
+                dist = mid/(np.sqrt(np.square(-dx_0) + np.square(-dy_0)))
+            elif mul_1 == 0 and mul_2 != 0:
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+            elif mul_1 != 0 and mul_2 == 0:
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+            elif mul_1 == 0 and mul_2 == 0:
+                dist = 0
+            elif mul_1 < 0 and mul_2 > 0:
+                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+            elif mul_2 < 0 and mul_1 > 0:
+                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+            else:
+                dist = 0
+
+            if dist < self.dis_threshold:
+                return False
+
+        return True
+
+
+    def merge(self):
+        try:
+            self.pathlist = self.pathlist
+        except:
+            return [], []
+
+        current = self.restree.shape[0] - 1
+        # import ipdb;ipdb.set_trace()
+        while current > 0:
+            for index_ in range(current-1):
+                index = current - index_ - 2
+                # print(self.check_two_points(self.restree[index], self.restree[current]))
+                if not self.CheckTwoPoints(self.restree[index], self.restree[current]):
+                    self.restree[current, 3] = index + 1
+                    break
+                self.restree[current, 3] = index
+            current = int(self.restree[current, 3].copy())
+        # import ipdb; ipdb.set_trace()
+
+        # current = self.restree.shape[0] - 1
+        # while current > 0:
+        #     index = current - 1
+        #     print(self.CheckTwoPoints(self.restree[index], self.restree[current]))
+        #     current -= 1
+
+        path = []
+        path_lines = []
+        point = self.restree[-1]
+        parent_x, parent_y, _, parent_id = point
+        path.append([parent_x, parent_y])
+        for i in range(len(self.restree)):
+            parent_id = int(parent_id)
+            if parent_id == -1:
+                break
+            point = self.restree[parent_id]
+            x, y, _, parent_id = point
+            path.append([x, y])
+            path_lines.append([x, y, parent_x, parent_y])
+            parent_x = x
+            parent_y = y
+        return path[::-1], path_lines[::-1]
+
 
     def Update_Barrier_Info(self):
         #只需要barrierTd不包含自身ID即可，？？？可能包含也可以

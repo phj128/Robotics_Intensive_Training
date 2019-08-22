@@ -5,7 +5,7 @@ from message.receive import Receive
 from global_planner.myRRT_static import RRT
 from global_planner.myRRTstar import RRT as RRT_STAR
 from global_planner.myRRTmerge import RRT as RRT_MERGE
-from global_planner.A_star import AStar
+from global_planner.A_star import AStar as A_star
 
 from ArtificialPotentialFieldMethod.myAPF import APF
 
@@ -18,7 +18,7 @@ from local_planner.xy_angle import XY_angle
 from run import run
 from run import run_while
 from run import run_line
-from run import run_p
+from run import run_shrink
 import time
 
 if __name__ == '__main__':
@@ -33,9 +33,9 @@ if __name__ == '__main__':
     #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
-    global_p = AStar
+    global_p = A_star
     local_p = XY_angle
-    RUN = run_line
+    RUN = run_shrink
 
     receive = Receive()
 

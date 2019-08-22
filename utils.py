@@ -49,9 +49,8 @@ def interpolate_point(point1, point2, d=30):
     return np.concatenate((np.array(point1)[np.newaxis, :], points, np.array(point2)[np.newaxis, :]), axis=0)
 
 
-def check_path_l(receive, point, path, barrierId, color='blue', id=0):
+def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_threshold=20):
     # import ipdb;ipdb.set_trace()
-    dis_threshold = 20
     infos = receive.get_infos(color, id)
     point1 = point.copy()
     point2 = path[0].copy()
@@ -92,9 +91,8 @@ def check_path_l(receive, point, path, barrierId, color='blue', id=0):
     return True
 
 
-def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0):
+def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0, dis_threshold=20):
     # import ipdb;ipdb.set_trace()
-    dis_threshold = 20
     infos = receive.get_infos(color, id)
     for index in range(len(infos)):
         center = infos[index]
@@ -127,8 +125,7 @@ def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0):
     return True
 
 
-def check_two_points(receive, point1, point2, barrierId, color, id):
-    dis_threshold = 30
+def check_two_points(receive, point1, point2, barrierId, color, id, dis_threshold=30):
     info = receive.get_infos(color, id)
     select_points = interpolate_point(point1, point2)
     delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]

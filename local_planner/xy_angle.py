@@ -93,7 +93,7 @@ class XY_angle():
             index += 1
 
 
-    def line_control(self, path, robot_id, color, receive, info=None):
+    def line_control(self, path, robot_id, color, receive, info=None, threshold=30):
         N = len(path)
         for i in range(N - 1):
             receive.get_info(color, robot_id)
@@ -104,7 +104,7 @@ class XY_angle():
             error = distance(point_now, path[i+1])
             error_max = distance(point_now, path[i+1])
             print('error:', error)
-            while error > 30:
+            while error > threshold:
                 orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
                 theta = now_ori - orientation_need_now
                 p = 1
@@ -138,7 +138,7 @@ class XY_angle():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_path_l(receive, point_now, path[i+1:], info, color=color, id=robot_id)
+                    status = check_path_l(receive, point_now, path[i+1:], info, color=color, id=robot_id, dis_threshold=threshold)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)
