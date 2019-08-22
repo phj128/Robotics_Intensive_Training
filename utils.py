@@ -127,13 +127,9 @@ def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0):
     return True
 
 
-def check_two_points(receive, point1, point2, barrierId):
+def check_two_points(receive, point1, point2, barrierId, color, id):
     dis_threshold = 30
-    info = []
-    for index in range(len(barrierId)):
-        receive.get_info(barrierId[index][0], barrierId[index][1])
-        info.append([receive.robot_info['x'], receive.robot_info['y']])
-    info = np.array(info)[:, :2]
+    info = receive.get_infos(color, id)
     select_points = interpolate_point(point1, point2)
     delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
     dis = np.sqrt(np.sum(delta * delta, axis=2))
@@ -141,5 +137,8 @@ def check_two_points(receive, point1, point2, barrierId):
         return False
     else:
         return True
+
+
+
 
 

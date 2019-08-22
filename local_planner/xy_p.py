@@ -4,7 +4,7 @@ from time import sleep
 import math
 import numpy as np
 import time
-from utils import distance, interpolate_path, check_two_points, check_two_points_l
+from utils import distance, interpolate_path, check_two_points, check_two_points_l, check_path_l
 
 
 class XY_p():
@@ -111,7 +111,7 @@ class XY_p():
             print('error:', error)
             while error > 30:
                 orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
-                theta = now_ori + orientation_need_now
+                theta = now_ori - orientation_need_now
                 # p = error/error_max
                 # if p < self.threshold:
                 #     p = self.threshold
@@ -131,11 +131,10 @@ class XY_p():
                 print('error:', error)
                 if info is not None:
                     start = time.time()
-                    status = check_two_points_l(receive, point_now, path[i+1], info)
+                    status = check_path_l(receive, point_now, path[i+1:], info)
                     # import ipdb;ipdb.set_trace()
                     end = time.time()
                     print("time:", end - start)
                     if not status:
-                        print(status)
                         return False
         return True

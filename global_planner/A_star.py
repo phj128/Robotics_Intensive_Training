@@ -24,7 +24,7 @@ class AStar:
             self.g = g
             self.h = (abs(endPoint.x - point.x) + abs(endPoint.y - point.y)) * 10
 
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=30, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=10, limitation=10000):
         self.color = color
         self.robot_id = id
         self.barrierId = barrierId
@@ -133,14 +133,25 @@ class AStar:
                 print('find!')
                 cPoint = point
                 pathlist = []
+                lines = []
+                ppoint = cPoint.father
+                try:
+                    lines.append([cPoint.point.x, cPoint.point.y, ppoint.point.x, ppoint.point.y])
+                except:
+                    lines.append([cPoint.point.x, cPoint.point.y, self.startpoint.x, self.startpoint.y])
                 while True:
                     if cPoint.father:
                         pathlist.append([cPoint.point.x, cPoint.point.y])
+                        ppoint = cPoint
                         cPoint = cPoint.father
+                        try:
+                            lines.append([cPoint.point.x, cPoint.point.y, ppoint.point.x, ppoint.point.y])
+                        except:
+                            cPoint = cPoint
                     else:
                         pathlist.append([self.startpoint.x, self.startpoint.y])
                         self.pathlist = list(reversed(pathlist))
-                        return True, self.pathlist, []
+                        return True, self.pathlist, lines
             if len(self.openlist) == 0:
                 return False, [], []
 

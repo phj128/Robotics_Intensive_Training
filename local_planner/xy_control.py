@@ -49,7 +49,7 @@ class XY_control():
             print('error:', error)
             while error > 10:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
-                theta = now_ori + orientation_need_now
+                theta = now_ori - orientation_need_now
                 vx_now = self.v * math.cos(theta)
                 vy_now = self.v * math.sin(theta)
                 self.send.send_msg(robot_id, vx_now, vy_now, 0)

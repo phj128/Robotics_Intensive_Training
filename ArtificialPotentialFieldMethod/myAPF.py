@@ -71,12 +71,9 @@ class Vector2d():
         return 'Vector deltaX:{}, deltaY:{}, length:{}, direction:{}'.format(self.deltaX, self.deltaY, self.length,
                                                                              self.direction)
 
-def get_info(info, receive):
-    obstacles = []
-    for index in range(len(info)):
-        receive.get_info(info[index][0], info[index][1])
-        x, y = receive.robot_info['x'], receive.robot_info['y']
-        obstacles.append([x, y])
+def get_info(info, receive, color, id):
+    receive = receive
+    obstacles = receive.get_infos(color, id)
     return obstacles
 
 
@@ -86,7 +83,7 @@ class APF():
     """
 
     def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80,
-                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30):
+                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30, color='blue', id='5'):
         """
         :param s_x, s_y: 起点
         :param g_x, g_y: 终点
@@ -103,7 +100,9 @@ class APF():
         self.start = Vector2d(s_x, s_y)
         self.current_pos = Vector2d(s_x, s_y)
         self.goal = Vector2d(g_x, g_y)
-        obstacles = get_info(info, receive)
+        self.color = color
+        self.id = id
+        obstacles = get_info(info, receive, color, id)
         self.barrierInfo = np.array(obstacles)
         self.dis_threshold = dis_threshold
         self.obstacles = [Vector2d(OB[0], OB[1]) for OB in obstacles]
