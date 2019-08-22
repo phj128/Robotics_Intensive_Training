@@ -21,6 +21,7 @@ from run import run_line
 from run import run_shrink
 import time
 
+
 if __name__ == '__main__':
     color = 'blue'
     robot_id = 5
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
-    global_p = A_star
+    global_p = RRT_MERGE
     local_p = XY_angle
     RUN = run_shrink
 

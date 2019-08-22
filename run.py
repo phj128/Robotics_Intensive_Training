@@ -131,8 +131,9 @@ def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p
     R = 30
     index = 1
     while True:
-        if index > R:
-            index = R
+        if index > 3:
+            index = 3
+        print('index:', index)
         r = R / index
         time_start = time.time()
         receive.get_info(color, robot_id)
@@ -155,12 +156,13 @@ def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p
         # import ipdb;ipdb.set_trace()
         if distance((now_x, now_y), (target_x, target_y)) > R:
             motion = local_planner()
-            if not motion.line_control(path, robot_id, color, receive, barriers, r):
+            status, index = motion.line_control(path, robot_id, color, receive, barriers, r, index=index)
+            print('control:', index)
+            if not status:
                 control = Send()
                 control.send_msg(robot_id, 0, 0, 0)
-                index = 1
             else:
-                index *= 2
+                index = 1
                 continue
         else:
             control = Send()
