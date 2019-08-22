@@ -5,6 +5,7 @@ from message.receive import Receive
 from global_planner.myRRT_static import RRT
 from global_planner.myRRTstar import RRT as RRT_STAR
 from global_planner.myRRTmerge import RRT as RRT_MERGE
+from global_planner.A_star import AStar
 
 from ArtificialPotentialFieldMethod.myAPF import APF
 
@@ -172,8 +173,8 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_control
-    RUN = run_while
+    local_p = XY_near
+    RUN = run
 
     receive = Receive()
     while True:

@@ -14,7 +14,7 @@ class XY_angle():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 200
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
