@@ -24,7 +24,9 @@ class AStar:
             self.g = g
             self.h = (abs(endPoint.x - point.x) + abs(endPoint.y - point.y)) * 10
 
-    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=10, limitation=10000):
+    def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, offset_x = 10, offset_y = 10, color='blue', id=0, step=10, inflateRadius=30, limitation=10000):
+        self.width = 350
+        self.height = 250
         self.color = color
         self.robot_id = id
         self.barrierId = barrierId
@@ -80,7 +82,7 @@ class AStar:
         '''
         print('searching')
         #越界检测
-        if minF.point.x + offsetX <= -300 or minF.point.x + offsetX >= 300 or minF.point.y + offsetY <= -200 or minF.point.y + offsetY >=200:
+        if minF.point.x + offsetX <= -self.width or minF.point.x + offsetX >= self.width or minF.point.y + offsetY <= -self.height or minF.point.y + offsetY >=self.height:
             print('越界')
             return
         #如果是障碍，则不管
@@ -156,6 +158,10 @@ class AStar:
                 return False, [], []
 
     def Get_Path(self):
+        try:
+            self.pathlist = self.pathlist
+        except:
+            self.pathlist = []
         return self.pathlist, []
 
     def Update_Barrier_Info(self):
