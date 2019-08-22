@@ -14,6 +14,7 @@ from local_planner.xy_control import XY_control
 from local_planner.xy_near import XY_near
 from local_planner.xy_p import XY_p
 from local_planner.xy_angle import XY_angle
+from local_planner.xy_speed import XY_speed
 
 from run import run
 from run import run_while
@@ -35,7 +36,7 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_angle
+    local_p = XY_speed
     RUN = run_shrink
 
     receive = Receive()

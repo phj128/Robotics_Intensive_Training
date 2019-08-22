@@ -1,10 +1,21 @@
 import numpy as np
+import math
 
 
 def distance(point, goal):
     x, y = point
     g_x, g_y = goal
     return np.sqrt((x - g_x) * (x - g_x) + (y - g_y) * (y - g_y))
+
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+
+def tanh(x):
+    s1 = np.exp(x) - np.exp(-x)
+    s2 = np.exp(x) + np.exp(-x)
+    return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
 
 
 def min_dis_index(point, path, i):
