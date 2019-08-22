@@ -24,12 +24,12 @@ import time
 
 if __name__ == '__main__':
     color = 'blue'
-    robot_id = 5
+    robot_id = 0
     barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
                 ['blue', 1], ['blue', 2], ['blue', 3], ['blue', 4],
-                ['blue', 0], ['blue', 6], ['blue', 7]]
-    g_x, g_y = (280, 210)
+                ['blue', 5], ['blue', 6], ['blue', 7]]
+    g_x, g_y = (250, -180)
     # barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
     #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
@@ -43,9 +43,9 @@ if __name__ == '__main__':
     while True:
         start = time.time()
         if i % 2 == 0:
-            RUN(color, robot_id, barriers, g_x, g_y, global_p, local_p, receive)
+            RUN(color, robot_id, barriers, 50, 100, global_p, local_p, receive)
         else:
-            RUN(color, robot_id, barriers, -g_x, -g_y, global_p, local_p, receive)
+            RUN(color, robot_id, barriers, 250, -120, global_p, local_p, receive)
         i += 1
         end = time.time()
         print('a circle time:', end - start)

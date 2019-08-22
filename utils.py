@@ -49,7 +49,7 @@ def interpolate_point(point1, point2, d=30):
     return np.concatenate((np.array(point1)[np.newaxis, :], points, np.array(point2)[np.newaxis, :]), axis=0)
 
 
-def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_threshold=20, index_=1, only_1=False):
+def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_threshold=20, index_=1, only_1=True):
     # import ipdb;ipdb.set_trace()
     infos = receive.get_infos(color, id)
     point1 = point.copy()

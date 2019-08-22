@@ -38,8 +38,8 @@ class AStar:
         self.endpoint = Point(goal_x, goal_y)
         self.openlist = []
         self.closelist = []
-        self.inflateRadius = inflateRadius
-        self.dis_threshold = inflateRadius
+        self.inflateRadius = inflateRadius+10
+        self.dis_threshold = inflateRadius+10
         self.offsetx = offset_x
         self.offsety = offset_y
 
@@ -135,7 +135,7 @@ class AStar:
             if point:
                 print('find!')
                 cPoint = point
-                pathlist = []
+                pathlist = [[self.endpoint.x, self.endpoint.y]]
                 lines = []
                 ppoint = cPoint.father
                 try:
