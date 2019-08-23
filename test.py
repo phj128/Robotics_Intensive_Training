@@ -91,6 +91,7 @@ def local_module():
                 if distance([x, y], path[i]) < 10:
                     i += 1
             except:
+                vx, vy = 0, 0
                 continue
         else:
             status = False
