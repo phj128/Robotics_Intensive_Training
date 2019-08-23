@@ -3,6 +3,7 @@ from message.send_debug import SendDebug
 from message.receive import Receive
 
 from thread_global.myRRTmerge import RRT as thread_RRT
+from thread_global.RRTmerge_predic import RRT as RRT_pred
 
 from thread_local.xy_speed import XY_speed
 
@@ -58,7 +59,7 @@ def global_module():
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, 180
-    global_planner = thread_RRT
+    global_planner = RRT_pred
     status_coll = False
     status = False
     index = 1

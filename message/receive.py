@@ -121,12 +121,12 @@ class Receive():
 
 
     def thread_change_info_yellow(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation])
+        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x, robot.vel_y])
         return infos
 
 
     def thread_change_info_blue(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation])
+        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x, robot.vel_y])
         return infos
 
 
@@ -154,6 +154,6 @@ if __name__ == "__main__":
     while True:
         receive.get_info('blue', 0)
         # import ipdb;ipdb.set_trace()
-        print(receive.robot_info['x'])
+        print(receive.robot_info['ori'])
         sleep(1)
 

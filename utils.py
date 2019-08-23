@@ -22,7 +22,7 @@ def select_info(infos, color, robot_id):
     for info in infos:
         if info[3] == robot_id:
             if info[2] == color:
-                return info
+                return info[:5]
     return -1, -1, -1, -1, -100
 
 
@@ -33,9 +33,9 @@ def min_dis_index(point, path, i):
     return np.argmin(dis) + i
 
 
-def make_vel(target, infos, vxs, vys, v=200):
+def make_vel(target, infos, vxs, vys, v=400):
     for i in range(len(target)):
-        now_x, now_y, _, _, now_ori = infos[i]
+        now_x, now_y, _, _, now_ori = infos[i][:5]
         orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
         theta = now_ori - orientation_need_now
         vxs[i+1] = v * math.cos(theta)
