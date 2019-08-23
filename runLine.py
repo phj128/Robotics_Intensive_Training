@@ -19,7 +19,7 @@ def runLine(color, robot_id, start_x, start_y, goal_x, goal_y, vmax = 150, thres
     while error > 10:
         p = 1
         orientation_need_now = math.atan2((goal_y - now_y), (goal_x - now_x))
-        theta = now_ori + orientation_need_now
+        theta = now_ori - orientation_need_now
         if error < error_max * threshold:
             p = error / (threshold * error_max) * math.log(2)
             p = math.exp(p) - 1
@@ -40,11 +40,11 @@ if __name__ == "__main__":
     end = [250, -180]
     i = 0
     while True:
-        start = time.time()
+        start_time = time.time()
         if i % 2 == 0:
             runLine(color, robot_id, origin[0], origin[1], end[0], end[1])
         else:
             runLine(color, robot_id, end[0], end[1], origin[0], origin[1])
         i += 1
-        end = time.time()
-        print('a circle time:', end - start)
+        end_time = time.time()
+        print('a circle time:', end_time - start_time)
