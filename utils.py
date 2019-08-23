@@ -33,6 +33,23 @@ def min_dis_index(point, path, i):
     return np.argmin(dis) + i
 
 
+def make_vel(target, infos, vxs, vys, v=200):
+    for i in range(len(target)):
+        now_x, now_y, _, _, now_ori = infos[i]
+        orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
+        theta = now_ori - orientation_need_now
+        vxs[i+1] = v * math.cos(theta)
+        vys[i+1] = v * math.sin(theta)
+    return vxs, vys
+
+
+def check_goals(targets, infos, threshold=30):
+    for i in range(len(targets)):
+        if distance(infos[i][:2], targets[i][:2]) < threshold:
+            targets[i][1] = -targets[i][1]
+    return targets
+
+
 def interpolate_path(path, d=80):
     path = np.array(path)
     num = len(path)

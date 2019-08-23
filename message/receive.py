@@ -142,10 +142,10 @@ class Receive():
 
         robots_yellow = package.robots_yellow
         robots_blue = package.robots_blue
-        for robot in robots_yellow:
-            infos = self.thread_change_info_yellow(robot, infos)
         for robot in robots_blue:
             infos = self.thread_change_info_blue(robot, infos)
+        for robot in robots_yellow:
+            infos = self.thread_change_info_yellow(robot, infos)
         return infos
 
 

@@ -33,6 +33,28 @@ class Send():
         self.sock.sendto(send_data, self.address)
 
 
+    def send_all(self, ids, v_x, v_y, v_r, d=10000):
+        '''
+        '''
+        robots_cmd = control.Robots_Command()
+        robots_cmd.delay = d
+        robot_cmd = []
+        for i in range(len(ids)):
+            robot_cmd.append(robots_cmd.command.add())
+            robot_cmd[i].robot_id = ids[i]
+            robot_cmd[i].velocity_x = v_x[i]
+            robot_cmd[i].velocity_y = v_y[i]
+            robot_cmd[i].velocity_r = v_r[i]
+            robot_cmd[i].kick = self.robot_cmd_dic['kick']
+            robot_cmd[i].power = self.robot_cmd_dic['power']
+            robot_cmd[i].dribbler_spin = self.robot_cmd_dic['dribbler_spin']
+            robot_cmd[i].current_angle = self.robot_cmd_dic['current_angle']
+            robot_cmd[i].target_angle = self.robot_cmd_dic['target_angle']
+
+        send_data = robots_cmd.SerializeToString()
+        self.sock.sendto(send_data, self.address)
+
+
 if __name__ == "__main__":
     vx = 0
     vy = 0
