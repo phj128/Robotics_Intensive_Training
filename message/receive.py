@@ -119,6 +119,36 @@ class Receive():
             self.change_info_blue(robot, color, id)
         return self.infos
 
+
+    def thread_change_info_yellow(self, robot, infos):
+        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation])
+        return infos
+
+
+    def thread_change_info_blue(self, robot, infos):
+        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation])
+        return infos
+
+
+    def thread_infos(self):
+        infos = []
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(("127.0.0.1", 23333))
+        data, address = self.sock.recvfrom(4096)
+
+        package = detection.Vision_DetectionFrame()
+        package.ParseFromString(data)
+
+        robots_yellow = package.robots_yellow
+        robots_blue = package.robots_blue
+        for robot in robots_yellow:
+            infos = self.thread_change_info_yellow(robot, infos)
+        for robot in robots_blue:
+            infos = self.thread_change_info_blue(robot, infos)
+        return infos
+
+
 if __name__ == "__main__":
     receive = Receive()
     while True:

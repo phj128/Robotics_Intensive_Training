@@ -38,8 +38,8 @@ if __name__ == "__main__":
     vy = 0
     robot_id = 0
     w = 1
+    send = Send()
     while True:
-        send = Send()
         send.send_msg(robot_id, vx, vy, w)
         sleep(1)
         vx /= 2
