@@ -98,6 +98,8 @@ def local_module():
             print(path)
             if N <= 1:
                 status = False
+                vx, vy = 0, 0
+                continue
             # try:
             if N == 2:
                 i = 0
