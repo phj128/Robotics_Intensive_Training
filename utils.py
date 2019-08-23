@@ -160,9 +160,9 @@ def check_two_points(receive, point1, point2, barrierId, color, id, dis_threshol
         return True
 
 
-def check_path_thread(point, path, infos, dis_threshold=20, index=1, color='blue', id=0):
+def check_path_thread(point, target, infos, dis_threshold=20, index=1, color='blue', id=0):
     point1 = point.copy()
-    point2 = path[0].copy()
+    point2 = target.copy()
     for i in range(len(infos)):
         if infos[i][3] == id:
             if infos[i][2] == color:

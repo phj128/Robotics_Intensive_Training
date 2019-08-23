@@ -18,7 +18,7 @@ global vx, vy
 global i
 global color, id
 global threshold
-global status_coll, status
+global status_coll, status, finish
 
 
 def receive_module():
@@ -55,10 +55,19 @@ def global_module():
     global_planner = thread_RRT
     status_coll = False
     status = False
-    while not status_coll or not status:
+    finish = False
+    index = 1
+    R = 30
+    while True:
         time_start = time.time()
-        global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=30)
+        if index > 3:
+            index = 3
+        global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
         status, tree, lines = global_path.Generate_Path()
+        if not status:
+            index += 1
+        else:
+            index = 1
         path_, path_lines = global_path.Get_Path()
         print('ori:', len(path_))
         path, path_lines = global_path.merge()
@@ -74,29 +83,41 @@ def local_module():
     global i
     global target_x, target_y
     global path
-    global status_coll, status
+    global status_coll, status, finish
     index = 1
     local_planner = XY_speed
+    finish = False
     while True:
         if distance((x, y), (target_x, target_y)) > 30:
+            print('x', x)
+            print('y', y)
+            print('t_x', target_x)
+            print('t_y', target_y)
             N = len(path)
-            if N < 1:
-                continue
-            try:
+            print(N)
+            print(path)
+            if N <= 1:
+                status = False
+            # try:
+            if N == 2:
+                i = 0
+            if i < N - 1:
                 motion = local_planner()
-                vx, vy = motion.line_control(x, y, ori, path, i, N, info=infos, threshold=30)
-                if i < N - 1:
-                    status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
-                                          dis_threshold=threshold, index=index)
-                if distance([x, y], path[i]) < 10:
-                    i += 1
-            except:
-                vx, vy = 0, 0
-                continue
+                vx, vy, finish = motion.line_control(x, y, ori, path, i, N, info=infos)
+                # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
+                #                           dis_threshold=threshold, index=index)
+
+            if finish:
+                i += 1
+                finish = False
+            # except:
+            #     vx, vy = 0, 0
+            #     continue
         else:
             status = False
             target_x = -target_x
             target_y = -target_y
+            i = 0
 
 
 def send_module():

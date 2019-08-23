@@ -103,7 +103,7 @@ class XY_speed():
             now_ori = receive.robot_info['ori']
             point_now = [now_x, now_y]
             error = distance(point_now, path[i+1])
-            error_max = distance(point_now, path[i+1])
+            error_max = distance(path[i], path[i+1])
             print('error:', error)
             while error > 30:
                 orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
