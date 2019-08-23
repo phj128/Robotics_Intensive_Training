@@ -28,7 +28,7 @@ def receive_module():
     global color, id
     global threshold
     global vx, vy
-    x , y = 0, 0
+    x, y = 0, 0
     vx = 0
     vy = 0
     threshold = 30
@@ -99,7 +99,7 @@ def local_module():
                 print(path)
                 if N <= 1:
                     status = False
-                    vx, vy = 0, 0
+                    vx, vy = 30, 30
                     continue
                 # try:
                 if N == 2:

@@ -97,7 +97,7 @@ def local_module():
                 N = len(path)
                 if N <= 1:
                     status = False
-                    vxs[0], vys[0] = 0, 0
+                    vxs[0], vys[0] = 30, 30
                     continue
                 if N == 2:
                     i = 0
