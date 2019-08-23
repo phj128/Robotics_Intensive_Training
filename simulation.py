@@ -4,6 +4,7 @@ from message.receive import Receive
 
 from thread_global.myRRTmerge import RRT as thread_RRT
 from thread_global.RRTmerge_predic import RRT as RRT_pred
+from thread_global.RRTmerge_circle import RRT as RRT_circle
 
 from thread_local.xy_speed import XY_speed
 
@@ -25,8 +26,8 @@ global simu_targets
 
 id = 5
 ids = [id, 0, 1, 2, 3, 4]
-vxs = [0, 0, 0, 0, 0, 0]
-vys = [0, 0, 0, 0, 0, 0]
+vxs = [0, 30, 30, 30, 30, 30]
+vys = [0, 30, 30, 30, 30, 30]
 
 def receive_module():
     global infos
@@ -59,7 +60,7 @@ def global_module():
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, 180
-    global_planner = RRT_pred
+    global_planner = RRT_circle
     status_coll = False
     status = False
     index = 1
@@ -124,6 +125,8 @@ def send_module():
     while True:
         send = Send()
         send.send_all(ids, vxs, vys, [0, 0, 0, 0, 0, 0])
+        print('vx', vxs[0])
+        print('vy', vys[0])
 
 
 def debug_module():

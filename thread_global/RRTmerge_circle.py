@@ -5,6 +5,7 @@ import time
 from math import sin, cos
 from time import sleep
 from message.receive import Receive
+import math
 
 
 def filter_infos(infos, robot_id, color, computing_time=0.10):
@@ -14,11 +15,11 @@ def filter_infos(infos, robot_id, color, computing_time=0.10):
             if infos[i][2] == color:
                 infos_.pop(i)
                 break
-    for i in range(len(infos_)):
-        info_temp = infos_[i].copy()
-        info_temp[0] = info_temp[0] + info_temp[5] * cos(info_temp[4]) - info_temp[6] * sin(info_temp[4])
-        info_temp[1] = info_temp[1] + info_temp[5] * sin(info_temp[4]) + info_temp[6] * cos(info_temp[4])
-        infos_.append(info_temp)
+    # for i in range(len(infos_)):
+    #     info_temp = infos_[i].copy()
+    #     info_temp[0] = info_temp[0] + info_temp[5] * cos(info_temp[4]) - info_temp[6] * sin(info_temp[4])
+    #     info_temp[1] = info_temp[1] + info_temp[5] * sin(info_temp[4]) + info_temp[6] * cos(info_temp[4])
+    #     infos_.append(info_temp)
     return infos_
 
 
@@ -29,7 +30,8 @@ class RRT:
         self.lines = []
         self.draw = False
         self.step = step
-        self.inflateRadius = inflateRadius  # inflate radius
+        self.inflateRadius = inflateRadius  # inflate radius # 是一个列表
+        self.changeable_radius = [] # 是一个列表
         self.limitation = limitation  # the max number of nodes
 
         self.startNode = [0, 0, 0, 0, 0]  # x, y, index, parentIndex, depth
@@ -52,6 +54,13 @@ class RRT:
         self.tree = []
         self.restree = []
         self.tree.append(self.startNode)
+        self.Update_barrier_radius()
+
+    def Update_barrier_radius(self):
+        for index in range(len(self.barrierInfo)):
+            v = math.sqrt(self.barrierInfo[index][5]*self.barrierInfo[index][5] + self.barrierInfo[index][6]*self.barrierInfo[index][6])
+            print('v是：', v)
+            self.changeable_radius.append(0.1*v)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
@@ -113,7 +122,7 @@ class RRT:
             else:
                 dist = 0
 
-            if dist < self.dis_threshold:
+            if dist < (self.dis_threshold+self.changeable_radius[i]):
                 return False
 
         return True
@@ -250,7 +259,7 @@ class RRT:
             barrier = self.barrierInfo[index]
             # import ipdb;ipdb.set_trace()
             distance = self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
-            if distance < self.inflateRadius:
+            if distance < self.changeable_radius[index]+self.inflateRadius:
                 return False
 
         return True

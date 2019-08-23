@@ -121,12 +121,12 @@ class Receive():
 
 
     def thread_change_info_yellow(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x, robot.vel_y])
+        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
         return infos
 
 
     def thread_change_info_blue(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x, robot.vel_y])
+        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
         return infos
 
 

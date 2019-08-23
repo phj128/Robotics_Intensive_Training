@@ -38,8 +38,11 @@ def receive_module():
     color = 'blue'
     id = 5
     while True:
-        infos = receive.thread_infos()
-        x, y, _, _, ori = select_info(infos, color, id)
+        try:
+            infos = receive.thread_infos()
+            x, y, _, _, ori = select_info(infos, color, id)
+        except:
+            continue
 
 
 def global_module():
@@ -59,22 +62,25 @@ def global_module():
     index = 1
     R = 30
     while True:
-        time_start = time.time()
-        if index > 3:
-            index = 3
-        global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
-        status, tree, lines = global_path.Generate_Path()
-        if not status:
-            index += 1
-        else:
-            index = 1
-        path_, path_lines = global_path.Get_Path()
-        print('ori:', len(path_))
-        path, path_lines = global_path.merge()
-        print('nodes:', len(path))
-        time_end = time.time()
-        print('path cost:', time_end - time_start)
-        i = 0
+        try:
+            time_start = time.time()
+            if index > 3:
+                index = 3
+            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
+            status, tree, lines = global_path.Generate_Path()
+            if not status:
+                index += 1
+            else:
+                index = 1
+            path_, path_lines = global_path.Get_Path()
+            print('ori:', len(path_))
+            path, path_lines = global_path.merge()
+            print('nodes:', len(path))
+            time_end = time.time()
+            print('path cost:', time_end - time_start)
+            i = 0
+        except:
+            continue
 
 
 def local_module():
@@ -84,7 +90,6 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    index = 1
     local_planner = XY_speed
     finish = False
     while True:
@@ -127,17 +132,23 @@ def local_module():
 
 def send_module():
     while True:
-        send = Send()
-        send.send_msg(id, vx, vy, 0)
-        print('vx', vx)
-        print('vy', vy)
+        try:
+            send = Send()
+            send.send_msg(id, vx, vy, 0)
+            print('vx', vx)
+            print('vy', vy)
+        except:
+            continue
 
 
 def debug_module():
     global lines, path_lines
     while True:
-        debug_info = SendDebug('LINE', [lines, path_lines])
-        debug_info.send()
+        try:
+            debug_info = SendDebug('LINE', [lines, path_lines])
+            debug_info.send()
+        except:
+            continue
 
 
 if __name__ == '__main__':
