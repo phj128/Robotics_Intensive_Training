@@ -13,7 +13,7 @@ class Send():
         self.robot_cmd_dic = {'delay': 1, 'robot_id': 0, 'velocity_x': 0, 'velocity_y': 0, 'velocity_r': 0,
                           'kick': False,  'power': 1, 'dribbler_spin': 1, 'current_angle': 0, 'target_angle': 0}
 
-    def send_msg(self, id_we_send, v_x, v_y, v_r, power = 1.0, d=10000):
+    def send_msg(self, id_we_send, v_x, v_y, v_r, d=10000):
         '''
         '''
         robots_cmd = control.Robots_Command()
@@ -24,8 +24,7 @@ class Send():
         robot_cmd.velocity_y = v_y
         robot_cmd.velocity_r = v_r
         robot_cmd.kick = self.robot_cmd_dic['kick']
-        robot_cmd.power = power
-        # robot_cmd.power = self.robot_cmd_dic['power']
+        robot_cmd.power = self.robot_cmd_dic['power']
         robot_cmd.dribbler_spin = self.robot_cmd_dic['dribbler_spin']
         robot_cmd.current_angle = self.robot_cmd_dic['current_angle']
         robot_cmd.target_angle = self.robot_cmd_dic['target_angle']
@@ -35,16 +34,17 @@ class Send():
 
 
 if __name__ == "__main__":
-    vx = 400
-    vy = 400
+    vx = 0
+    vy = 0
     robot_id = 0
-    w = 0
-    send = Send()
-    send.send_msg(robot_id, vx, vy, w)
-    sleep(2)
-    #send.send_msg(robot_id, 100, 200, 0, power=0.0)
-    sleep(10)
-
+    w = 1
+    while True:
+        send = Send()
+        send.send_msg(robot_id, vx, vy, w)
+        sleep(1)
+        vx /= 2
+        vy /= 2
+        w = 0
 '''
 
 package = control.Robots_Status.robots_status

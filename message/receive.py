@@ -11,23 +11,8 @@ class Receive():
         self.infos = []
         self.velocity_infos = []
 
-    def get_velocity_infos(self, color, id):
-        self.velocity_infos = []
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.bind(("127.0.0.1", 23333))
-        data, address = self.sock.recvfrom(4096)
-
-        package = detection.Vision_DetectionFrame()
-        package.ParseFromString(data)
-
-        robots_yellow = package.robots_yellow
-        robots_blue = package.robots_blue
-        for robot in robots_yellow:
-            self.change_info_yellow_velocity(robot, color, id)
-        for robot in robots_blue:
-            self.change_info_blue_velocity(robot, color, id)
-        return self.velocity_infos
+    def get_velocity_infos(self):
+        pass
 
     def convert_info(self, robot):
         self.robot_info['x'] = robot.x / 10
@@ -69,6 +54,27 @@ class Receive():
         self.infos.append([robot.x/10, robot.y/10])
 
 
+    def get_velocity_info(self, color, id):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(("127.0.0.1", 23333))
+        data, address = self.sock.recvfrom(4096)
+        package = detection.Vision_DetectionFrame()
+        package.ParseFromString(data)
+        robots_yellow = package.robots_yellow
+        robots_blue = package.robots_blue
+
+        if color == 'yellow':
+            for robot in robots_yellow:
+                if robot.robot_id == id:
+                    self.convert_info(robot)
+                    break
+        else:
+            for robot in robots_blue:
+                if robot.robot_id == id:
+                    self.convert_info(robot)
+                    break
+
     def get_info(self, color, id):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -92,6 +98,7 @@ class Receive():
                 if robot.robot_id == id:
                     self.convert_info(robot)
                     break
+
 
 
     def get_infos(self, color, id):
