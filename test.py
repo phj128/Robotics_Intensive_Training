@@ -88,38 +88,41 @@ def local_module():
     local_planner = XY_speed
     finish = False
     while True:
-        if distance((x, y), (target_x, target_y)) > 30:
-            print('x', x)
-            print('y', y)
-            print('t_x', target_x)
-            print('t_y', target_y)
-            N = len(path)
-            print(N)
-            print(path)
-            if N <= 1:
-                status = False
-                vx, vy = 0, 0
-                continue
-            # try:
-            if N == 2:
-                i = 0
-            if i < N - 1:
-                motion = local_planner()
-                vx, vy, finish = motion.line_control(x, y, ori, path, i, N, info=infos)
-                # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
-                #                           dis_threshold=threshold, index=index)
+        try:
+            if distance((x, y), (target_x, target_y)) > 30:
+                print('x', x)
+                print('y', y)
+                print('t_x', target_x)
+                print('t_y', target_y)
+                N = len(path)
+                print(N)
+                print(path)
+                if N <= 1:
+                    status = False
+                    vx, vy = 0, 0
+                    continue
+                # try:
+                if N == 2:
+                    i = 0
+                if i < N - 1:
+                    motion = local_planner()
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, info=infos)
+                    # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
+                    #                           dis_threshold=threshold, index=index)
 
-            if finish:
-                i += 1
-                finish = False
-            # except:
-            #     vx, vy = 0, 0
-            #     continue
-        else:
-            status = False
-            target_x = -target_x
-            target_y = -target_y
-            i = 0
+                if finish:
+                    i += 1
+                    finish = False
+                # except:
+                #     vx, vy = 0, 0
+                #     continue
+            else:
+                status = False
+                target_x = -target_x
+                target_y = -target_y
+                i = 0
+        except:
+            continue
 
 
 def send_module():
