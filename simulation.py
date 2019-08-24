@@ -67,7 +67,7 @@ def global_module():
     global status_coll, status
     global radius
     path, path_lines, tree, lines = [], [], [], []
-    target_x, target_y = 250, 180
+    target_x, target_y = 250, -150
     global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
@@ -113,7 +113,8 @@ def local_module():
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos=infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos,
+                                                         color=color, robot_id=id)
                     vxs[0] = vx
                     vys[0] = vy
                 if finish:
