@@ -6,6 +6,7 @@ from thread_global.myRRTmerge import RRT as thread_RRT
 from thread_global.RRTmerge_predic import RRT as RRT_pred
 from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
 from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
+from thread_global.RRTmerge_circle_v_a_v import RRT as RRT_circle_v_a_v
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
@@ -42,7 +43,7 @@ def receive_module():
     global color, id
     global threshold
     global vx, vy
-    x , y = 0, 0
+    x, y = 0, 0
     vx = 0
     vy = 0
     threshold = 30
@@ -67,7 +68,7 @@ def global_module():
     global radius
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, 180
-    global_planner = RRT_circle_v_a
+    global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
     index = 1

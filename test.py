@@ -3,6 +3,10 @@ from message.send_debug import SendDebug
 from message.receive import Receive
 
 from thread_global.myRRTmerge import RRT as thread_RRT
+from thread_global.RRTmerge_predic import RRT as RRT_pred
+from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
+from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
+from thread_global.RRTmerge_circle_v_a_v import RRT as RRT_circle_v_a_v
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
@@ -62,13 +66,13 @@ def global_module():
     status = False
     finish = False
     index = 1
-    R = 30
+    R = 50
     while True:
         try:
             time_start = time.time()
             if index > 3:
                 index = 3
-            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
+            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
             status, tree, lines = global_path.Generate_Path()
             if not status:
                 index += 1

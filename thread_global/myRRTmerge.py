@@ -19,7 +19,11 @@ def filter_infos(infos, robot_id, color):
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, infos, step=10, robot_id=0, color='blue',
+<<<<<<< Updated upstream
                  inflateRadius=30, dis_threshold=30, limitation=500):
+=======
+                 inflateRadius=100, dis_threshold=100, limitation=500):
+>>>>>>> Stashed changes
         self.lines = []
         self.draw = False
         self.step = step
