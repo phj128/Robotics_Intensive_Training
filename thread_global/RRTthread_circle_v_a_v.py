@@ -60,9 +60,6 @@ class RRT:
             v = self.barrierInfo[index][5]
             a = self.barrierInfo[index][6]
             v_self = self.self_message[5]
-            print('v是：', v)
-            print('a是：', a)
-            print('自己的v是：', v_self)
             self.changeable_radius.append(0.02*v + 0.02*v_self + 0.00125*a)
 
     # function: generate a random node in the map
@@ -270,7 +267,7 @@ class RRT:
     # function: check if we find the goal
     def CheckGoal(self, Qnext):
         distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.goalNode[0], self.goalNode[1])
-        if distance < self.inflateRadius:
+        if distance < 7:
             return True
 
 

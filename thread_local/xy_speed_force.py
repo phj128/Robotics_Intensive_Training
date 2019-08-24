@@ -24,7 +24,6 @@ class XY_speed():
         error_max = distance(path[i], path[i+1])
         if error_max < 80:
             error_max = 80
-        print('error:', error)
         orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
         p = 1
@@ -32,7 +31,7 @@ class XY_speed():
         if distance(point_now, [target_x, target_y]) < 80:
             p = 0.2
         else:
-            if error > 10:
+            if error > 7:
                 if dis_now < self.up:
                     p = sigmoid(error/dis_now-1)
                 if error < error_max * self.threshold:
@@ -72,8 +71,6 @@ class XY_speed():
                 vy = vy + k * math.sin(gamma)
             else:
                 continue
-        print('vx是：', vx)
-        print('vy是：', vy)
 
         vx_now = (self.v * math.cos(theta)-vx) * p
         vy_now = (self.v * math.sin(theta)-vy) * p

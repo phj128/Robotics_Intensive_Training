@@ -10,6 +10,7 @@ from thread_global.RRTthread_circle_v_a_v import RRT as RRT_circle_v_a_v
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
+from thread_local.xy_fast import XY_speed as XY_fast
 
 from utils import select_info, distance, check_path_thread
 
@@ -71,7 +72,6 @@ def global_module():
     R = 50
     while True:
         try:
-            time_start = time.time()
             if index > 3:
                 index = 3
             global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
@@ -81,11 +81,7 @@ def global_module():
             else:
                 index = 1
             path_, path_lines = global_path.Get_Path()
-            print('ori:', len(path_))
             path, path_lines = global_path.merge()
-            print('nodes:', len(path))
-            time_end = time.time()
-            print('path cost:', time_end - time_start)
             i = 0
         except:
             continue
@@ -98,38 +94,25 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed_force
+    local_planner = XY_fast
     finish = False
     while True:
         try:
-            if distance((x, y), (target_x, target_y)) > 30:
-                print('x', x)
-                print('y', y)
-                print('t_x', target_x)
-                print('t_y', target_y)
+            if distance((x, y), (target_x, target_y)) > 7:
                 N = len(path)
-                print(N)
-                print(path)
                 if N <= 1:
                     status = False
                     vx, vy = 10, 10
                     continue
-                # try:
                 if N == 2:
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
                     vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos,
                                                          color=color, robot_id=id)
-                    # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
-                    #                           dis_threshold=threshold, index=index)
-
                 if finish:
                     i += 1
                     finish = False
-                # except:
-                #     vx, vy = 0, 0
-                #     continue
             else:
                 status = False
                 target_x = -target_x
@@ -144,8 +127,6 @@ def send_module():
         try:
             send = Send()
             send.send_msg(id, vx, vy, 0)
-            print('vx', vx)
-            print('vy', vy)
         except:
             continue
 
