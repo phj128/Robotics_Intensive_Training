@@ -27,6 +27,10 @@ global threshold
 global status_coll, status, finish
 
 
+color = 'blue'
+id = 0
+
+
 def receive_module():
     global infos
     global x, y, ori
@@ -41,8 +45,6 @@ def receive_module():
     i = 0
     infos = []
     receive = Receive()
-    color = 'blue'
-    id = 5
     while True:
         try:
             infos = receive.thread_infos()
@@ -60,7 +62,7 @@ def global_module():
     global i
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
-    target_x, target_y = 250, 180
+    target_x, target_y = 250, -150
     global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
@@ -117,7 +119,8 @@ def local_module():
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos,
+                                                         color=color, robot_id=id)
                     # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
                     #                           dis_threshold=threshold, index=index)
 

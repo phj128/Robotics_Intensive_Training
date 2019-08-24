@@ -16,11 +16,6 @@ def filter_infos(infos, robot_id, color, computing_time=0.10):
                 self_message = infos_[i]
                 infos_.pop(i)
                 break
-    # for i in range(len(infos_)):
-    #     info_temp = infos_[i].copy()
-    #     info_temp[0] = info_temp[0] + info_temp[5] * cos(info_temp[4]) - info_temp[6] * sin(info_temp[4])
-    #     info_temp[1] = info_temp[1] + info_temp[5] * sin(info_temp[4]) + info_temp[6] * cos(info_temp[4])
-    #     infos_.append(info_temp)
     return infos_, self_message
 
 
