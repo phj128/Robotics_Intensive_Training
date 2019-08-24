@@ -8,6 +8,7 @@ from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
 from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
 
 from thread_local.xy_speed import XY_speed
+from thread_local.xy_speed_force import XY_speed as XY_speed_force
 
 from utils import select_info, distance, check_path_thread, make_vel, check_goals
 
@@ -97,7 +98,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed
+    local_planner = XY_speed_force
     finish = False
     while True:
         try:
@@ -111,7 +112,7 @@ def local_module():
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, info=infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos = infos)
                     vxs[0] = vx
                     vys[0] = vy
                 if finish:
