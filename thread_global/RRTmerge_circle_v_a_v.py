@@ -68,7 +68,7 @@ class RRT:
             print('v是：', v)
             print('a是：', a)
             print('自己的v是：', v_self)
-            self.changeable_radius.append(0.05*v + 0.05*v_self + 0.00125*a)
+            self.changeable_radius.append(0.02*v + 0.02*v_self + 0.00125*a)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):

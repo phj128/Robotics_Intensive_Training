@@ -5,8 +5,8 @@ from message.receive import Receive
 from thread_global.myRRTmerge import RRT as thread_RRT
 from thread_global.RRTmerge_predic import RRT as RRT_pred
 from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
-from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
-from thread_global.RRTmerge_circle_v_a_v import RRT as RRT_circle_v_a_v
+from thread_global.RRTthread_circle_v_a import RRT as RRT_circle_v_a
+from thread_global.RRTthread_circle_v_a_v import RRT as RRT_circle_v_a_v
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force

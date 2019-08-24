@@ -12,21 +12,13 @@ PI = 3.1415926
 class XY_speed():
     def __init__(self):
         self.v = 300
-<<<<<<< Updated upstream
         self.threshold = 0.6
-=======
-        self.threshold = 0.4
->>>>>>> Stashed changes
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
         self.up = 60
 
 
-<<<<<<< Updated upstream
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, k1=10, k2=10, v_obstacle_max=400, rr=100, color="blue", robot_id=5):
-=======
-    def line_control(self, now_x, now_y, now_ori, path, i, N, infos=None, k1=100, k2=10, v_obstacle_max=400, rr=50, color="blue", robot_id=5):
->>>>>>> Stashed changes
         point_now = [now_x, now_y]
         error = distance(point_now, path[i+1])
         error_max = distance(path[i], path[i+1])
