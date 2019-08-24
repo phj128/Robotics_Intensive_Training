@@ -61,7 +61,7 @@ def global_module():
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, 180
-    global_planner = thread_RRT
+    global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
     finish = False
