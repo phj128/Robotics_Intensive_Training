@@ -145,5 +145,6 @@ class XY_speed():
                         if not status:
                             return False, index
             else:
+                self.send.send_msg(robot_id, 0, 0, 0)
                 return True, index
         return True, index

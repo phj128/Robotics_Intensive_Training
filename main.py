@@ -37,7 +37,7 @@ if __name__ == '__main__':
     i = 0
     global_p = RRT_MERGE
     local_p = XY_speed
-    RUN = run_line
+    RUN = run_shrink
 
     receive = Receive()
 
