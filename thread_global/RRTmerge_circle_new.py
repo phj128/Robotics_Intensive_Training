@@ -15,6 +15,11 @@ def filter_infos(infos, robot_id, color, computing_time=0.10):
             if infos[i][2] == color:
                 infos_.pop(i)
                 break
+    # for i in range(len(infos_)):
+    #     info_temp = infos_[i].copy()
+    #     info_temp[0] = info_temp[0] + info_temp[5] * cos(info_temp[4]) - info_temp[6] * sin(info_temp[4])
+    #     info_temp[1] = info_temp[1] + info_temp[5] * sin(info_temp[4]) + info_temp[6] * cos(info_temp[4])
+    #     infos_.append(info_temp)
     return infos_
 
 
@@ -45,7 +50,7 @@ class RRT:
         self.goalNode[4] = 0
         self.dis_threshold = dis_threshold
         infos = filter_infos(infos, robot_id, color)
-        self.barrierInfo = infos # x, y, color ,id, ori, vx, vy, ax, ay
+        self.barrierInfo = infos # x, y, color ,id, ori, v, a
         self.tree = []
         self.restree = []
         self.tree.append(self.startNode)
@@ -53,9 +58,13 @@ class RRT:
 
     def Update_barrier_radius(self):
         for index in range(len(self.barrierInfo)):
+            # v = math.sqrt(self.barrierInfo[index][5]*self.barrierInfo[index][5] + self.barrierInfo[index][6]*self.barrierInfo[index][6])
+            # a = math.sqrt(self.barrierInfo[index][7]*self.barrierInfo[index][7] + self.barrierInfo[index][8]*self.barrierInfo[index][8])
             v = self.barrierInfo[index][5]
+            a = self.barrierInfo[index][6]
             print('v是：', v)
-            self.changeable_radius.append(0.05*v)
+            print('a是：', a)
+            self.changeable_radius.append(0.1*v + 0.005*a)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
@@ -274,8 +283,7 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        radius = np.array(self.changeable_radius) + self.inflateRadius
-        return status, self.tree, self.lines, radius
+        return status, self.tree, self.lines
 
 
     def Get_Path(self):

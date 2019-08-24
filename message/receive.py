@@ -1,6 +1,7 @@
 import socket
 from time import sleep
 import proto.vision_detection_pb2 as detection
+import numpy as np
 
 
 
@@ -121,12 +122,19 @@ class Receive():
 
 
     def thread_change_info_yellow(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
+        # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
+        v = np.sqrt((robot.vel_x/10)*(robot.vel_x/10) + (robot.vel_y/10)*(robot.vel_y/10))
+        a = np.sqrt((robot.accelerate_x)*(robot.accelerate_x) + (robot.accelerate_y)*(robot.accelerate_y))
+        # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x / 10, robot.vel_y / 10, robot.accelerate_x, robot.accelerate_y])
+        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, v, a])
         return infos
 
 
     def thread_change_info_blue(self, robot, infos):
-        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
+        # infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
+        v = np.sqrt((robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))
+        a = np.sqrt((robot.accelerate_x/10) * (robot.accelerate_x/10) + (robot.accelerate_y/10) * (robot.accelerate_y/10))
+        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, v, a])
         return infos
 
 
