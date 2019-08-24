@@ -64,7 +64,7 @@ class RRT:
             a = self.barrierInfo[index][6]
             print('v是：', v)
             print('a是：', a)
-            self.changeable_radius.append(0.1*v + 0.005*a)
+            self.changeable_radius.append(0.05*v + 0.00125*a)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
@@ -283,7 +283,8 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        return status, self.tree, self.lines
+            radius = np.array(self.changeable_radius) + self.inflateRadius
+        return status, self.tree, self.lines, radius
 
 
     def Get_Path(self):
