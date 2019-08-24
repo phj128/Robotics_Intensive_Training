@@ -2,10 +2,24 @@ import socket
 import proto.zss_debug_pb2 as debug_info
 from time import sleep
 import numpy as np
+import math
+
+
+PI = 3.1415926
+
+
+def filter_infos(infos, robot_id, color):
+    infos_ = infos.copy()
+    for i in range(len(infos)):
+        if infos[i][3] == robot_id:
+            if infos[i][2] == color:
+                infos_.pop(i)
+                break
+    return infos_
 
 
 class SendDebug():
-    def __init__(self, type='LINE', lines=[], color='YELLOW'):
+    def __init__(self, type='LINE', lines=[], color='YELLOW', circles=[], infos=[]):
         '''
         type: 'LINE', 'ARC', 'TEXT', 'ROBOT', 'CURVE', 'POLYGON', 'POINTS'
         lines: lists of line, and the line in lines contain [start_x, start_y, end_x, end_y]
@@ -25,6 +39,9 @@ class SendDebug():
             self.num_yellow = self.num
             self.lines = lines
         # import ipdb;ipdb.set_trace()
+        self.circles = circles
+        self.infos = filter_infos(infos, 5, 'blue')
+        self.draw_circles = []
         self.debug_msg = {'start_x': 0, 'start_y': 0, 'end_x': 100, 'end_y': 100}
 
     def send(self):
@@ -124,6 +141,19 @@ class SendDebug():
             else:
                 print('No this kind of instruction')
                 return -1
+        for i in range(len(self.circles)):
+            theta = PI / 3
+            for k in range(6):
+                self.draw_circles.append(package.msgs.add())
+                self.draw_circles[6*i+k].color = debug_info.Debug_Msg.GREEN
+                self.draw_circles[6*i+k].type = debug_info.Debug_Msg.LINE
+                line = self.draw_circles[6*i+k].line
+                line.FORWARD = True
+                line.BACK = False
+                line.start.x = self.infos[i][0] + self.circles[i] * math.cos(theta*k)
+                line.start.y = self.infos[i][1] + self.circles[i] * math.sin(theta*k)
+                line.end.x = self.infos[i][0] + self.circles[i] * math.cos(theta*(k+1))
+                line.end.y = self.infos[i][1] + self.circles[i] * math.sin(theta*(k+1))
         send_data = package.SerializeToString()
         self.sock.sendto(send_data, ("127.0.0.1", 20001))
 

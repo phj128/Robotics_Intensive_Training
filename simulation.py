@@ -23,11 +23,15 @@ global threshold
 global status_coll, status, finish
 global ids, vxs, vys
 global simu_targets
+global radius
+
 
 id = 5
 ids = [id, 0, 1, 2, 3, 4]
 vxs = [0, 30, 30, 30, 30, 30]
 vys = [0, 30, 30, 30, 30, 30]
+radius = []
+
 
 def receive_module():
     global infos
@@ -58,6 +62,7 @@ def global_module():
     global x, y
     global i
     global status_coll, status
+    global radius
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, 180
     global_planner = RRT_circle
@@ -70,7 +75,7 @@ def global_module():
         if index > 3:
             index = 3
         global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
-        status, tree, lines = global_path.Generate_Path()
+        status, tree, lines, radius = global_path.Generate_Path()
         if not status:
             index += 1
         else:
@@ -132,7 +137,7 @@ def send_module():
 def debug_module():
     global lines, path_lines
     while True:
-        debug_info = SendDebug('LINE', [lines, path_lines])
+        debug_info = SendDebug('LINE', [lines, path_lines], circles=radius, infos=infos)
         debug_info.send()
 
 

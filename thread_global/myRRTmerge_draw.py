@@ -2,13 +2,11 @@ import numpy as np
 from message.send_debug import SendDebug
 import random
 import time
-from math import sin, cos
 from time import sleep
 from message.receive import Receive
-import math
 
 
-def filter_infos(infos, robot_id, color, computing_time=0.10):
+def filter_infos(infos, robot_id, color):
     infos_ = infos.copy()
     for i in range(len(infos)):
         if infos[i][3] == robot_id:
@@ -25,8 +23,7 @@ class RRT:
         self.lines = []
         self.draw = False
         self.step = step
-        self.inflateRadius = inflateRadius  # inflate radius # 是一个列表
-        self.changeable_radius = [] # 是一个列表
+        self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes
 
         self.startNode = [0, 0, 0, 0, 0]  # x, y, index, parentIndex, depth
@@ -45,17 +42,10 @@ class RRT:
         self.goalNode[4] = 0
         self.dis_threshold = dis_threshold
         infos = filter_infos(infos, robot_id, color)
-        self.barrierInfo = infos # x, y, color ,id, ori, vx, vy
+        self.barrierInfo = infos # x, y, r, v_x, v_y
         self.tree = []
         self.restree = []
         self.tree.append(self.startNode)
-        self.Update_barrier_radius()
-
-    def Update_barrier_radius(self):
-        for index in range(len(self.barrierInfo)):
-            v = math.sqrt(self.barrierInfo[index][5]*self.barrierInfo[index][5] + self.barrierInfo[index][6]*self.barrierInfo[index][6])
-            print('v是：', v)
-            self.changeable_radius.append(0.1*v)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
@@ -117,7 +107,7 @@ class RRT:
             else:
                 dist = 0
 
-            if dist < (self.dis_threshold+self.changeable_radius[i]):
+            if dist < self.dis_threshold:
                 return False
 
         return True
@@ -254,7 +244,7 @@ class RRT:
             barrier = self.barrierInfo[index]
             # import ipdb;ipdb.set_trace()
             distance = self.Calculate_Distance(Qnext[0], Qnext[1], barrier[0], barrier[1])
-            if distance < self.changeable_radius[index]+self.inflateRadius:
+            if distance < self.inflateRadius:
                 return False
 
         return True
@@ -274,8 +264,7 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        radius = np.array(self.changeable_radius) + self.inflateRadius
-        return status, self.tree, self.lines, radius
+        return status, self.tree, self.lines, []
 
 
     def Get_Path(self):
