@@ -10,6 +10,7 @@ from utils import select_info, distance, check_path_thread
 
 import time, threading
 
+
 global infos
 global path, path_lines, tree, lines
 global target_x, target_y

@@ -35,17 +35,26 @@ def min_dis_index(point, path, i):
 
 def make_vel(target, infos, vxs, vys, v=400):
     for i in range(len(target)):
-        now_x, now_y, _, _, now_ori = infos[i][:5]
-        orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
-        theta = now_ori - orientation_need_now
-        vxs[i+1] = v * math.cos(theta)
-        vys[i+1] = v * math.sin(theta)
+        if i >= 5:
+            now_x, now_y, _, _, now_ori = infos[i+1][:5]
+            orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
+            theta = now_ori - orientation_need_now
+            vxs[i + 1] = v * math.cos(theta)
+            vys[i + 1] = v * math.sin(theta)
+        else:
+            now_x, now_y, _, _, now_ori = infos[i][:5]
+            orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
+            theta = now_ori - orientation_need_now
+            vxs[i+1] = v * math.cos(theta)
+            vys[i+1] = v * math.sin(theta)
     return vxs, vys
 
 
-def check_goals(targets, infos, threshold=30):
+def check_goals(targets, infos, threshold=30, x=1, y=1):
     for i in range(len(targets)):
-        if distance(infos[i][:2], targets[i][:2]) < threshold:
+        if i == 5:
+            targets[i][0], targets[i][1] = x, y
+        elif distance(infos[i][:2], targets[i][:2]) < threshold:
             targets[i][1] = -targets[i][1]
     return targets
 

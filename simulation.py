@@ -29,9 +29,9 @@ global radius
 
 
 id = 5
-ids = [id, 0, 1, 2, 3, 4]
-vxs = [0, 30, 30, 30, 30, 30]
-vys = [0, 30, 30, 30, 30, 30]
+ids = [id, 0, 1, 2, 3, 4, 6]
+vxs = [0, 30, 30, 30, 30, 30, 30]
+vys = [0, 30, 30, 30, 30, 30, 30]
 radius = []
 
 
@@ -112,7 +112,7 @@ def local_module():
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos = infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos=infos)
                     vxs[0] = vx
                     vys[0] = vy
                 if finish:
@@ -131,7 +131,7 @@ def send_module():
     global ids, vxs, vys
     while True:
         send = Send()
-        send.send_all(ids, vxs, vys, [0, 0, 0, 0, 0, 0])
+        send.send_all(ids, vxs, vys, [0, 0, 0, 0, 0, 0, 0])
         print('vx', vxs[0])
         print('vy', vys[0])
 
@@ -147,11 +147,12 @@ def simulation_module():
     global simu_targets
     global vxs, vys
     global ids
-    simu_targets = [[-150, 150], [-75, 150], [0, 150], [75, 150], [150, 150]]
+    global x, y
+    simu_targets = [[-150, 150], [-75, 150], [0, 150], [75, 150], [150, 150], [1, 1]]
     while True:
         # try:
         vxs, vys = make_vel(simu_targets, infos, vxs, vys)
-        simu_targets = check_goals(simu_targets, infos)
+        simu_targets = check_goals(simu_targets, infos, x, y)
         # except:
         #     continue
 
