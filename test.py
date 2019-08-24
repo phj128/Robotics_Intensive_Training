@@ -92,7 +92,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed
+    local_planner = XY_speed_force
     finish = False
     while True:
         try:
@@ -113,7 +113,7 @@ def local_module():
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, info=infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos=infos)
                     # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
                     #                           dis_threshold=threshold, index=index)
 
