@@ -5,6 +5,7 @@ from message.receive import Receive
 from thread_global.myRRTmerge import RRT as thread_RRT
 
 from thread_local.xy_speed import XY_speed
+from thread_local.xy_speed_force import XY_speed as XY_speed_force
 
 from utils import select_info, distance, check_path_thread
 

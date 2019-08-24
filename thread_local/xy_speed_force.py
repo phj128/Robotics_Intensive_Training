@@ -61,13 +61,13 @@ class XY_speed():
         for index in range(len(infos)):
             if infos[index][3] == robot_id and infos[index][2] == color:
                 continue
-            else:
-                k = (k1 * infos[index][5] / v_obstacle_max) + k2 * rr / (np.sqrt(
-                    (infos[index][0] - now_x) * (infos[index][0] - now_x) + (infos[index][1] - now_y) * (
-                                infos[index][1] - now_y)))
+            elif distance(infos[index][:2], point_now) < rr:
+                k = (k1 * infos[index][5] / v_obstacle_max) + k2 * rr / distance(infos[index][:2], point_now)
                 gamma = math.atan2(infos[index][1] - now_y, infos[index][0] - now_x)
                 vx = vx + k * math.cos(gamma)
                 vy = vy + k * math.sin(gamma)
+            else:
+                continue
         print(vx, vy)
 
         vx_now = (self.v * math.cos(theta)-vx) * p
