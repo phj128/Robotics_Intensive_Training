@@ -33,7 +33,7 @@ def min_dis_index(point, path, i):
     return np.argmin(dis) + i
 
 
-def make_vel(target, infos, vxs, vys, v=400):
+def make_vel(target, infos, vxs, vys, v=200):
     for i in range(len(target)):
         if i >= 5:
             now_x, now_y, _, _, now_ori = infos[i+1][:5]

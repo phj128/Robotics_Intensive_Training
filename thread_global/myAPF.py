@@ -77,13 +77,26 @@ def get_info(info, receive, color, id):
     return obstacles
 
 
+def filter_infos(infos, robot_id, color, computing_time=0.10):
+    infos_ = infos.copy()
+    self_message = []
+    for i in range(len(infos)):
+        if infos[i][3] == robot_id:
+            if infos[i][2] == color:
+                self_message = infos_[i]
+                infos_.pop(i)
+                break
+    return infos_, self_message
+
+
+
 class APF():
     """
     人工势场寻路
     """
 
-    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80,
-                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30, color='blue', id='5'):
+    def __init__(self, s_x, s_y, g_x, g_y, info, k_att=30, k_rep=8000, rr=80,
+                 step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30, color='blue', robot_id=0, inflateRadius=30):
         """
         :param s_x, s_y: 起点
         :param g_x, g_y: 终点
@@ -101,9 +114,9 @@ class APF():
         self.current_pos = Vector2d(s_x, s_y)
         self.goal = Vector2d(g_x, g_y)
         self.color = color
-        self.id = id
-        obstacles = get_info(info, receive, color, id)
-        self.barrierInfo = np.array(obstacles)
+        self.id = robot_id
+        obstacles, _ = filter_infos(info, robot_id, color)
+        self.barrierInfo = np.array(obstacles)[:, :2]
         self.dis_threshold = dis_threshold
         self.obstacles = [Vector2d(OB[0], OB[1]) for OB in obstacles]
         self.k_att = k_att
@@ -146,7 +159,7 @@ class APF():
             obs_to_rob = self.current_pos - obstacle
             rob_to_goal = self.goal - self.current_pos
             if (obs_to_rob.length > self.rr):  # 超出障碍物斥力影响范围
-                pass
+                continue
             else:
                 rep_1 = Vector2d(obs_to_rob.direction[0], obs_to_rob.direction[1]) * self.k_rep * (
                         1.0 / obs_to_rob.length - 1.0 / self.rr) / (obs_to_rob.length ** 2) * (rob_to_goal.length ** 2)
@@ -158,7 +171,7 @@ class APF():
         point1 = real_point1.copy()
         point2 = real_point2.copy()
         for i in range(len(self.barrierInfo)):
-            center = [self.barrierInfo[i][0], self.barrierInfo[i][1]]
+            center = np.array([self.barrierInfo[i][0], self.barrierInfo[i][1]]).astype('float')
             dx_1 = center[0] - point1[0]
             dy_1 = center[1] - point1[1]
             dx_2 = center[0] - point2[0]
@@ -254,7 +267,7 @@ class APF():
             path_lines.append([x, y, x_, y_])
             path.append([x, y, i, i - 1])
         path.append([self.path[-1][0], self.path[-1][1], num-1, num-2])
-        self.restree = np.array(path)
+        self.restree = np.array(path).astype('float')
         # import ipdb;ipdb.set_trace()
         return np.array(self.path), path_lines
 
