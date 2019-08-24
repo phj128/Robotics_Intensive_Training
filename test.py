@@ -106,14 +106,14 @@ def local_module():
                 print(path)
                 if N <= 1:
                     status = False
-                    vx, vy = 30, 30
+                    vx, vy = 10, 10
                     continue
                 # try:
                 if N == 2:
                     i = 0
                 if i < N - 1:
                     motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, infos=infos)
+                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos)
                     # status_coll, index = check_path_thread([x, y], path[i+1], infos, color=color, id=id,
                     #                           dis_threshold=threshold, index=index)
 

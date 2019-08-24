@@ -19,7 +19,7 @@ class XY_speed():
         self.up = 60
 
 
-    def line_control(self, now_x, now_y, now_ori, path, i, N, info=None):
+    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None):
         point_now = [now_x, now_y]
         error = distance(point_now, path[i+1])
         error_max = distance(path[i], path[i+1])

@@ -14,6 +14,7 @@ from local_planner.xy_control import XY_control
 from local_planner.xy_near import XY_near
 from local_planner.xy_p import XY_p
 from local_planner.xy_angle import XY_angle
+from local_planner.xy_speed import XY_speed
 
 from run import run
 from run import run_while
@@ -29,14 +30,14 @@ if __name__ == '__main__':
                 ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
                 ['blue', 1], ['blue', 2], ['blue', 3], ['blue', 4],
                 ['blue', 0], ['blue', 6], ['blue', 7]]
-    g_x, g_y = (280, 210)
+    g_x, g_y = (260, 180)
     # barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
     #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_angle
-    RUN = run_shrink
+    local_p = XY_speed
+    RUN = run_line
 
     receive = Receive()
 
