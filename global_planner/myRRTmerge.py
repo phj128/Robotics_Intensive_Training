@@ -9,11 +9,7 @@ from message.receive import Receive
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, color='blue', id=5, step=10,
-<<<<<<< Updated upstream
                  inflateRadius=30, dis_threshold=30, limitation=500):
-=======
-                 inflateRadius=100, dis_threshold=30, limitation=500):
->>>>>>> Stashed changes
         self.color = color
         self.robot_id = id
         self.lines = []
@@ -258,7 +254,7 @@ class RRT:
     # function: check if we find the goal
     def CheckGoal(self, Qnext):
         distance = self.Calculate_Distance(Qnext[0], Qnext[1], self.goalNode[0], self.goalNode[1])
-        if distance < self.inflateRadius:
+        if distance < 7:
             return True
 
 

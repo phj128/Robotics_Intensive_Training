@@ -93,28 +93,20 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
     local_planner = local_p
 
     while True:
-        time_start = time.time()
         receive.get_info(color, robot_id)
         global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers,
                                      receive, color=color, id=robot_id)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
-        print('ori:', len(path))
         path, path_lines = global_path.merge()
-        print('nodes:', len(path))
-        time_end = time.time()
-        print('path cost:', time_end - time_start)
         debug_info = SendDebug('LINE', [lines, path_lines])
         debug_info.send()
-        end = time.time()
-        print('total cost:', end - time_start)
         receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
-        # import ipdb;ipdb.set_trace()
-        if distance((now_x, now_y), (target_x, target_y)) > 30:
+        if distance((now_x, now_y), (target_x, target_y)) > 7:
             motion = local_planner()
-            if not motion.line_control(path, robot_id, color, receive, barriers):
+            if not motion.line_control(path, robot_id, color, receive, target_x, target_y, barriers):
                 control = Send()
                 control.send_msg(robot_id, 0, 0, 0)
             else:
@@ -133,31 +125,22 @@ def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p
     while True:
         if index > 3:
             index = 3
-        print('index:', index)
         r = R / index
-        time_start = time.time()
         receive.get_info(color, robot_id)
         global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers,
                                      receive, color=color, id=robot_id, inflateRadius=r)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
-        print('ori:', len(path))
         path, path_lines = global_path.merge()
-        print('nodes:', len(path))
-        time_end = time.time()
-        print('path cost:', time_end - time_start)
         debug_info = SendDebug('LINE', [lines, path_lines])
         debug_info.send()
-        end = time.time()
-        print('total cost:', end - time_start)
         receive.get_info(color, robot_id)
         now_x = receive.robot_info['x']
         now_y = receive.robot_info['y']
         # import ipdb;ipdb.set_trace()
-        if distance((now_x, now_y), (target_x, target_y)) > R:
+        if distance((now_x, now_y), (target_x, target_y)) > 7:
             motion = local_planner()
-            status, index = motion.line_control(path, robot_id, color, receive, barriers, r, index=index)
-            print('control:', index)
+            status, index = motion.line_control(path, robot_id, color, receive, target_x, target_y, barriers, r, index=index)
             if not status:
                 control = Send()
                 control.send_msg(robot_id, 0, 0, 0)
