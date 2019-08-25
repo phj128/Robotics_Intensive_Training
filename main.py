@@ -6,6 +6,7 @@ from global_planner.myRRT_static import RRT
 from global_planner.myRRTstar import RRT as RRT_STAR
 from global_planner.myRRTmerge import RRT as RRT_MERGE
 from global_planner.A_star import AStar as A_star
+from ArtificialPotentialFieldMethod.myAPF import APF
 
 from ArtificialPotentialFieldMethod.myAPF import APF
 
@@ -15,6 +16,7 @@ from local_planner.xy_near import XY_near
 from local_planner.xy_p import XY_p
 from local_planner.xy_angle import XY_angle
 from local_planner.xy_speed import XY_speed
+from local_planner.XY_speed_force import XY_speed as XY_speed_force
 
 from run import run
 from run import run_while
@@ -36,7 +38,7 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_speed
+    local_p = XY_speed_force
     RUN = run_shrink
 
     receive = Receive()

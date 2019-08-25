@@ -82,7 +82,7 @@ class APF():
     人工势场寻路
     """
 
-    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80,
+    def __init__(self, s_x, s_y, g_x, g_y, info, receive, k_att=3, k_rep=8000, rr=80, inflateRadius=0,
                  step_size=10, max_iters=500, goal_threshold=10, att_threshold=50, dis_threshold=30, color='blue', id='5'):
         """
         :param s_x, s_y: 起点

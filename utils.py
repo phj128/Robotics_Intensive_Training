@@ -105,7 +105,7 @@ def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_thresh
         N = len(path)
     for i in range(N):
         for index in range(len(infos)):
-            center = infos[index]
+            center = [infos[index][0], infos[index][1]]
             if distance(point1, center) < dis_threshold:
                 return False, index_+1
             dx_1 = center[0] - point1[0]
