@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
-    global_p = RRT_MERGE
+    global_p = APF
     local_p = XY_speed_force
     RUN = run_shrink
 

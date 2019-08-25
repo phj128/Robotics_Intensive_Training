@@ -30,7 +30,10 @@ class XY_speed():
             error = distance(point_now, path[i + 1])
             error_max = distance(path[i], path[i + 1])
             if distance(point_now, [target_x, target_y]) > 7:
-                while error > 7:
+                thres = 20
+                if i == N - 2:
+                    thres = 7
+                while error > thres:
                     orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                     theta = now_ori - orientation_need_now
                     p = 1
