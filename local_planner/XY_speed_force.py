@@ -61,17 +61,18 @@ class XY_speed():
                     #速度斥力部分
                     vx = 0.0
                     vy = 0.0
+                    k1 = 20
+                    k2 = 20
+                    rr = 50
                     info = receive.get_infos(color=color, id=robot_id)
                     for index in range(len(info)):
-                        if distance(info[index][:2], point_now) < 50:
-                                k = (10 * info[index][2] / 400) + 10 * 50 / distance(info[index][:2], point_now)
+                        if distance(info[index][:2], point_now) < rr:
+                                k = (k1 * info[index][2] / 400) + k2 * rr / distance(info[index][:2], point_now)
                                 gamma = math.atan2(info[index][1] - now_y, info[index][0] - now_x)
                                 vx = vx + k * math.cos(gamma)
                                 vy = vy + k * math.sin(gamma)
                         else:
                                 continue
-
-
                     vx_now = (self.v-vx) * math.cos(theta) * p
                     vy_now = (self.v-vy) * math.sin(theta) * p
                     self.send.send_msg(robot_id, vx_now, vy_now, 0)
