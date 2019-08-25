@@ -25,14 +25,14 @@ import time
 
 if __name__ == '__main__':
     color = 'blue'
-    robot_id = 5
-    barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
-                ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
-                ['blue', 1], ['blue', 2], ['blue', 3], ['blue', 4],
-                ['blue', 0], ['blue', 6], ['blue', 7]]
-    g_x, g_y = (250, -150)
-    # barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
-    #             ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
+    robot_id = 4
+    # barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+    #             ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
+    #             ['blue', 1], ['blue', 2], ['blue', 5], ['blue', 3],
+    #             ['blue', 0], ['blue', 6], ['blue', 7]]
+    g_x, g_y = (-250, 150)
+    barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
+                ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
     global_p = RRT_MERGE

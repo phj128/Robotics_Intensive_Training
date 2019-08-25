@@ -9,7 +9,7 @@ from message.receive import Receive
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, barrierId, receive, color='blue', id=5, step=10,
-                 inflateRadius=30, dis_threshold=30, limitation=500):
+                 inflateRadius=30, dis_threshold=30, limitation=800):
         self.color = color
         self.robot_id = id
         self.lines = []
@@ -44,7 +44,7 @@ class RRT:
     # function: generate a random node in the map
     def Generate_Qrand(self):
         Qrand = [0, 0]
-        if random.randint(0, 5) > 3:
+        if random.randint(0, 7) > 5:
             Qrand[0] = self.goalNode[0]
             Qrand[1] = self.goalNode[1]
         else:
