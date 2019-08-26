@@ -112,21 +112,21 @@ class RRT:
             mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
                 mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-                dist = mid/(np.sqrt(np.square(-dx_0) + np.square(-dy_0)))
+                dist = mid / (math.sqrt(dx_0 * dx_0 + dy_0 * dy_0))
             elif mul_1 == 0 and mul_2 != 0:
-                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_1 != 0 and mul_2 == 0:
-                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_2 < 0 and mul_1 > 0:
-                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             else:
                 dist = 0
 
-            if dist < (self.dis_threshold+self.changeable_radius[i]):
+            if dist < (self.dis_threshold + self.changeable_radius[i]):
                 return False
 
         return True
@@ -149,7 +149,7 @@ class RRT:
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
     def Calculate_Distance(self, node1_x, node1_y, node2_x, node2_y):
-        return np.sqrt((node1_x - node2_x) ** 2 + (node1_y - node2_y) ** 2)
+        return math.sqrt((node1_x - node2_x) * (node1_x - node2_x) + (node1_y - node2_y) * (node1_y - node2_y))
         #return abs(node1_x - node2_x)+abs(node1_y - node2_y)
 
     # function: find the nearest node to Qrand
@@ -167,9 +167,9 @@ class RRT:
     # function: generate Qnext and add it into the tree
     def BornQnext(self, Qrand, Qnear):
         Qnext = [0, 0, 0, 0, 0]
-        theta = np.arctan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
-        Qnext[0] = Qnear[0] + self.step * np.cos(theta)
-        Qnext[1] = Qnear[1] + self.step * np.sin(theta)
+        theta = math.atan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
+        Qnext[0] = Qnear[0] + self.step * math.cos(theta)
+        Qnext[1] = Qnear[1] + self.step * math.sin(theta)
         Qnext[2] = len(self.tree)
         Qnext[3] = Qnear[2]
         Qnext[4] = Qnear[4]+self.Calculate_Distance(Qnext[0], Qnext[1], Qnear[0], Qnear[1])

@@ -2,7 +2,7 @@ import socket
 from time import sleep
 import proto.vision_detection_pb2 as detection
 import numpy as np
-
+import math
 
 
 class Receive():
@@ -46,14 +46,14 @@ class Receive():
     def change_info_yellow(self, robot, color, id):
         if color == 'yellow' and id == robot.robot_id:
             return
-        self.infos.append([robot.x / 10, robot.y / 10, np.sqrt(
+        self.infos.append([robot.x / 10, robot.y / 10, math.sqrt(
             (robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))])
 
 
     def change_info_blue(self, robot, color, id):
         if color == 'blue' and id == robot.robot_id:
             return
-        self.infos.append([robot.x/10, robot.y/10, np.sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10))])
+        self.infos.append([robot.x/10, robot.y/10, math.sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10))])
 
 
     def get_velocity_info(self, color, id):
@@ -122,25 +122,22 @@ class Receive():
         return self.infos
 
 
-    def thread_change_info_yellow(self, robot, infos):
+    def thread_change_info_yellow(self, robot, infos=None):
         # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
-        v = np.sqrt((robot.vel_x/10)*(robot.vel_x/10) + (robot.vel_y/10)*(robot.vel_y/10))
-        a = np.sqrt((robot.accelerate_x)*(robot.accelerate_x) + (robot.accelerate_y)*(robot.accelerate_y))
+        v = math.sqrt((robot.vel_x/10)*(robot.vel_x/10) + (robot.vel_y/10)*(robot.vel_y/10))
+        a = math.sqrt((robot.accelerate_x)*(robot.accelerate_x) + (robot.accelerate_y)*(robot.accelerate_y))
         # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x / 10, robot.vel_y / 10, robot.accelerate_x, robot.accelerate_y])
-        infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, v, a])
-        return infos
+        return [robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, v, a]
 
 
-    def thread_change_info_blue(self, robot, infos):
+    def thread_change_info_blue(self, robot, infos=None):
         # infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
-        v = np.sqrt((robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))
-        a = np.sqrt((robot.accelerate_x/10) * (robot.accelerate_x/10) + (robot.accelerate_y/10) * (robot.accelerate_y/10))
-        infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, v, a])
-        return infos
+        v = math.sqrt((robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))
+        a = math.sqrt((robot.accelerate_x/10) * (robot.accelerate_x/10) + (robot.accelerate_y/10) * (robot.accelerate_y/10))
+        return [robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, v, a]
 
 
     def thread_infos(self):
-        infos = []
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind(("127.0.0.1", 23333))
@@ -151,12 +148,14 @@ class Receive():
 
         robots_yellow = package.robots_yellow
         robots_blue = package.robots_blue
-        for robot in robots_blue:
-            infos = self.thread_change_info_blue(robot, infos)
-        for robot in robots_yellow:
-            infos = self.thread_change_info_yellow(robot, infos)
-        return infos
-
+        infos_blue = [self.thread_change_info_blue(robot) for robot in robots_blue]
+        infos_yellow = [self.thread_change_info_yellow(robot) for robot in robots_yellow]
+        # for robot in robots_blue:
+        #     infos = self.thread_change_info_blue(robot, infos)
+        # for robot in robots_yellow:
+        #     infos = self.thread_change_info_yellow(robot, infos)
+        # return infos
+        return infos_blue + infos_yellow
 
 if __name__ == "__main__":
     receive = Receive()

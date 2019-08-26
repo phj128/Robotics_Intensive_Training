@@ -117,17 +117,17 @@ class RRT:
             mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
                 mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-                dist = mid/(np.sqrt(np.square(-dx_0) + np.square(-dy_0)))
+                dist = mid/(math.sqrt(dx_0 * dx_0 + dy_0*dy_0))
             elif mul_1 == 0 and mul_2 != 0:
-                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+                dist = math.sqrt(dx_1*dx_1 + dy_1*dy_1)
             elif mul_1 != 0 and mul_2 == 0:
-                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+                dist = math.sqrt(dx_2*dx_2 + dy_2*dy_2)
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = np.sqrt(np.square(dx_1) + np.square(dy_1))
+                dist = math.sqrt(dx_1*dx_1 + dy_1*dy_1)
             elif mul_2 < 0 and mul_1 > 0:
-                dist = np.sqrt(np.square(dx_2) + np.square(dy_2))
+                dist = math.sqrt(dx_2*dx_2 +dy_2*dy_2)
             else:
                 dist = 0
 
@@ -154,7 +154,7 @@ class RRT:
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
     def Calculate_Distance(self, node1_x, node1_y, node2_x, node2_y):
-        return np.sqrt((node1_x - node2_x) ** 2 + (node1_y - node2_y) ** 2)
+        return math.sqrt((node1_x - node2_x) ** 2 + (node1_y - node2_y) ** 2)
         #return abs(node1_x - node2_x)+abs(node1_y - node2_y)
 
     # function: find the nearest node to Qrand
