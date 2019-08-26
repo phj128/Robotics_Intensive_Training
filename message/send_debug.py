@@ -142,18 +142,33 @@ class SendDebug():
                 print('No this kind of instruction')
                 return -1
         for i in range(len(self.circles)):
-            theta = PI / 3
-            for k in range(6):
-                self.draw_circles.append(package.msgs.add())
-                self.draw_circles[6*i+k].color = debug_info.Debug_Msg.GREEN
-                self.draw_circles[6*i+k].type = debug_info.Debug_Msg.LINE
-                line = self.draw_circles[6*i+k].line
-                line.FORWARD = True
-                line.BACK = False
-                line.start.x = self.infos[i][0] + self.circles[i] * math.cos(theta*k)
-                line.start.y = self.infos[i][1] + self.circles[i] * math.sin(theta*k)
-                line.end.x = self.infos[i][0] + self.circles[i] * math.cos(theta*(k+1))
-                line.end.y = self.infos[i][1] + self.circles[i] * math.sin(theta*(k+1))
+            # theta = PI / 3
+            self.draw_circles.append(package.msgs.add())
+            self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
+            self.draw_circles[i].type = debug_info.Debug_Msg.ARC
+            arc = self.draw_circles[i].arc
+            radius = self.circles[i]
+            arc.rectangle.point1.x = self.infos[i][0] - radius
+            arc.rectangle.point1.y = self.infos[i][1] + radius
+            arc.rectangle.point2.x = self.infos[i][0] + radius
+            arc.rectangle.point2.y = self.infos[i][1] - radius
+
+            arc.start = 0
+            arc.end = 360
+            arc.FILL = 1
+
+            # for k in range(6):
+            #     self.draw_circles.append(package.msgs.add())
+            #     self.draw_circles[6*i+k].color = debug_info.Debug_Msg.GREEN
+            #     self.draw_circles[6*i+k].type = debug_info.Debug_Msg.LINE
+            #     line = self.draw_circles[6*i+k].line
+            #     line.FORWARD = True
+            #     line.BACK = False
+            #     line.start.x = self.infos[i][0] + self.circles[i] * math.cos(theta*k)
+            #     line.start.y = self.infos[i][1] + self.circles[i] * math.sin(theta*k)
+            #     line.end.x = self.infos[i][0] + self.circles[i] * math.cos(theta*(k+1))
+            #     line.end.y = self.infos[i][1] + self.circles[i] * math.sin(theta*(k+1))
+
         send_data = package.SerializeToString()
         self.sock.sendto(send_data, ("127.0.0.1", 20001))
 
