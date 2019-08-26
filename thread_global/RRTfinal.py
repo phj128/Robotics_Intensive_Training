@@ -240,7 +240,7 @@ class RRT:
             path_lines.append([x, y, parent_x, parent_y])
             parent_x = x
             parent_y = y
-        return path[::-1], path_lines[::-1]
+        return path, path_lines
 
 
     # function: update barrier status

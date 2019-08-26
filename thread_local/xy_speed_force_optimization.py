@@ -20,7 +20,7 @@ class XY_speed():
         self.up = 60
 
     # def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1):
-    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos = None, color='blue', robot_id=4, threshold=30, index=1):
+    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
         error = distance(point_now, path[i + 1])
         error_max = distance(path[i], path[i + 1])
@@ -31,7 +31,6 @@ class XY_speed():
             if i == N - 2:
                 thres = 7
             if error > thres:
-
                 p = 1
                 dis_now = distance(path[i], path[i + 1])
                 if dis_now < self.up:
