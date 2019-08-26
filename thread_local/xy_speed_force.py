@@ -11,27 +11,30 @@ PI = 3.1415926
 
 class XY_speed():
     def __init__(self):
-        self.v = 300
-        self.threshold = 0.6
+        self.v = 200
+        self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
-        self.up = 60
+        self.up = 80
 
 
-    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, k1=50, k2=50, v_obstacle_max=400, rr=100, color="blue", robot_id=0):
+    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, k1=20, k2=20, v_obstacle_max=400, rr=100, color="blue", robot_id=0):
         point_now = [now_x, now_y]
         error = distance(point_now, path[i+1])
         error_max = distance(path[i], path[i+1])
-        if error_max < 80:
-            error_max = 80
+        if error_max < 30:
+            error_max = 30
         orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
         p = 1
         dis_now = distance(path[i], path[i+1])
-        if distance(point_now, [target_x, target_y]) < 80:
-            p = 0.2
+        if distance(point_now, [target_x, target_y]) < 30:
+            p = 0.4
         else:
-            if error > 7:
+            thres = 20
+            if i == N - 2:
+                thres = 7
+            if error > thres:
                 if dis_now < self.up:
                     p = sigmoid(error/dis_now-1)
                 if error < error_max * self.threshold:

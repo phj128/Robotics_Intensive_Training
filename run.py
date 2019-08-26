@@ -127,12 +127,15 @@ def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p
             index = 4
         r = R / index
         receive.get_info(color, robot_id)
+        starttime = time.time()
         global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers,
                                      # receive, color=color, id=robot_id)
                                      receive, color=color, id=robot_id, inflateRadius=r, dis_threshold=r)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()
         path, path_lines = global_path.merge()
+        endtime = time.time()
+        print('road planning time: ', endtime-starttime)
         debug_info = SendDebug('LINE', [lines, path_lines])
         debug_info.send()
         receive.get_info(color, robot_id)

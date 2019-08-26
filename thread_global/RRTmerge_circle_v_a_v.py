@@ -28,7 +28,7 @@ def filter_infos(infos, robot_id, color, computing_time=0.10):
 class RRT:
     # get the start node and the final node
     def __init__(self, start_x, start_y, goal_x, goal_y, infos, step=10, robot_id=0, color='blue',
-                 inflateRadius=20, dis_threshold=30, limitation=500):
+                 inflateRadius=20, dis_threshold=30, limitation=800):
         self.lines = []
         self.draw = False
         self.step = step

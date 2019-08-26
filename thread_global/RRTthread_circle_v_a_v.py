@@ -10,6 +10,7 @@ import math
 
 def filter_infos(infos, robot_id, color, computing_time=0.10):
     infos_ = infos.copy()
+    self_message = []
     for i in range(len(infos)):
         if infos[i][3] == robot_id:
             if infos[i][2] == color:
@@ -279,7 +280,8 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        return status, self.tree, self.lines
+        radius = np.array(self.changeable_radius) + self.inflateRadius
+        return status, self.tree, self.lines, radius
 
 
     def Get_Path(self):
