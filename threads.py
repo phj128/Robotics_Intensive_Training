@@ -26,6 +26,7 @@ global i
 global color, id
 global threshold
 global status_coll, status, finish
+lock = threading.Lock()
 circles = []
 
 color = 'blue'
@@ -62,6 +63,7 @@ def global_module():
     global x, y
     global i
     global status_coll, status
+    global lock
     target_x, target_y = -250, 150
     path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
     global_planner = RRT_circle_v_a_v
@@ -71,7 +73,6 @@ def global_module():
     index = 1
     R = 30
     i = 0
-    lock = threading.Lock()
     while True:
         # try:
         N = len(path)
@@ -163,17 +164,13 @@ if __name__ == '__main__':
     thread5 = threading.Thread(target=debug_module)
 
     thread1.start()
-    time.sleep(0.1)
     thread2.start()
-    time.sleep(0.1)
     thread3.start()
-    time.sleep(0.1)
-    thread4.start()
-    time.sleep(0.1)
+    # thread4.start()
     thread5.start()
 
     thread1.join()
     thread2.join()
     thread3.join()
-    thread4.join()
+    # thread4.join()
     thread5.join()

@@ -30,7 +30,7 @@ global status_coll, status, finish
 
 
 color = 'blue'
-id = 0
+id = 4
 
 
 def receive_module():
@@ -65,7 +65,7 @@ def global_module():
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, -150
-    global_planner = APF
+    global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
     finish = False
@@ -95,7 +95,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed_force
+    local_planner = XY_speed
     finish = False
     while True:
         try:

@@ -63,7 +63,7 @@ class XY_speed():
                     vy = 0.0
                     k1 = 20
                     k2 = 20
-                    rr = 50
+                    rr = 80
                     info = receive.get_infos(color=color, id=robot_id)
                     for index in range(len(info)):
                         if distance(info[index][:2], point_now) < rr:
@@ -73,6 +73,7 @@ class XY_speed():
                                 vy = vy + k * math.sin(gamma)
                         else:
                                 continue
+                    print(vx, vy)
                     vx_now = (self.v-vx) * math.cos(theta) * p
                     vy_now = (self.v-vy) * math.sin(theta) * p
                     self.send.send_msg(robot_id, vx_now, vy_now, 0)
