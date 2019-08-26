@@ -14,7 +14,7 @@ class XY_speed():
         self.send = Send()
         self.debug = SendDebug()
         self.v = 400
-        self.threshold = 0.4
+        self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
         self.up = 60
@@ -26,27 +26,36 @@ class XY_speed():
         error_max = distance(path[i], path[i + 1])
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
-        if distance(point_now, [target_x, target_y]) > 7:
-            thres = 20
-            if i == N - 2:
-                thres = 7
-            if error > thres:
-                p = 1
-                dis_now = distance(path[i], path[i + 1])
-                if dis_now < self.up:
-                    p = 0.5
-                thresdist = error_max * self.threshold
-                if 3 * thresdist > error > thresdist:
-                    p = 0.6 * p
-                if error < thresdist:
-                    p = p * error / thresdist
+        dis = distance(point_now, [target_x, target_y])
+        if dis > 7:
+            if dis > 60:
+                if error > 20:
+                    p = 1
+                    dis_now = distance(path[i], path[i + 1])
+                    if dis_now < self.up:
+                        p = 0.5
+                    thresdist = error_max * self.threshold
+                    if 3 * thresdist > error > thresdist:
+                        p = 0.6 * p
+                    if error < thresdist:
+                        p = p * error / thresdist
 
-                vx_now = self.v * cos(theta) * p
-                vy_now = self.v * sin(theta) * p
+                    vx_now = self.v * cos(theta) * p
+                    vy_now = self.v * sin(theta) * p
 
-                return vx_now, vy_now, False
+                    return vx_now, vy_now, False
+                else:
+                    p = 0.2
+                    vx_now = self.v * cos(theta) * p
+                    vy_now = self.v * sin(theta) * p
+                    return vx_now, vy_now, True
             else:
                 p = 0.2
                 vx_now = self.v * cos(theta) * p
                 vy_now = self.v * sin(theta) * p
                 return vx_now, vy_now, True
+        else:
+            p = 0.05
+            vx_now = self.v * cos(theta) * p
+            vy_now = self.v * sin(theta) * p
+            return vx_now, vy_now, True
