@@ -20,8 +20,11 @@ class XY_speed():
         error = distance(point_now, path[i+1])
         orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
-        if distance(point_now, [target_x, target_y]) > 60:
-            if error > 7:
+        if distance(point_now, [target_x, target_y]) > 30:
+            thres = 20
+            if i == N-2:
+                thres = 7
+            if error > thres:
                 vx_now = self.v * math.cos(theta)
                 vy_now = self.v * math.sin(theta)
                 return vx_now, vy_now, False

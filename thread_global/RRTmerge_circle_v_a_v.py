@@ -78,7 +78,7 @@ class RRT:
             Qrand[1] = self.goalNode[1]
         else:
             Qrand[0] = np.random.randint(-300, 300)
-            Qrand[1] = np.random.randint(-225, 225)
+            Qrand[1] = np.random.randint(-200, 200)
 
         return Qrand
     '''

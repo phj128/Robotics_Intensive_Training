@@ -5,16 +5,17 @@ from message.receive import Receive
 from thread_global.myRRTmerge import RRT as thread_RRT
 from thread_global.RRTmerge_predic import RRT as RRT_pred
 from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
-from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
-from thread_global.RRTmerge_circle_v_a_v import RRT as RRT_circle_v_a_v
+from thread_global.RRTthread_circle_v_a import RRT as RRT_circle_v_a
+from thread_global.RRTthread_circle_v_a_v import RRT as RRT_circle_v_a_v
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
 from thread_local.xy_fast import XY_speed as XY_fast
 
-from utils import select_info, distance, check_path_thread, make_vel, check_goals
+from utils import select_info, distance, check_path_thread
 
 import time, threading
+
 
 global infos
 global path, path_lines, tree, lines
@@ -25,16 +26,10 @@ global i
 global color, id
 global threshold
 global status_coll, status, finish
-global ids, vxs, vys
-global simu_targets
-global radius
 
 
-id = 5
-ids = [id, 0, 1, 2, 3, 4, 6]
-vxs = [0, 30, 30, 30, 30, 30, 30]
-vys = [0, 30, 30, 30, 30, 30, 30]
-radius = []
+color = 'blue'
+id = 0
 
 
 def receive_module():
@@ -51,11 +46,12 @@ def receive_module():
     i = 0
     infos = []
     receive = Receive()
-    color = 'blue'
-    id = 5
     while True:
-        infos = receive.thread_infos()
-        x, y, _, _, ori = select_info(infos, color, id)
+        try:
+            infos = receive.thread_infos()
+            x, y, _, _, ori = select_info(infos, color, id)
+        except:
+            continue
 
 
 def global_module():
@@ -66,31 +62,39 @@ def global_module():
     global x, y
     global i
     global status_coll, status
-    global radius
-    path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, -150
+    path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
     global_planner = RRT_circle_v_a_v
     status_coll = False
     status = False
+    finish = False
     index = 1
     R = 30
+    i = 0
+    lock = threading.Lock()
     while True:
-        time_start = time.time()
-        if index > 3:
-            index = 3
-        global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index)
-        status, tree, lines, radius = global_path.Generate_Path()
-        if not status:
-            index += 1
-        else:
-            index = 1
-        path_, path_lines = global_path.Get_Path()
-        print('ori:', len(path_))
-        path, path_lines = global_path.merge()
-        print('nodes:', len(path))
-        time_end = time.time()
-        print('path cost:', time_end - time_start)
-        i = 0
+        try:
+            if not status or not check_path_thread([x, y], path[i+1], infos, R/index, color=color, id=id):
+                lock.acquire()
+                start = time.time()
+                if index > 3:
+                    index = 3
+                global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
+                status, tree, lines = global_path.Generate_Path()
+                if not status:
+                    index += 1
+                else:
+                    index = 1
+                path_, path_lines_ = global_path.Get_Path()
+                path, path_lines = global_path.merge()
+                i = 0
+                end = time.time()
+                print('time cost:', end - start)
+                lock.release()
+            else:
+                continue
+        except:
+            continue
 
 
 def local_module():
@@ -104,11 +108,11 @@ def local_module():
     finish = False
     while True:
         try:
-            if distance((x, y), (target_x, target_y)) > 30:
+            if distance((x, y), (target_x, target_y)) > 7:
                 N = len(path)
                 if N <= 1:
                     status = False
-                    vxs[0], vys[0] = 30, 30
+                    vx, vy = 10, 10
                     continue
                 if N == 2:
                     i = 0
@@ -116,8 +120,6 @@ def local_module():
                     motion = local_planner()
                     vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos,
                                                          color=color, robot_id=id)
-                    vxs[0] = vx
-                    vys[0] = vy
                 if finish:
                     i += 1
                     finish = False
@@ -131,34 +133,22 @@ def local_module():
 
 
 def send_module():
-    global ids, vxs, vys
     while True:
-        send = Send()
-        send.send_all(ids, vxs, vys, [0, 0, 0, 0, 0, 0, 0])
-        print('vx', vxs[0])
-        print('vy', vys[0])
+        try:
+            send = Send()
+            send.send_msg(id, vx, vy, 0)
+        except:
+            continue
 
 
 def debug_module():
     global lines, path_lines
     while True:
-        debug_info = SendDebug('LINE', [lines, path_lines], circles=radius, infos=infos)
-        debug_info.send()
-
-
-def simulation_module():
-    global simu_targets
-    global vxs, vys
-    global ids
-    global x, y
-    simu_targets = [[-150, 150], [-75, 150], [0, 150], [75, 150], [150, 150], [1, 1]]
-    while True:
-        # try:
-        vxs, vys = make_vel(simu_targets, infos, vxs, vys)
-        simu_targets = check_goals(simu_targets, infos, x, y)
-        # except:
-        #     continue
-
+        try:
+            debug_info = SendDebug('LINE', [lines, path_lines])
+            debug_info.send()
+        except:
+            continue
 
 
 if __name__ == '__main__':
@@ -167,7 +157,6 @@ if __name__ == '__main__':
     thread3 = threading.Thread(target=local_module)
     thread4 = threading.Thread(target=send_module)
     thread5 = threading.Thread(target=debug_module)
-    thread6 = threading.Thread(target=simulation_module)
 
     thread1.start()
     time.sleep(0.1)
@@ -177,8 +166,6 @@ if __name__ == '__main__':
     time.sleep(0.1)
     thread4.start()
     time.sleep(0.1)
-    thread6.start()
-    time.sleep(1)
     thread5.start()
 
     thread1.join()
@@ -186,4 +173,3 @@ if __name__ == '__main__':
     thread3.join()
     thread4.join()
     thread5.join()
-    thread6.join()
