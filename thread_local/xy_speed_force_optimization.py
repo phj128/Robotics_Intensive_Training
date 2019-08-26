@@ -36,7 +36,7 @@ class XY_speed():
                 if dis_now < self.up:
                     p = 0.5
                 thresdist = error_max * self.threshold
-                if 3 * thresdist > error and error > thresdist:
+                if 3 * thresdist > error > thresdist:
                     p = 0.6 * p
                 if error < thresdist:
                     p = p * error / thresdist
