@@ -7,6 +7,7 @@ from thread_global.RRTmerge_predic import RRT as RRT_pred
 from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
 from thread_global.RRTmerge_circle_v_a import RRT as RRT_circle_v_a
 from thread_global.RRTmerge_circle_v_a_v import RRT as RRT_circle_v_a_v
+from thread_global.myAPF_draw import APF
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
@@ -69,7 +70,7 @@ def global_module():
     global radius
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, -150
-    global_planner = RRT_circle_v_a_v
+    global_planner = APF
     status_coll = False
     status = False
     index = 1
@@ -143,6 +144,7 @@ def debug_module():
     global lines, path_lines
     while True:
         debug_info = SendDebug('LINE', [lines, path_lines], circles=radius, infos=infos)
+        # debug_info = SendDebug('LINE', [lines, path_lines])
         debug_info.send()
 
 
@@ -153,11 +155,11 @@ def simulation_module():
     global x, y
     simu_targets = [[-150, 150], [-75, 150], [0, 150], [75, 150], [150, 150], [1, 1]]
     while True:
-        # try:
-        vxs, vys = make_vel(simu_targets, infos, vxs, vys)
-        simu_targets = check_goals(simu_targets, infos, x, y)
-        # except:
-        #     continue
+        try:
+            vxs, vys = make_vel(simu_targets, infos, vxs, vys)
+            simu_targets = check_goals(simu_targets, infos, x, y)
+        except:
+            continue
 
 
 

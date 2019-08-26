@@ -10,6 +10,7 @@ import math
 
 def filter_infos(infos, robot_id, color, computing_time=0.10):
     infos_ = infos.copy()
+    self_message = []
     for i in range(len(infos)):
         if infos[i][3] == robot_id:
             if infos[i][2] == color:

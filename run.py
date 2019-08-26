@@ -120,14 +120,15 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
 def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p, receive):
     global_planner = global_p
     local_planner = local_p
-    R = 30
+    R = 40
     index = 1
     while True:
-        if index > 3:
-            index = 3
+        if index > 4:
+            index = 4
         r = R / index
         receive.get_info(color, robot_id)
         global_path = global_planner(receive.robot_info['x'], receive.robot_info['y'], target_x, target_y, barriers,
+                                     # receive, color=color, id=robot_id)
                                      receive, color=color, id=robot_id, inflateRadius=r, dis_threshold=r)
         status, tree, lines = global_path.Generate_Path()
         path, path_lines = global_path.Get_Path()

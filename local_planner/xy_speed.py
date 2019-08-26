@@ -14,7 +14,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 250
+        self.v = 320
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -33,7 +33,10 @@ class XY_speed():
             error = distance(point, path[i+1])
             error_max = distance(path[i], path[i+1])
             # print('error:', error)
-            while error > 10:
+            thres = 20
+            if i == N - 2:
+                thres = 7
+            while error > thres:
                 p = 1
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori + orientation_need_now
@@ -105,7 +108,10 @@ class XY_speed():
             error = distance(point_now, path[i+1])
             error_max = distance(path[i], path[i+1])
             if distance(point_now, [target_x, target_y]) > 7:
-                while error > 20:
+                thres = 20
+                if i == N - 2:
+                    thres = 7
+                while error > thres:
                     orientation_need_now = math.atan2((path[i+1][1] - now_y), (path[i+1][0] - now_x))
                     theta = now_ori - orientation_need_now
                     p = 1

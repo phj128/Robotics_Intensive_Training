@@ -33,7 +33,7 @@ def min_dis_index(point, path, i):
     return np.argmin(dis) + i
 
 
-def make_vel(target, infos, vxs, vys, v=400):
+def make_vel(target, infos, vxs, vys, v=200):
     for i in range(len(target)):
         if i >= 5:
             now_x, now_y, _, _, now_ori = infos[i+1][:5]
@@ -105,7 +105,7 @@ def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_thresh
         N = len(path)
     for i in range(N):
         for index in range(len(infos)):
-            center = infos[index]
+            center = [infos[index][0], infos[index][1]]
             if distance(point1, center) < dis_threshold:
                 return False, index_+1
             dx_1 = center[0] - point1[0]

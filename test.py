@@ -7,6 +7,7 @@ from thread_global.RRTmerge_predic import RRT as RRT_pred
 from thread_global.RRTmerge_circle_v import RRT as RRT_circle_v
 from thread_global.RRTthread_circle_v_a import RRT as RRT_circle_v_a
 from thread_global.RRTthread_circle_v_a_v import RRT as RRT_circle_v_a_v
+from thread_global.myAPF import APF
 
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
@@ -64,7 +65,7 @@ def global_module():
     global status_coll, status
     path, path_lines, tree, lines = [], [], [], []
     target_x, target_y = 250, -150
-    global_planner = RRT_circle_v_a_v
+    global_planner = APF
     status_coll = False
     status = False
     finish = False
@@ -94,7 +95,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_fast
+    local_planner = XY_speed_force
     finish = False
     while True:
         try:
