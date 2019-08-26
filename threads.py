@@ -83,8 +83,8 @@ def global_module():
             if not status or not status_coll:
                 lock.acquire()
                 start = time.time()
-                if index > 3:
-                    index = 3
+                if index > 5:
+                    index = 5
                 global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
                 status, tree, lines, circles = global_path.Generate_Path()
                 if not status:
@@ -152,8 +152,8 @@ def debug_module():
     global lines, path_lines, circles
     while True:
         try:
-            # debug_info = SendDebug('LINE', [[], path_lines], infos=infos, circles=circles)
-            debug_info = SendDebug('LINE', [[], path_lines])
+            debug_info = SendDebug('LINE', [[], path_lines], infos=infos, circles=circles)
+            # debug_info = SendDebug('LINE', [[], path_lines])
             debug_info.send()
         except:
             continue
