@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 200
+        self.v = 370
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -63,7 +63,7 @@ class XY_speed():
                     vy = 0.0
                     k1 = 20
                     k2 = 20
-                    rr = 80
+                    rr = 50
                     info = receive.get_infos(color=color, id=robot_id)
                     for index in range(len(info)):
                         if distance(info[index][:2], point_now) < rr:
