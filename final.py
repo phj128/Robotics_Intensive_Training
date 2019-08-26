@@ -68,31 +68,31 @@ def global_module():
     R = 30
     i = 0
     while True:
-        # try:
-        N = len(path)
-        if i > N - 2:
-            i = N - 2
-        status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
-        if not status or not status_coll:
-            lock.acquire()
-            start = time.time()
-            if index > 3:
-                index = 3
-            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
-            status = global_path.Generate_Path()
-            if not status:
-                index += 1
+        try:
+            N = len(path)
+            if i > N - 2:
+                i = N - 2
+            status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
+            if not status or not status_coll:
+                lock.acquire()
+                start = time.time()
+                if index > 5:
+                    index = 5
+                global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
+                status = global_path.Generate_Path()
+                if not status:
+                    index += 1
+                else:
+                    index = 1
+                path, path_lines = global_path.Get_Path()
+                i = 0
+                end = time.time()
+                print('time cost:', end - start)
+                lock.release()
             else:
-                index = 1
-            path, path_lines = global_path.Get_Path()
-            i = 0
-            end = time.time()
-            print('time cost:', end - start)
-            lock.release()
-        else:
+                continue
+        except:
             continue
-        # except:
-        #     continue
 
 
 def local_module():
@@ -110,7 +110,7 @@ def local_module():
                 N = len(path)
                 if N <= 1:
                     status = False
-                    vx, vy = 10, 10
+                    vx, vy = 40, 40
                     continue
                 if N == 2:
                     i = 0
