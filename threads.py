@@ -101,6 +101,8 @@ def global_module():
                 continue
         except:
             continue
+        # except:
+        #     continue
 
 
 def local_module():
@@ -153,7 +155,6 @@ def debug_module():
     while True:
         try:
             debug_info = SendDebug('LINE', [[], path_lines], infos=infos, circles=circles)
-            # debug_info = SendDebug('LINE', [[], path_lines])
             debug_info.send()
         except:
             continue

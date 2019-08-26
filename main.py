@@ -25,10 +25,31 @@ from run import run_line
 from run import run_shrink
 import time
 
+def func(color, robot_id, receive):
+    # barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
+    #             ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
+    #             ['blue', 1], ['blue', 2], ['blue', 5], ['blue', 3],
+    #             ['blue', 0], ['blue', 6], ['blue', 7]]
+    g_x, g_y = (-250, 150)
+    barriers = [['yellow', 0], ['blue', 1], ['blue', 2], ['blue', 3],
+                ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
+
+    i = 0
+    global_p = RRT_MERGE
+    local_p = XY_speed
+    RUN = run_shrink
+
+    while True:
+        if i % 2 == 0:
+            RUN(color, robot_id, barriers, g_x, g_y, global_p, local_p, receive)
+        else:
+            RUN(color, robot_id, barriers, -g_x, -g_y, global_p, local_p, receive)
+        i += 1
+
 
 if __name__ == '__main__':
     color = 'blue'
-    robot_id = 4
+    robot_id = 0
     # barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
     #             ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
     #             ['blue', 1], ['blue', 2], ['blue', 5], ['blue', 3],
