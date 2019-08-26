@@ -150,7 +150,7 @@ def debug_module():
     global lines, path_lines, circles
     while True:
         # try:
-        debug_info = SendDebug('LINE', [lines, path_lines], circles=circles, infos=infos)
+        debug_info = SendDebug('LINE', [[], path_lines], circles=circles, infos=infos)
         debug_info.send()
         # except:
         #     continue

@@ -11,12 +11,14 @@ import math
 def filter_infos(infos, robot_id, color, computing_time=0.10):
     infos_ = infos.copy()
     self_message = []
-    for i in range(len(infos)):
-        if infos[i][3] == robot_id:
-            if infos[i][2] == color:
-                self_message = infos_[i]
+    i = 0
+    for info in infos:
+        if info[3] == robot_id:
+            if info[2] == color:
+                self_message = info.copy()
                 infos_.pop(i)
                 break
+        i += 1
     return infos_, self_message
 
 
@@ -55,13 +57,14 @@ class RRT:
         self.Update_barrier_radius()
 
     def Update_barrier_radius(self):
-        for index in range(len(self.barrierInfo)):
-            # v = math.sqrt(self.barrierInfo[index][5]*self.barrierInfo[index][5] + self.barrierInfo[index][6]*self.barrierInfo[index][6])
-            # a = math.sqrt(self.barrierInfo[index][7]*self.barrierInfo[index][7] + self.barrierInfo[index][8]*self.barrierInfo[index][8])
-            v = self.barrierInfo[index][5]
-            a = self.barrierInfo[index][6]
-            v_self = self.self_message[5]
-            self.changeable_radius.append(0.02*v + 0.02*v_self + 0.00125*a)
+        self.changeable_radius = [0.02*info[5]+0.02*self.self_message[5]+0.00125*info[6] for info in self.barrierInfo]
+        # for index in range(len(self.barrierInfo)):
+        #     # v = math.sqrt(self.barrierInfo[index][5]*self.barrierInfo[index][5] + self.barrierInfo[index][6]*self.barrierInfo[index][6])
+        #     # a = math.sqrt(self.barrierInfo[index][7]*self.barrierInfo[index][7] + self.barrierInfo[index][8]*self.barrierInfo[index][8])
+        #     v = self.barrierInfo[index][5]
+        #     a = self.barrierInfo[index][6]
+        #     v_self = self.self_message[5]
+        #     self.changeable_radius.append(0.02*v + 0.02*v_self + 0.00125*a)
 
     # function: generate a random node in the map
     def Generate_Qrand(self):
