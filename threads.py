@@ -18,7 +18,7 @@ import time, threading
 
 
 global infos
-global path, path_lines, tree, lines
+global path, path_lines, tree, lines, circles
 global target_x, target_y
 global x, y, ori
 global vx, vy
@@ -26,10 +26,10 @@ global i
 global color, id
 global threshold
 global status_coll, status, finish
-
+circles = []
 
 color = 'blue'
-id = 0
+id = 5
 
 
 def receive_module():
@@ -58,11 +58,11 @@ def global_module():
     global infos
     global target_x
     global target_y
-    global path, path_lines, tree, lines
+    global path, path_lines, tree, lines, circles
     global x, y
     global i
     global status_coll, status
-    target_x, target_y = 250, -150
+    target_x, target_y = -250, 150
     path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
     global_planner = RRT_circle_v_a_v
     status_coll = False
@@ -73,28 +73,32 @@ def global_module():
     i = 0
     lock = threading.Lock()
     while True:
-        try:
-            if not status or not check_path_thread([x, y], path[i+1], infos, R/index, color=color, id=id):
-                lock.acquire()
-                start = time.time()
-                if index > 3:
-                    index = 3
-                global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
-                status, tree, lines = global_path.Generate_Path()
-                if not status:
-                    index += 1
-                else:
-                    index = 1
-                path_, path_lines_ = global_path.Get_Path()
-                path, path_lines = global_path.merge()
-                i = 0
-                end = time.time()
-                print('time cost:', end - start)
-                lock.release()
+        # try:
+        N = len(path)
+        if i > N - 2:
+            i = N - 2
+        status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
+        if not status or not status_coll:
+            lock.acquire()
+            start = time.time()
+            if index > 3:
+                index = 3
+            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
+            status, tree, lines, circles = global_path.Generate_Path()
+            if not status:
+                index += 1
             else:
-                continue
-        except:
+                index = 1
+            path_, path_lines_ = global_path.Get_Path()
+            path, path_lines = global_path.merge()
+            i = 0
+            end = time.time()
+            print('time cost:', end - start)
+            lock.release()
+        else:
             continue
+        # except:
+        #     continue
 
 
 def local_module():
@@ -104,7 +108,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_fast
+    local_planner = XY_speed_force
     finish = False
     while True:
         try:
@@ -142,13 +146,13 @@ def send_module():
 
 
 def debug_module():
-    global lines, path_lines
+    global lines, path_lines, circles
     while True:
-        try:
-            debug_info = SendDebug('LINE', [lines, path_lines])
-            debug_info.send()
-        except:
-            continue
+        # try:
+        debug_info = SendDebug('LINE', [lines, path_lines], circles=circles, infos=infos)
+        debug_info.send()
+        # except:
+        #     continue
 
 
 if __name__ == '__main__':

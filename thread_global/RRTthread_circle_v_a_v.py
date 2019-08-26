@@ -279,7 +279,8 @@ class RRT:
             Qnear = self.Find_Qnear(Qrand)
             status = self.BornQnext(Qrand, Qnear)
             i += 1
-        return status, self.tree, self.lines
+        radius = np.array(self.changeable_radius) + self.inflateRadius
+        return status, self.tree, self.lines, radius
 
 
     def Get_Path(self):
