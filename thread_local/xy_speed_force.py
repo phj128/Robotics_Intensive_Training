@@ -1,7 +1,7 @@
 from message.send import Send
 from message.send_debug import SendDebug
 from time import sleep
-import math
+from math import sin, cos, atan2, exp, log
 import numpy as np
 import time
 from utils import distance, interpolate_path, check_two_points_l, check_path_l, sigmoid
@@ -24,7 +24,7 @@ class XY_speed():
         error_max = distance(path[i], path[i+1])
         if error_max < 30:
             error_max = 30
-        orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
+        orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
         p = 1
         dis_now = distance(path[i], path[i+1])
@@ -39,7 +39,7 @@ class XY_speed():
                     p = sigmoid(error/dis_now-1)
                 if error < error_max * self.threshold:
                     if i < N - 2:
-                        alpha = math.atan2(path[i + 2][1] - path[i + 1][1], path[i + 2][0] - path[i + 1][0])
+                        alpha = atan2(path[i + 2][1] - path[i + 1][1], path[i + 2][0] - path[i + 1][0])
                         if orientation_need_now > 0:
                             angle = alpha + (PI - orientation_need_now)
                         else:
@@ -47,18 +47,18 @@ class XY_speed():
                         if angle > PI:
                             angle = 2 * PI - angle
                         if abs(angle) < self.angle_threshold:
-                            p = error / ((self.threshold + self.time_turn) * error_max) * math.log(2)
-                            p = math.exp(p) - 1
+                            p = error / ((self.threshold + self.time_turn) * error_max) * log(2)
+                            p = exp(p) - 1
                         else:
-                            p = error / (self.threshold * error_max) * math.log(2)
-                            p = math.exp(p) - 1
+                            p = error / (self.threshold * error_max) * log(2)
+                            p = exp(p) - 1
                     else:
-                        p = error / (self.threshold * error_max) * math.log(2)
-                        p = math.exp(p) - 1
+                        p = error / (self.threshold * error_max) * log(2)
+                        p = exp(p) - 1
             else:
                 p = 0.2
-                vx_now = self.v * math.cos(theta) * p
-                vy_now = self.v * math.sin(theta) * p
+                vx_now = self.v * cos(theta) * p
+                vy_now = self.v * sin(theta) * p
                 return vx_now, vy_now, True
 
         #速度斥力部分
@@ -69,12 +69,12 @@ class XY_speed():
                 continue
             elif distance(infos[index][:2], point_now) < rr:
                 k = (k1 * infos[index][5] / v_obstacle_max) + k2 * rr / distance(infos[index][:2], point_now)
-                gamma = math.atan2(infos[index][1] - now_y, infos[index][0] - now_x)
-                vx = vx + k * math.cos(gamma)
-                vy = vy + k * math.sin(gamma)
+                gamma = atan2(infos[index][1] - now_y, infos[index][0] - now_x)
+                vx = vx + k * cos(gamma)
+                vy = vy + k * sin(gamma)
             else:
                 continue
 
-        vx_now = (self.v * math.cos(theta)-vx) * p
-        vy_now = (self.v * math.sin(theta)-vy) * p
+        vx_now = (self.v * cos(theta)-vx) * p
+        vy_now = (self.v * sin(theta)-vy) * p
         return vx_now, vy_now, False

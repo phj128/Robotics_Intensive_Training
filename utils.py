@@ -1,21 +1,21 @@
-import numpy as math
-import math
+import numpy as np
+from math import sqrt, sin, cos, atan2, exp
 
 
 def distance(point, goal):
     x, y = point
     g_x, g_y = goal
-    return math.sqrt((x - g_x) * (x - g_x) + (y - g_y) * (y - g_y))
+    return sqrt((x - g_x) * (x - g_x) + (y - g_y) * (y - g_y))
 
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + exp(-x))
 
 
 def tanh(x):
-    s1 = math.exp(x) - math.exp(-x)
-    s2 = math.exp(x) + math.exp(-x)
-    return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
+    s1 = exp(x) - exp(-x)
+    s2 = exp(x) + exp(-x)
+    return (exp(x) - exp(-x)) / (exp(x) + exp(-x))
 
 
 def select_info(infos, color, robot_id):
@@ -29,7 +29,7 @@ def select_info(infos, color, robot_id):
 def min_dis_index(point, path, i):
     path = np.array(path)
     delta = point - path
-    dis = math.sqrt(np.sum(delta * delta, axis=1))
+    dis = sqrt(np.sum(delta * delta, axis=1))
     return np.argmin(dis) + i
 
 
@@ -37,16 +37,16 @@ def make_vel(target, infos, vxs, vys, v=200):
     for i in range(len(target)):
         if i >= 5:
             now_x, now_y, _, _, now_ori = infos[i+1][:5]
-            orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
+            orientation_need_now = atan2((target[i][1] - now_y), (target[i][0] - now_x))
             theta = now_ori - orientation_need_now
-            vxs[i + 1] = v * math.cos(theta)
-            vys[i + 1] = v * math.sin(theta)
+            vxs[i + 1] = v * cos(theta)
+            vys[i + 1] = v * sin(theta)
         else:
             now_x, now_y, _, _, now_ori = infos[i][:5]
-            orientation_need_now = math.atan2((target[i][1] - now_y), (target[i][0] - now_x))
+            orientation_need_now = atan2((target[i][1] - now_y), (target[i][0] - now_x))
             theta = now_ori - orientation_need_now
-            vxs[i+1] = v * math.cos(theta)
-            vys[i+1] = v * math.sin(theta)
+            vxs[i+1] = v * cos(theta)
+            vys[i+1] = v * sin(theta)
     return vxs, vys
 
 
@@ -118,17 +118,17 @@ def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_thresh
             mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
                 mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-                dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+                dist = mid / sqrt(dx_0 * dx_0 + dy_0 * dy_0)
             elif mul_1 == 0 and mul_2 != 0:
-                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_1 != 0 and mul_2 == 0:
-                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_2 < 0 and mul_1 > 0:
-                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             else:
                 dist = 0
 
@@ -156,17 +156,17 @@ def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0, d
         mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
         if mul_1 > 0 and mul_2 > 0:
             mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-            dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+            dist = mid / sqrt(dx_0 * dx_0 + dy_0 * dy_0)
         elif mul_1 == 0 and mul_2 != 0:
-            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_1 != 0 and mul_2 == 0:
-            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         elif mul_1 == 0 and mul_2 == 0:
             dist = 0
         elif mul_1 < 0 and mul_2 > 0:
-            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_2 < 0 and mul_1 > 0:
-            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         else:
             dist = 0
 
@@ -179,7 +179,7 @@ def check_two_points(receive, point1, point2, barrierId, color, id, dis_threshol
     info = receive.get_infos(color, id)
     select_points = interpolate_point(point1, point2)
     delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
-    dis = math.sqrt(math.sum(delta * delta, axis=2))
+    dis = sqrt(np.sum(delta * delta, axis=2))
     if (dis < dis_threshold).sum():
         return False
     else:
@@ -206,17 +206,17 @@ def check_path_thread(point, target, infos, dis_threshold=20, index=1, color='bl
         mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
         if mul_1 > 0 and mul_2 > 0:
             mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-            dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+            dist = mid / sqrt(dx_0 * dx_0 + dy_0 * dy_0)
         elif mul_1 == 0 and mul_2 != 0:
-            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_1 != 0 and mul_2 == 0:
-            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         elif mul_1 == 0 and mul_2 == 0:
             dist = 0
         elif mul_1 < 0 and mul_2 > 0:
-            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_2 < 0 and mul_1 > 0:
-            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         else:
             dist = 0
 

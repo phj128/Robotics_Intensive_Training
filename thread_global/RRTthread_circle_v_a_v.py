@@ -1,11 +1,12 @@
 import numpy as np
 from message.send_debug import SendDebug
-import random
+from numpy.random import randint
+from numpy import arange, concatenate, newaxis
 import time
 from math import sin, cos
 from time import sleep
 from message.receive import Receive
-import math
+from math import sin, cos, atan2, sqrt
 
 
 def filter_infos(infos, robot_id, color, computing_time=0.10):
@@ -69,12 +70,12 @@ class RRT:
     # function: generate a random node in the map
     def Generate_Qrand(self):
         Qrand = [0, 0]
-        if random.randint(0, 5) > 3:
+        if randint(0, 5) > 3:
             Qrand[0] = self.goalNode[0]
             Qrand[1] = self.goalNode[1]
         else:
-            Qrand[0] = np.random.randint(-300, 300)
-            Qrand[1] = np.random.randint(-200, 200)
+            Qrand[0] = randint(-300, 300)
+            Qrand[1] = randint(-200, 200)
 
         return Qrand
     '''
@@ -112,17 +113,17 @@ class RRT:
             mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
                 mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-                dist = mid / (math.sqrt(dx_0 * dx_0 + dy_0 * dy_0))
+                dist = mid / (sqrt(dx_0 * dx_0 + dy_0 * dy_0))
             elif mul_1 == 0 and mul_2 != 0:
-                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_1 != 0 and mul_2 == 0:
-                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_2 < 0 and mul_1 > 0:
-                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             else:
                 dist = 0
 
@@ -149,7 +150,7 @@ class RRT:
 
     # function: calculate Euclidean distance between all existed nodes and Qrand
     def Calculate_Distance(self, node1_x, node1_y, node2_x, node2_y):
-        return math.sqrt((node1_x - node2_x) * (node1_x - node2_x) + (node1_y - node2_y) * (node1_y - node2_y))
+        return sqrt((node1_x - node2_x) * (node1_x - node2_x) + (node1_y - node2_y) * (node1_y - node2_y))
         #return abs(node1_x - node2_x)+abs(node1_y - node2_y)
 
     # function: find the nearest node to Qrand
@@ -167,9 +168,9 @@ class RRT:
     # function: generate Qnext and add it into the tree
     def BornQnext(self, Qrand, Qnear):
         Qnext = [0, 0, 0, 0, 0]
-        theta = math.atan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
-        Qnext[0] = Qnear[0] + self.step * math.cos(theta)
-        Qnext[1] = Qnear[1] + self.step * math.sin(theta)
+        theta = atan2(Qrand[1] - Qnear[1], Qrand[0] - Qnear[0])
+        Qnext[0] = Qnear[0] + self.step * cos(theta)
+        Qnext[1] = Qnear[1] + self.step * sin(theta)
         Qnext[2] = len(self.tree)
         Qnext[3] = Qnear[2]
         Qnext[4] = Qnear[4]+self.Calculate_Distance(Qnext[0], Qnext[1], Qnear[0], Qnear[1])
@@ -304,9 +305,9 @@ class RRT:
             parent_x = x
             parent_y = y
         path = path[::-1]
-        id = np.arange(0, len(path))
-        p_id = np.arange(-1, len(path)-1)
-        self.restree = np.concatenate((np.array(path), id[:, np.newaxis], p_id[:, np.newaxis]), axis=1)
+        id = arange(0, len(path))
+        p_id = arange(-1, len(path)-1)
+        self.restree = concatenate((np.array(path), id[:, newaxis], p_id[:, newaxis]), axis=1)
         return path, path_lines[::-1]
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from message.send import Send
 from message.send_debug import SendDebug
 from time import sleep
-import math
+from math import sin, cos, atan2
 import numpy as np
 import time
 from utils import distance, interpolate_path, check_two_points_l, check_path_l, sigmoid
@@ -24,7 +24,7 @@ class XY_speed():
         point_now = [now_x, now_y]
         error = distance(point_now, path[i + 1])
         error_max = distance(path[i], path[i + 1])
-        orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
+        orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
         if distance(point_now, [target_x, target_y]) > 7:
             thres = 20
@@ -41,12 +41,12 @@ class XY_speed():
                 if error < thresdist:
                     p = p * error / thresdist
 
-                vx_now = self.v * math.cos(theta) * p
-                vy_now = self.v * math.sin(theta) * p
+                vx_now = self.v * cos(theta) * p
+                vy_now = self.v * sin(theta) * p
 
                 return vx_now, vy_now, False
             else:
                 p = 0.2
-                vx_now = self.v * math.cos(theta) * p
-                vy_now = self.v * math.sin(theta) * p
+                vx_now = self.v * cos(theta) * p
+                vy_now = self.v * sin(theta) * p
                 return vx_now, vy_now, True
