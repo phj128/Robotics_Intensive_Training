@@ -11,6 +11,7 @@ from thread_global.RRTthread_circle_v_a_v import RRT as RRT_circle_v_a_v
 from thread_local.xy_speed import XY_speed
 from thread_local.xy_speed_force import XY_speed as XY_speed_force
 from thread_local.xy_fast import XY_speed as XY_fast
+from thread_local.xy_speed_force_optimization import XY_speed as XY_speed_force_optimization
 
 from utils import select_info, distance, check_path_thread
 
@@ -26,7 +27,7 @@ global i
 global color, id
 global threshold
 global status_coll, status, finish
-lock = threading.Lock()
+
 circles = []
 
 color = 'blue'
@@ -74,32 +75,32 @@ def global_module():
     R = 30
     i = 0
     while True:
-        # try:
-        N = len(path)
-        if i > N - 2:
-            i = N - 2
-        status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
-        if not status or not status_coll:
-            lock.acquire()
-            start = time.time()
-            if index > 3:
-                index = 3
-            global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
-            status, tree, lines, circles = global_path.Generate_Path()
-            if not status:
-                index += 1
+        try:
+            N = len(path)
+            if i > N - 2:
+                i = N - 2
+            status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
+            if not status or not status_coll:
+                lock.acquire()
+                start = time.time()
+                if index > 3:
+                    index = 3
+                global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
+                status, tree, lines, circles = global_path.Generate_Path()
+                if not status:
+                    index += 1
+                else:
+                    index = 1
+                path_, path_lines_ = global_path.Get_Path()
+                path, path_lines = global_path.merge()
+                i = 0
+                end = time.time()
+                print('time cost:', end - start)
+                lock.release()
             else:
-                index = 1
-            path_, path_lines_ = global_path.Get_Path()
-            path, path_lines = global_path.merge()
-            i = 0
-            end = time.time()
-            print('time cost:', end - start)
-            lock.release()
-        else:
+                continue
+        except:
             continue
-        # except:
-        #     continue
 
 
 def local_module():
@@ -109,7 +110,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed_force
+    local_planner = XY_speed_force_optimization
     finish = False
     while True:
         try:
@@ -138,6 +139,7 @@ def local_module():
 
 
 def send_module():
+    # vx, vy = 10, 10
     while True:
         try:
             send = Send()
@@ -149,11 +151,12 @@ def send_module():
 def debug_module():
     global lines, path_lines, circles
     while True:
-        # try:
-        debug_info = SendDebug('LINE', [[], path_lines], circles=circles, infos=infos)
-        debug_info.send()
-        # except:
-        #     continue
+        try:
+            # debug_info = SendDebug('LINE', [[], path_lines], infos=infos, circles=circles)
+            debug_info = SendDebug('LINE', [[], path_lines])
+            debug_info.send()
+        except:
+            continue
 
 
 if __name__ == '__main__':
@@ -162,6 +165,7 @@ if __name__ == '__main__':
     thread3 = threading.Thread(target=local_module)
     thread4 = threading.Thread(target=send_module)
     thread5 = threading.Thread(target=debug_module)
+    lock = threading.Lock()
 
     thread1.start()
     thread2.start()

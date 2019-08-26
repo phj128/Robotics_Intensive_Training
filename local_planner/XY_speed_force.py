@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 250
+        self.v = 200
         self.threshold = 0.4
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -73,7 +73,6 @@ class XY_speed():
                                 vy = vy + k * math.sin(gamma)
                         else:
                                 continue
-                    print(vx, vy)
                     vx_now = (self.v-vx) * math.cos(theta) * p
                     vy_now = (self.v-vy) * math.sin(theta) * p
                     self.send.send_msg(robot_id, vx_now, vy_now, 0)

@@ -18,6 +18,7 @@ from local_planner.xy_p import XY_p
 from local_planner.xy_angle import XY_angle
 from local_planner.xy_speed import XY_speed
 from local_planner.XY_speed_force import XY_speed as XY_speed_force
+from local_planner.XY_speed_force_optimization import XY_speed as XY_speed_force_optimization
 
 from run import run
 from run import run_while
@@ -38,8 +39,8 @@ if __name__ == '__main__':
                 ['blue', 4], ['blue', 5], ['blue', 6], ['blue', 7]]
 
     i = 0
-    global_p = RRT_MERGE
-    local_p = XY_speed_force
+    global_p = APF
+    local_p = XY_speed_force_optimization
     RUN = run_shrink
 
     receive = Receive()
