@@ -73,6 +73,7 @@ def global_module():
             if i > N - 2:
                 i = N - 2
             status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
+            e = time.time()
             if not status or not status_coll:
                 lock.acquire()
                 start = time.time()
