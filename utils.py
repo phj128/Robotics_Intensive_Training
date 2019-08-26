@@ -1,11 +1,11 @@
-import numpy as np
+import numpy as math
 import math
 
 
 def distance(point, goal):
     x, y = point
     g_x, g_y = goal
-    return np.sqrt((x - g_x) * (x - g_x) + (y - g_y) * (y - g_y))
+    return math.sqrt((x - g_x) * (x - g_x) + (y - g_y) * (y - g_y))
 
 
 def sigmoid(x):
@@ -13,8 +13,8 @@ def sigmoid(x):
 
 
 def tanh(x):
-    s1 = np.exp(x) - np.exp(-x)
-    s2 = np.exp(x) + np.exp(-x)
+    s1 = math.exp(x) - math.exp(-x)
+    s2 = math.exp(x) + math.exp(-x)
     return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
 
 
@@ -29,7 +29,7 @@ def select_info(infos, color, robot_id):
 def min_dis_index(point, path, i):
     path = np.array(path)
     delta = point - path
-    dis = np.sqrt(np.sum(delta * delta, axis=1))
+    dis = math.sqrt(np.sum(delta * delta, axis=1))
     return np.argmin(dis) + i
 
 
@@ -118,17 +118,17 @@ def check_path_l(receive, point, path, barrierId, color='blue', id=0, dis_thresh
             mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
             if mul_1 > 0 and mul_2 > 0:
                 mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-                dist = mid / np.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+                dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
             elif mul_1 == 0 and mul_2 != 0:
-                dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_1 != 0 and mul_2 == 0:
-                dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             elif mul_1 == 0 and mul_2 == 0:
                 dist = 0
             elif mul_1 < 0 and mul_2 > 0:
-                dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+                dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
             elif mul_2 < 0 and mul_1 > 0:
-                dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+                dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
             else:
                 dist = 0
 
@@ -156,17 +156,17 @@ def check_two_points_l(receive, point1, point2, barrierId, color='blue', id=0, d
         mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
         if mul_1 > 0 and mul_2 > 0:
             mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-            dist = mid / np.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+            dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
         elif mul_1 == 0 and mul_2 != 0:
-            dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_1 != 0 and mul_2 == 0:
-            dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         elif mul_1 == 0 and mul_2 == 0:
             dist = 0
         elif mul_1 < 0 and mul_2 > 0:
-            dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_2 < 0 and mul_1 > 0:
-            dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         else:
             dist = 0
 
@@ -179,7 +179,7 @@ def check_two_points(receive, point1, point2, barrierId, color, id, dis_threshol
     info = receive.get_infos(color, id)
     select_points = interpolate_point(point1, point2)
     delta = select_points[np.newaxis, ...] - info[:, np.newaxis, :]
-    dis = np.sqrt(np.sum(delta * delta, axis=2))
+    dis = math.sqrt(math.sum(delta * delta, axis=2))
     if (dis < dis_threshold).sum():
         return False
     else:
@@ -206,17 +206,17 @@ def check_path_thread(point, target, infos, dis_threshold=20, index=1, color='bl
         mul_2 = (dx_2) * (dx_0) + (dy_2) * (dy_0)
         if mul_1 > 0 and mul_2 > 0:
             mid = abs((dx_1) * (-dy_0) - (-dx_0) * (dy_1))
-            dist = mid / np.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
+            dist = mid / math.sqrt(dx_0 * dx_0 + dy_0 * dy_0)
         elif mul_1 == 0 and mul_2 != 0:
-            dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_1 != 0 and mul_2 == 0:
-            dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         elif mul_1 == 0 and mul_2 == 0:
             dist = 0
         elif mul_1 < 0 and mul_2 > 0:
-            dist = np.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
+            dist = math.sqrt(dx_1 * dx_1 + dy_1 * dy_1)
         elif mul_2 < 0 and mul_1 > 0:
-            dist = np.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
+            dist = math.sqrt(dx_2 * dx_2 + dy_2 * dy_2)
         else:
             dist = 0
 
