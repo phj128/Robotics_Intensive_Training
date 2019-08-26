@@ -19,7 +19,7 @@ class XY_speed():
         self.angle_threshold = 5 * PI / 6
         self.up = 60
 
-    # def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1):
+
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
         error = distance(point_now, path[i + 1])
@@ -36,7 +36,7 @@ class XY_speed():
                 if dis_now < self.up:
                     p = 0.5
                 thresdist = error_max * self.threshold
-                if 3 * thresdist > error > thresdist:
+                if 3 * thresdist > error and error > thresdist:
                     p = 0.6 * p
                 if error < thresdist:
                     p = p * error / thresdist
