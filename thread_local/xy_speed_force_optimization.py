@@ -31,6 +31,7 @@ class XY_speed():
             if i == N - 2:
                 thres = 7
             if error > thres:
+
                 p = 1
                 dis_now = distance(path[i], path[i + 1])
                 if dis_now < self.up:
