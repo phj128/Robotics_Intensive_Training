@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 50
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -28,14 +28,15 @@ class XY_speed():
         theta = now_ori - orientation_need_now
         dis = distance(point_now, [target_x, target_y])
         barriers = infos.copy()
-        for y in range(len(barriers)):
-            if barriers[y][3] == color and barriers[y][4] == robot_id:
+        M = len(infos)
+        for y in range(M):
+            if barriers[y][2] == color and barriers[y][3] == robot_id:
                 barriers.pop(y)
                 break
-        for t in range(len(barriers)):
-            if distance(point_now, [barriers[t][0], barriers[t][1]]) < 5:
+        for t in range(M):
+            if distance(point_now, [barriers[t][0], barriers[t][1]]) < 40:
                 print('here')
-                return 45*cos(now_ori)+60*sin(now_ori), -45*sin(now_ori)+60*cos(now_ori), True
+                return 45*cos(now_ori)+60*sin(now_ori), 45*sin(now_ori)-60*cos(now_ori), False
         if dis > 7:
             if dis > 60:
                 if error > 20:
