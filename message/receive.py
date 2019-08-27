@@ -47,13 +47,13 @@ class Receive():
         if color == 'yellow' and id == robot.robot_id:
             return
         self.infos.append([robot.x / 10, robot.y / 10, sqrt(
-            (robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10)), color, id])
+            (robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10)), color, robot.robot_id])
 
 
     def change_info_blue(self, robot, color, id):
         if color == 'blue' and id == robot.robot_id:
             return
-        self.infos.append([robot.x/10, robot.y/10, sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10)), color, id])
+        self.infos.append([robot.x/10, robot.y/10, sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10)), color, robot.robot_id])
 
 
     def get_velocity_info(self, color, id):
