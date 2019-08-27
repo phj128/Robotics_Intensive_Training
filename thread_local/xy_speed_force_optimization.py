@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 200
+        self.v = 300
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -22,6 +22,8 @@ class XY_speed():
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
+        if i >= len(path) - 1:
+            return 0, 0, False
         error = distance(point_now, path[i + 1])
         error_max = distance(path[i], path[i + 1])
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))

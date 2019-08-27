@@ -18,8 +18,8 @@ class XY_speed():
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
         self.up = 60
-        self.x = 90
-        self.y = 120
+        self.x = 135
+        self.y = 180
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
