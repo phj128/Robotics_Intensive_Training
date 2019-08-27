@@ -9,7 +9,7 @@ from thread_local.xy_speed_force_optimization import XY_speed as XY_speed_force_
 from utils import select_info, distance, check_path_thread
 
 import time, threading
-
+from time import sleep
 
 global infos
 global path, path_lines, tree, lines, circles
@@ -24,7 +24,7 @@ global status_coll, status, finish
 circles = []
 
 color = 'blue'
-id = 9
+id = 0
 
 
 def receive_module():
@@ -90,6 +90,8 @@ def global_module():
                 end = time.time()
                 print('time cost:', end - start)
                 lock.release()
+                if status:
+                    sleep(0.5)
             else:
                 continue
         except:
