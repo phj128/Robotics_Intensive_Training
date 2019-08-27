@@ -6,6 +6,7 @@ from thread_global.RRTfinal import RRT as RRT
 from thread_global.RRTfinal_move import RRT as RRT_move
 
 from thread_local.xy_speed_force_optimization import XY_speed as XY_speed_force_optimization
+from thread_local.xy_left_right import XY_speed as XY_left_right
 
 from utils import select_info, distance, check_path_thread
 
