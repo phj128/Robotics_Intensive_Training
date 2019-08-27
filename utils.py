@@ -59,7 +59,7 @@ def check_goals(targets, infos, threshold=30, x=1, y=1):
     return targets
 
 
-def interpolate_path(path, d=80):
+def interpolate_path(path, d=120):
     path = np.array(path)
     num = len(path)
     path_ = []

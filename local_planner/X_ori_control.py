@@ -19,7 +19,7 @@ class X_ori_speed():
         self.angle_threshold = 5 * PI / 6
         self.up = 60
 
-    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1, Av_max=4):
+    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1, Av_max=7):
         N = len(path)
         for i in range(N - 1):
             receive.get_info(color, robot_id)
@@ -54,7 +54,7 @@ class X_ori_speed():
                     angular_error = angular_error + 2 * PI
                 flag = abs(angular_error) / angular_error
                 angular_error = abs(angular_error)
-            thres = 30
+            thres = 15
             if i == N - 2:
                 thres = 7
             # print(error, theta)

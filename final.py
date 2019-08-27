@@ -143,6 +143,7 @@ def send_module():
         try:
             send = Send()
             send.send_msg(id, vx, vy, 0)
+            sleep(0.005)
         except:
             continue
 

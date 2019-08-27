@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 500
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6

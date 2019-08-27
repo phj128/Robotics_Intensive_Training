@@ -9,7 +9,7 @@ from local_planner.XY_speed_force import XY_speed as XY_speed_force
 from local_planner.XY_speed_force_optimization import XY_speed as XY_speed_force_optimization
 from local_planner.X_ori_control import X_ori_speed
 
-from utils import distance
+from utils import distance, interpolate_path
 import numpy as np
 from numpy import sqrt
 import time
@@ -96,6 +96,7 @@ def RUN_mark(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
             path_last = path
             lines_last = lines
             path_lines_last = path_lines
+    path_last = interpolate_path(path_last)
     e = time.time()
     print('cost:', e-s)
     print(flag)
@@ -137,7 +138,7 @@ def RUN_mark(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
 
 if __name__ == "__main__":
     color = 'blue'
-    robot_id = 0
+    robot_id = 4
     # barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
     #             ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
     #             ['blue', 1], ['blue', 2], ['blue', 5], ['blue', 3],
