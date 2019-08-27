@@ -24,6 +24,8 @@ class XY_speed():
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
+        if i >= len(path) - 1:
+            return 0, 0, False
         error = distance(point_now, path[i + 1])
         error_max = distance(path[i], path[i + 1])
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
@@ -37,8 +39,20 @@ class XY_speed():
                 break
         for t in range(M-1):
             if distance(point_now, [barriers[t][0], barriers[t][1]]) < 20:
-                print('here')
-                return self.x*cos(now_ori)+self.y*sin(now_ori), -self.x*sin(now_ori)+self.y*cos(now_ori), False
+                # print('here')
+                if now_x>=0 and now_y>=0:
+                    return -self.x * cos(now_ori) - self.y * sin(now_ori), self.x * sin(now_ori) - self.y * cos(
+                        now_ori), False
+                elif now_x>=0 and now_y<0:
+                    return self.x * cos(now_ori) + self.y * sin(now_ori), -self.x * sin(now_ori) + self.y * cos(
+                        now_ori), False
+                elif now_x<0 and now_y>=0:
+                    return self.x * cos(now_ori) + self.y * sin(now_ori), -self.x * sin(now_ori) + self.y * cos(
+                        now_ori), False
+                else:
+                    return -self.x * cos(now_ori) - self.y * sin(now_ori), self.x * sin(now_ori) - self.y * cos(
+                        now_ori), False
+
         if dis > 7:
             if dis > 60:
                 if error > 20:
