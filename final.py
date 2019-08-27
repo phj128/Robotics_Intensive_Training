@@ -3,6 +3,7 @@ from message.send_debug import SendDebug
 from message.receive import Receive
 
 from thread_global.RRTfinal import RRT as RRT
+from thread_global.RRTfinal_move import RRT as RRT_move
 
 from thread_local.xy_speed_force_optimization import XY_speed as XY_speed_force_optimization
 
@@ -20,7 +21,9 @@ global i
 global color, id
 global threshold
 global status_coll, status, finish
+global barrier
 
+barrier = []
 circles = []
 
 color = 'blue'
@@ -58,9 +61,10 @@ def global_module():
     global i
     global status_coll, status
     global lock
+    global barrier
     target_x, target_y = -250, 150
     path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
-    global_planner = RRT
+    global_planner = RRT_move
     status_coll = False
     status = False
     finish = False
@@ -73,7 +77,7 @@ def global_module():
             if i > N - 2:
                 i = N - 2
             status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
-            if not status or not status_coll:
+            if not status or not status_coll or True:
                 lock.acquire()
                 start = time.time()
                 if index > 5:
@@ -90,7 +94,7 @@ def global_module():
                 print('time cost:', end - start)
                 lock.release()
                 if status:
-                    sleep(0.5)
+                    sleep(0.3)
             else:
                 continue
         except:
@@ -143,14 +147,14 @@ def send_module():
 
 
 def debug_module():
-    global lines, path_lines, circles
+    global lines, path_lines, circles, barrier
     while True:
-        try:
-            # debug_info = SendDebug('LINE', [[], path_lines], infos=infos, circles=circles)
-            debug_info = SendDebug('LINE', [[], path_lines])
-            debug_info.send()
-        except:
-            continue
+        # try:
+        # debug_info = SendDebug('LINE', [[], path_lines], infos=barrier, circles=circles, id=id, color_rob=color)
+        debug_info = SendDebug('LINE', [[], path_lines])
+        debug_info.send()
+        # except:
+        #     continue
 
 
 if __name__ == '__main__':
