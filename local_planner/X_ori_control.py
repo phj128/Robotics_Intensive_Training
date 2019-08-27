@@ -19,7 +19,7 @@ class X_ori_speed():
         self.angle_threshold = 5 * PI / 6
         self.up = 60
 
-    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1, Av_max = 1):
+    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1, Av_max=10):
         N = len(path)
         for i in range(N - 1):
             receive.get_info(color, robot_id)
@@ -36,7 +36,8 @@ class X_ori_speed():
             while error > thres:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori - orientation_need_now
-                angular_error = theta
+                angular_error = abs(theta)
+                print('xxx')
                 while angular_error > angular_thres:
                     if angular_error > 0.25:
                         Av = Av_max
@@ -57,7 +58,6 @@ class X_ori_speed():
                     p = 0.6 * p
                 if error < thresdist:
                     p = p * error/thresdist
-
                 vx_now = self.v * p
                 self.send.send_msg(robot_id, vx_now, 0, 0)
                 receive.get_info(color, robot_id)
@@ -66,8 +66,6 @@ class X_ori_speed():
                 now_ori = receive.robot_info['ori']
                 point_now = [now_x, now_y]
                 error = distance(point_now, path[i + 1])
-                # print(i)
-                # print('cal')
 
         self.send.send_msg(robot_id, 0, 0, 0)
         return True, index
