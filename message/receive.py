@@ -2,7 +2,7 @@ import socket
 from time import sleep
 import proto.vision_detection_pb2 as detection
 import numpy as np
-import math
+from math import sqrt, atan2
 
 
 class Receive():
@@ -46,14 +46,14 @@ class Receive():
     def change_info_yellow(self, robot, color, id):
         if color == 'yellow' and id == robot.robot_id:
             return
-        self.infos.append([robot.x / 10, robot.y / 10, math.sqrt(
+        self.infos.append([robot.x / 10, robot.y / 10, sqrt(
             (robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10)), color, id])
 
 
     def change_info_blue(self, robot, color, id):
         if color == 'blue' and id == robot.robot_id:
             return
-        self.infos.append([robot.x/10, robot.y/10, math.sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10)), color, id])
+        self.infos.append([robot.x/10, robot.y/10, sqrt((robot.vel_x/10)*(robot.vel_x/10)+(robot.vel_y/10)*(robot.vel_y/10)), color, id])
 
 
     def get_velocity_info(self, color, id):
@@ -124,17 +124,19 @@ class Receive():
 
     def thread_change_info_yellow(self, robot, infos=None):
         # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
-        v = math.sqrt((robot.vel_x/10)*(robot.vel_x/10) + (robot.vel_y/10)*(robot.vel_y/10))
-        a = math.sqrt((robot.accelerate_x)*(robot.accelerate_x) + (robot.accelerate_y)*(robot.accelerate_y))
+        v = sqrt((robot.vel_x/10)*(robot.vel_x/10) + (robot.vel_y/10)*(robot.vel_y/10))
+        a = sqrt((robot.accelerate_x)*(robot.accelerate_x) + (robot.accelerate_y)*(robot.accelerate_y))
+        theta = atan2(robot.vel_y, robot.vel_x)
         # infos.append([robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, robot.vel_x / 10, robot.vel_y / 10, robot.accelerate_x, robot.accelerate_y])
-        return [robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, v, a]
+        return [robot.x / 10, robot.y / 10, 'yellow', robot.robot_id, robot.orientation, v, a, theta]
 
 
     def thread_change_info_blue(self, robot, infos=None):
         # infos.append([robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, robot.vel_x/10, robot.vel_y/10])
-        v = math.sqrt((robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))
-        a = math.sqrt((robot.accelerate_x/10) * (robot.accelerate_x/10) + (robot.accelerate_y/10) * (robot.accelerate_y/10))
-        return [robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, v, a]
+        v = sqrt((robot.vel_x / 10) * (robot.vel_x / 10) + (robot.vel_y / 10) * (robot.vel_y / 10))
+        a = sqrt((robot.accelerate_x/10) * (robot.accelerate_x/10) + (robot.accelerate_y/10) * (robot.accelerate_y/10))
+        theta = atan2(robot.vel_y, robot.vel_x)
+        return [robot.x / 10, robot.y / 10, 'blue', robot.robot_id, robot.orientation, v, a, theta]
 
 
     def thread_infos(self):

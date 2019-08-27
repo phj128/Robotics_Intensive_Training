@@ -10,16 +10,18 @@ PI = 3.1415926
 
 def filter_infos(infos, robot_id, color):
     infos_ = infos.copy()
-    for i in range(len(infos)):
-        if infos[i][3] == robot_id:
-            if infos[i][2] == color:
+    i = 0
+    for info in infos:
+        if info[3] == robot_id:
+            if info[2] == color:
                 infos_.pop(i)
                 break
+        i += 1
     return infos_
 
 
 class SendDebug():
-    def __init__(self, type='LINE', lines=[], color='YELLOW', circles=[], infos=[]):
+    def __init__(self, type='LINE', lines=[], color='YELLOW', circles=[], infos=[], id=0, color_rob='blue'):
         '''
         type: 'LINE', 'ARC', 'TEXT', 'ROBOT', 'CURVE', 'POLYGON', 'POINTS'
         lines: lists of line, and the line in lines contain [start_x, start_y, end_x, end_y]
@@ -40,7 +42,7 @@ class SendDebug():
             self.lines = lines
         # import ipdb;ipdb.set_trace()
         self.circles = circles
-        self.infos = filter_infos(infos, 5, 'blue')
+        self.infos = filter_infos(infos, id, color)
         self.draw_circles = []
         self.debug_msg = {'start_x': 0, 'start_y': 0, 'end_x': 100, 'end_y': 100}
 
@@ -141,13 +143,13 @@ class SendDebug():
             else:
                 print('No this kind of instruction')
                 return -1
-        for i in range(len(self.circles)):
-            # theta = PI / 3
+
+        for i in range(len(self.infos)):
             self.draw_circles.append(package.msgs.add())
             self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
             self.draw_circles[i].type = debug_info.Debug_Msg.ARC
             arc = self.draw_circles[i].arc
-            radius = self.circles[i]
+            radius = 30
             arc.rectangle.point1.x = self.infos[i][0] - radius
             arc.rectangle.point1.y = self.infos[i][1] + radius
             arc.rectangle.point2.x = self.infos[i][0] + radius
@@ -156,6 +158,23 @@ class SendDebug():
             arc.start = 0
             arc.end = 360
             arc.FILL = 1
+
+
+        # for i in range(len(self.circles)):
+        #     # theta = PI / 3
+        #     self.draw_circles.append(package.msgs.add())
+        #     self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
+        #     self.draw_circles[i].type = debug_info.Debug_Msg.ARC
+        #     arc = self.draw_circles[i].arc
+        #     radius = self.circles[i]
+        #     arc.rectangle.point1.x = self.infos[i][0] - radius
+        #     arc.rectangle.point1.y = self.infos[i][1] + radius
+        #     arc.rectangle.point2.x = self.infos[i][0] + radius
+        #     arc.rectangle.point2.y = self.infos[i][1] - radius
+        #
+        #     arc.start = 0
+        #     arc.end = 360
+        #     arc.FILL = 1
 
             # for k in range(6):
             #     self.draw_circles.append(package.msgs.add())
