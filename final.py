@@ -65,7 +65,7 @@ def global_module():
     global barrier
     target_x, target_y = -250, 150
     path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
-    global_planner = RRT_move
+    global_planner = RRT
     status_coll = False
     status = False
     finish = False
@@ -78,7 +78,7 @@ def global_module():
             if i > N - 2:
                 i = N - 2
             status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
-            if not status or not status_coll or True:
+            if not status or not status_coll:
                 lock.acquire()
                 start = time.time()
                 if index > 5:
@@ -95,7 +95,7 @@ def global_module():
                 print('time cost:', end - start)
                 lock.release()
                 if status:
-                    sleep(0.3)
+                    sleep(0.4)
             else:
                 continue
         except:

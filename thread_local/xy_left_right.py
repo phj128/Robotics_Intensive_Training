@@ -13,11 +13,13 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 50
+        self.v = 300
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
         self.up = 60
+        self.x = 90
+        self.y = 120
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
@@ -33,10 +35,10 @@ class XY_speed():
             if barriers[y][2] == color and barriers[y][3] == robot_id:
                 barriers.pop(y)
                 break
-        for t in range(M):
-            if distance(point_now, [barriers[t][0], barriers[t][1]]) < 40:
+        for t in range(M-1):
+            if distance(point_now, [barriers[t][0], barriers[t][1]]) < 20:
                 print('here')
-                return 45*cos(now_ori)+60*sin(now_ori), 45*sin(now_ori)-60*cos(now_ori), False
+                return self.x*cos(now_ori)+self.y*sin(now_ori), -self.x*sin(now_ori)+self.y*cos(now_ori), False
         if dis > 7:
             if dis > 60:
                 if error > 20:
