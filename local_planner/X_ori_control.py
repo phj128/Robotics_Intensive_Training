@@ -9,7 +9,7 @@ from utils import distance, interpolate_path, check_two_points_l, check_path_l, 
 PI = 3.1415926
 
 
-class XY_speed():
+class X_ori_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
@@ -19,7 +19,7 @@ class XY_speed():
         self.angle_threshold = 5 * PI / 6
         self.up = 60
 
-    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1):
+    def line_control(self, path, robot_id, color, receive, target_x, target_y, info=None, threshold=30, index=1, Av_max = 1):
         N = len(path)
         for i in range(N - 1):
             receive.get_info(color, robot_id)
@@ -29,12 +29,25 @@ class XY_speed():
             point_now = [now_x, now_y]
             error = distance(point_now, path[i + 1])
             error_max = distance(path[i], path[i + 1])
+            angular_thres = 0.088
             thres = 30
             if i == N - 2:
                 thres = 7
             while error > thres:
                 orientation_need_now = math.atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
                 theta = now_ori - orientation_need_now
+                angular_error = theta
+                while angular_error > angular_thres:
+                    if angular_error > 0.25:
+                        Av = Av_max
+                        self.send.send_msg(robot_id, 0, 0, Av)
+                    else:
+                        Av = Av_max * angular_error/theta
+                        self.send.send_msg(robot_id, 0, 0, Av)
+                    receive.get_info(color, robot_id)
+                    now_ori = receive.robot_info['ori']
+                    angular_error = now_ori - orientation_need_now
+
                 p = 1
                 dis_now = distance(path[i], path[i + 1])
                 if dis_now < self.up:
@@ -42,12 +55,11 @@ class XY_speed():
                 thresdist = error_max * self.threshold
                 if 3*thresdist > error > thresdist:
                     p = 0.6 * p
-                if  error < thresdist:
+                if error < thresdist:
                     p = p * error/thresdist
 
-                vx_now = self.v * math.cos(theta) * p
-                vy_now = self.v * math.sin(theta) * p
-                self.send.send_msg(robot_id, vx_now, vy_now, 0)
+                vx_now = self.v * p
+                self.send.send_msg(robot_id, vx_now, 0, 0)
                 receive.get_info(color, robot_id)
                 now_x = receive.robot_info['x']
                 now_y = receive.robot_info['y']

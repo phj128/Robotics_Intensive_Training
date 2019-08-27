@@ -14,8 +14,6 @@ class Send():
                           'kick': False,  'power': 1, 'dribbler_spin': 1, 'current_angle': 0, 'target_angle': 0}
 
     def send_msg(self, id_we_send, v_x, v_y, v_r, d=10000):
-        '''
-        '''
         robots_cmd = control.Robots_Command()
         robots_cmd.delay = d
         robot_cmd = robots_cmd.command.add()
@@ -59,13 +57,11 @@ if __name__ == "__main__":
     vx = 0
     vy = 0
     robot_id = 0
-    w = 1
+    w = 0.5236
     send = Send()
     while True:
         send.send_msg(robot_id, vx, vy, w)
-        sleep(1)
-        vx /= 2
-        vy /= 2
+        sleep(6)
         w = 0
 '''
 
