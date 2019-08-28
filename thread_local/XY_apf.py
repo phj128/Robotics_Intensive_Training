@@ -23,8 +23,8 @@ class XY_speed():
         self.wall_k = 800
         self.w = 300
         self.h = 200
-        self.d_k = 400
-        self.v_k = 100
+        self.d_k = 40000
+        self.v_k = 0.5
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
@@ -58,8 +58,8 @@ class XY_speed():
                 v_qiexiang = barrier[5]*sin(PI-barrier[7]+alpha)
                 vx_rtt = vx_rtt + self.v_k * (v_jingxiang * cos(PI - now_ori + alpha) - v_qiexiang * cos(alpha - (PI / 2) - now_ori))
                 vy_rtt = vy_rtt + self.v_k * (v_jingxiang * sin(PI - now_ori + alpha) - v_qiexiang * sin(alpha - (PI / 2) - now_ori))
-                # vx_rtt = vx_rtt + self.v_k*(v_jingxiang*cos(PI-now_ori+alpha) - v_qiexiang*cos(alpha-(PI/2)-now_ori)) + self.d_k*cos(now_ori-alpha)/(d*d)
-                # vy_rtt = vy_rtt + self.v_k*(v_jingxiang*sin(PI-now_ori+alpha) - v_qiexiang*sin(alpha-(PI/2)-now_ori)) + self.d_k*sin(now_ori-alpha)/(d*d)
+                # vx_rtt = vx_rtt - self.d_k*cos(now_ori-alpha)/(d*d)
+                # vy_rtt = vy_rtt - self.d_k*sin(now_ori-alpha)/(d*d)
         print(vx_rtt,vy_rtt)
         return vx_rtt, vy_rtt, False
 
@@ -74,12 +74,11 @@ class XY_speed():
         vx_wall = dx*cos(now_ori) - dy*sin(now_ori)
         vy_wall = dy*cos(now_ori) - dx*sin(now_ori)
 
-        return vx_wall, vy_wall, False
+        # return vx_wall, vy_wall, False
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
-        vx_att = self.v*cos(theta)/(1+error)
-        vy_att = self.v*sin(theta)/(1+error)
-
+        vx_att = self.v*cos(theta)/(error)
+        vy_att = self.v*sin(theta)/(error)
 
         dis = distance(point_now, [target_x, target_y])
         if dis > 7:
