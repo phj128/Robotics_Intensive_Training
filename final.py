@@ -111,7 +111,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed_force_optimization
+    local_planner = XY_left_right
     finish = False
     while True:
         try:

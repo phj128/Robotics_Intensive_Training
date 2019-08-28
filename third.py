@@ -66,42 +66,7 @@ def global_module():
     global lock
     global barrier
     target_x, target_y = -250, 150
-    path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
-    global_planner = RRT_move
-    status_coll = False
-    status = False
-    finish = False
-    index = 1
-    R = 30
-    i = 0
-    while True:
-        try:
-            N = len(path)
-            if i > N - 2:
-                i = N - 2
-            status_coll, index = check_path_thread([x, y], path[i + 1], infos, R / index, color=color, id=id)
-            if not status or not status_coll:
-                lock.acquire()
-                start = time.time()
-                if index > 5:
-                    index = 5
-                global_path = global_planner(x, y, target_x, target_y, infos, color=color, robot_id=id, inflateRadius=R/index, dis_threshold=R/index)
-                status = global_path.Generate_Path()
-                if not status:
-                    index += 1
-                else:
-                    index = 1
-                path, path_lines = global_path.Get_Path()
-                i = 0
-                end = time.time()
-                print('time cost:', end - start)
-                lock.release()
-                if status:
-                    sleep(0.4)
-            else:
-                continue
-        except:
-            continue
+    path, path_lines, tree, lines = [[target_x, target_y], [-target_x, -target_y]], [[target_x, target_y, -target_x, -target_y]], [], []
 
 
 def local_module():
@@ -111,30 +76,17 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_speed_force_optimization
+    local_planner = XY_apf
     finish = False
     while True:
         try:
             if distance((x, y), (target_x, target_y)) > 7:
-                N = len(path)
-                if N <= 1:
-                    status = False
-                    vx, vy = 40, 40
-                    continue
-                if N == 2:
-                    i = 0
-                if i < N - 1:
-                    motion = local_planner()
-                    vx, vy, finish = motion.line_control(x, y, ori, path, i, N, target_x, target_y, infos=infos,
-                                                         color=color, robot_id=id)
-                if finish:
-                    i += 1
-                    finish = False
+                motion = local_planner()
+                vx, vy, finish = motion.line_control(x, y, ori, path, i, 2, target_x, target_y, infos=infos,
+                                                     color=color, robot_id=id)
             else:
-                status = False
                 target_x = -target_x
                 target_y = -target_y
-                i = 0
         except:
             continue
 
