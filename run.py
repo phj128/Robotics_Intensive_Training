@@ -120,7 +120,7 @@ def run_line(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
 def run_shrink(color, robot_id, barriers, target_x, target_y,  global_p, local_p, receive):
     global_planner = global_p
     local_planner = local_p
-    R = 40
+    R = 25
     index = 1
     while True:
         if index > 4:

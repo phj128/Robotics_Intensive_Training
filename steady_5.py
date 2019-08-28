@@ -66,7 +66,7 @@ def Update_Barrier_Info(color, robot_id, receive):
 def RUN_mark(color, robot_id, barriers, target_x, target_y,  global_p, local_p, receive):
     global_planner = global_p
     local_planner = local_p
-    R = 30
+    R = 25
     index = 1
     r = R / index
     receive.get_info(color, robot_id)
@@ -148,7 +148,7 @@ def RUN_mark(color, robot_id, barriers, target_x, target_y,  global_p, local_p, 
 
 if __name__ == "__main__":
     color = 'blue'
-    robot_id = 5
+    robot_id = 4
     # barriers = [['yellow', 0], ['yellow', 1], ['yellow', 2], ['yellow', 3],
     #             ['yellow', 4], ['yellow', 5], ['yellow', 6], ['yellow', 7],
     #             ['blue', 1], ['blue', 2], ['blue', 5], ['blue', 3],
