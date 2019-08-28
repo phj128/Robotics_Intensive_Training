@@ -7,6 +7,8 @@ from thread_global.RRTfinal_move import RRT as RRT_move
 
 from thread_local.xy_speed_force_optimization import XY_speed as XY_speed_force_optimization
 from thread_local.xy_left_right import XY_speed as XY_left_right
+from thread_local.xy_left_right_spring import XY_speed as XY_left_right_spring
+from thread_local.XY_apf import XY_speed as XY_apf
 
 from utils import select_info, distance, check_path_thread
 
@@ -109,7 +111,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish
-    local_planner = XY_left_right
+    local_planner = XY_apf
     finish = False
     while True:
         # try:
