@@ -41,24 +41,27 @@ class XY_speed():
             if d < self.rtt_distance:
                 alpha = atan2(barrier[1]-now_y, barrier[0]-now_x)
                 v = barrier[5]*cos(barrier[7]-alpha)
-                vx_rtt = vx_rtt + v*cos(now_ori-alpha)/(d*d+1)
-                vy_rtt = vy_rtt + v*sin(now_ori-alpha)/(d*d+1)
+                vx_rtt = vx_rtt + v*cos(now_ori-alpha)/(d*d+10)
+                vy_rtt = vy_rtt + v*sin(now_ori-alpha)/(d*d+10)
 
         if abs(now_x-300) <= self.wallthreshold:
-            dx = 400/(now_x-300)
+            dx = 800/(now_x-300)
         if abs(now_x+300) <= self.wallthreshold:
-            dx = 400 / (300-now_x)
+            dx = 800/(300+now_x)
         if abs(now_y - 225) <= self.wallthreshold:
-            dy = 400/(225-now_y) # y是正的时候是向右，这里我目前以为靠近上边沿读进的y是正的
+            dy = 800/(225-now_y) # y是正的时候是向右，这里我目前以为靠近上边沿读进的y是正的
         if abs(now_y + 225) <= self.wallthreshold:
-            dy = 400/(-225+now_y)
+            dy = 800/(225+now_y)
         vx_wall = dx*cos(now_ori) + dy*sin(now_ori)
-        vy_wall = dy*cos(now_ori) + dx*sin(now_ori)
+        vy_wall = dy*cos(now_ori) - dx*sin(now_ori)
+        print(vx_wall, vy_wall)
 
+        return vx_wall, vy_wall, False
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
         theta = now_ori - orientation_need_now
         vx_att = self.v*cos(theta)/(1+error)
         vy_att = self.v*sin(theta)/(1+error)
+
 
         dis = distance(point_now, [target_x, target_y])
         if dis > 7:
@@ -74,22 +77,22 @@ class XY_speed():
                     if error < thresdist:
                         p = p * error / thresdist
 
-                    vx_now = self.v * cos(theta) * p + vx_att + vx_wall + vx_rtt
-                    vy_now = self.v * sin(theta) * p + vy_att + vy_wall + vy_rtt
+                    vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
+                    vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
 
                     return vx_now, vy_now, False
                 else:
                     p = 0.2
-                    vx_now = self.v * cos(theta) * p + vx_att + vx_wall + vx_rtt
-                    vy_now = self.v * sin(theta) * p + vy_att + vy_wall + vy_rtt
+                    vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
+                    vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
                     return vx_now, vy_now, True
             else:
                 p = 0.2
-                vx_now = self.v * cos(theta) * p + vx_att + vx_wall + vx_rtt
-                vy_now = self.v * sin(theta) * p + vy_att + vy_wall + vy_rtt
+                vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
+                vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
                 return vx_now, vy_now, True
         else:
             p = 0.05
-            vx_now = self.v * cos(theta) * p + vx_att + vx_wall + vx_rtt
-            vy_now = self.v * sin(theta) * p + vy_att + vy_wall + vy_rtt
+            vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
+            vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
             return vx_now, vy_now, True
