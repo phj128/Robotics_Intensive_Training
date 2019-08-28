@@ -83,9 +83,9 @@ class XY_speed():
         vy_att = self.v*sin(theta)/(error)
 
         dis = distance(point_now, [target_x, target_y])
-        end_time = time.time()
+        # end_time = time.time()
         if dis > 7:
-            if my_info[5] < 10 and (end_time - start_time) > self.time_threshold:
+            if 0.01 < my_info[5] < 10:
                 lamda = atan(4/3)-now_ori
                 sign = np.random.rand()
                 random_v = np.random.randint(200, 300)

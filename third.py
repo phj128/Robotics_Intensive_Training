@@ -31,7 +31,7 @@ barrier = []
 circles = []
 
 color = 'blue'
-id = 4
+id = 0
 start_time = 0
 
 def receive_module():
