@@ -13,32 +13,30 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 500
+        self.v = 300
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
         self.up = 60
-        self.rtt_distance = 40
+        self.rtt_distance = 60
         self.wallthreshold = 30
         self.wall_k = 800
         self.w = 300
         self.h = 200
-        self.d_k = 40000
+        self.d_k = 80000
         self.v_k = 0.5
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
-        if i >= len(path)-1:
-            return 0, 0, False
         barriers = infos.copy()
         for i in range(len(barriers)):
             if barriers[i][2]==color and barriers[i][3]==robot_id:
                 barriers.pop(i)
                 break
 
-        error = distance(point_now, path[i+1])
-        error_max = distance(path[i], path[i+1])
+        error = distance(point_now, [target_x, target_y])
+        error_max = distance([-target_x, -target_y], [target_x, target_y])
         vx_rtt = 0.0 # 机器人x方向受到斥力整合的速度，与速度有关
         vy_rtt = 0.0 # 机器人y方向受到斥力整合的速度，与速度有关
         # vx_rdt = 0.0 # 机器人x方向受到斥力整合的速度，与距离有关
@@ -75,7 +73,7 @@ class XY_speed():
         vy_wall = dy*cos(now_ori) - dx*sin(now_ori)
 
         # return vx_wall, vy_wall, False
-        orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
+        orientation_need_now = atan2((target_y - now_y), (target_x - now_x))
         theta = now_ori - orientation_need_now
         vx_att = self.v*cos(theta)/(error)
         vy_att = self.v*sin(theta)/(error)
