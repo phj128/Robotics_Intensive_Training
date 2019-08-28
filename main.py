@@ -18,6 +18,7 @@ from local_planner.xy_angle import XY_angle
 from local_planner.xy_speed import XY_speed
 from local_planner.XY_speed_force import XY_speed as XY_speed_force
 from local_planner.XY_speed_force_optimization import XY_speed as XY_speed_force_optimization
+from local_planner.X_ori_control import X_ori_speed
 
 from run import run
 from run import run_while
@@ -36,7 +37,7 @@ def func(color, robot_id, receive):
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_speed
+    local_p = X_ori_speed
     RUN = run_shrink
 
     while True:
@@ -60,7 +61,7 @@ if __name__ == '__main__':
 
     i = 0
     global_p = RRT_MERGE
-    local_p = XY_speed
+    local_p = X_ori_speed
     RUN = run_shrink
 
     receive = Receive()
