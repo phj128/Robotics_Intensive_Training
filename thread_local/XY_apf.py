@@ -23,6 +23,8 @@ class XY_speed():
         self.wall_k = 800
         self.w = 300
         self.h = 200
+        self.d_k = 400
+        self.v_k = 100
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
@@ -52,9 +54,14 @@ class XY_speed():
             d = distance(point_now, [barrier[0], barrier[1]])
             if d < self.rtt_distance:
                 alpha = atan2(barrier[1]-now_y, barrier[0]-now_x)
-                v = barrier[5]*cos(barrier[7]-alpha)
-                vx_rtt = vx_rtt + v*cos(now_ori-alpha)/10 + 400*cos(now_ori-alpha)/(d*d)
-                vy_rtt = vy_rtt + v*sin(now_ori-alpha)/10 + 400*sin(now_ori-alpha)/(d*d)
+                v_jingxiang = barrier[5]*cos(PI-barrier[7]+alpha)
+                v_qiexiang = barrier[5]*sin(PI-barrier[7]+alpha)
+                vx_rtt = vx_rtt + self.v_k * (v_jingxiang * cos(PI - now_ori + alpha) - v_qiexiang * cos(alpha - (PI / 2) - now_ori))
+                vy_rtt = vy_rtt + self.v_k * (v_jingxiang * sin(PI - now_ori + alpha) - v_qiexiang * sin(alpha - (PI / 2) - now_ori))
+                # vx_rtt = vx_rtt + self.v_k*(v_jingxiang*cos(PI-now_ori+alpha) - v_qiexiang*cos(alpha-(PI/2)-now_ori)) + self.d_k*cos(now_ori-alpha)/(d*d)
+                # vy_rtt = vy_rtt + self.v_k*(v_jingxiang*sin(PI-now_ori+alpha) - v_qiexiang*sin(alpha-(PI/2)-now_ori)) + self.d_k*sin(now_ori-alpha)/(d*d)
+        print(vx_rtt,vy_rtt)
+        return vx_rtt, vy_rtt, False
 
         if abs(now_x - self.w) <= self.wallthreshold:
             dx = -abs(self.wall_k / (now_x - self.w))
