@@ -67,7 +67,7 @@ def global_module():
     global barrier
     target_x, target_y = -250, 150
     path, path_lines, tree, lines = [[x, y], [target_x, target_y]], [], [], []
-    global_planner = RRT_move
+    global_planner = RRT
     status_coll = False
     status = False
     finish = False
