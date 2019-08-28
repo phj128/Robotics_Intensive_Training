@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 300
+        self.v = 350
         self.threshold = 0.3
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -23,11 +23,13 @@ class XY_speed():
         self.wall_k = 2400
         self.w = 300
         self.h = 200
-        self.d_k = 240000
+        self.d_k = 300000
         self.v_k = 0.5
+        self.time_threshold = 0.5
 
 
-    def line_control(self, now_x, now_y, now_ori, path, ind, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
+    def line_control(self, now_x, now_y, now_ori, path, ind, N, target_x, target_y, infos=None, color='blue',
+                     robot_id=4, threshold=30, index=1, start_time=None):
         point_now = [now_x, now_y]
         barriers = infos.copy()
         my_info = []
@@ -81,10 +83,14 @@ class XY_speed():
         vy_att = self.v*sin(theta)/(error)
 
         dis = distance(point_now, [target_x, target_y])
+        end_time = time.time()
         if dis > 7:
-            if my_info[5] < 10:
+            if my_info[5] < 10 and (end_time - start_time) > self.time_threshold:
                 lamda = atan(4/3)-now_ori
-                random_v = np.random.randint(-300, 300)
+                sign = np.random.rand()
+                random_v = np.random.randint(200, 300)
+                if sign >= 0.5:
+                    random_v = -random_v
                 return random_v*cos(lamda), -random_v*sin(lamda), True
                 # return vx_rtt + random_v*cos(lamda), vy_rtt - random_v*sin(lamda), True
                 # return vx_rtt + np.random.randint(-100, 100), vy_rtt + np.random.randint(-100, 100), True

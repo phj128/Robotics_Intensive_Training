@@ -25,13 +25,14 @@ global color, id
 global threshold
 global status_coll, status, finish, shock
 global barrier
+global start_time, end_time
 
 barrier = []
 circles = []
 
 color = 'blue'
-id = 0
-
+id = 4
+start_time = 0
 
 def receive_module():
     global infos
@@ -40,6 +41,7 @@ def receive_module():
     global color, id
     global threshold
     global vx, vy
+    global start_time
     x, y, ori = 0, 0, 0
     vx = 0
     vy = 0
@@ -47,6 +49,7 @@ def receive_module():
     i = 0
     infos = []
     receive = Receive()
+    start_time = time.time()
     while True:
         try:
             infos = receive.thread_infos()
@@ -76,6 +79,7 @@ def local_module():
     global target_x, target_y
     global path
     global status_coll, status, finish, shock
+    global start_time
     local_planner = XY_apf
     shock = False
     while True:
@@ -83,27 +87,28 @@ def local_module():
             if distance((x, y), (target_x, target_y)) > 7:
                 motion = local_planner()
                 vx, vy, shock = motion.line_control(x, y, ori, path, i, 2, target_x, target_y, infos=infos,
-                                                     color=color, robot_id=id)
+                                                     color=color, robot_id=id, start_time=start_time)
             else:
                 target_x = -target_x
                 target_y = -target_y
+                start_time = time.time()
         except:
             continue
 
 
 def send_module():
     # vx, vy = 10, 10
-    global shock
+    global shock, end_time
     while True:
         try:
             send = Send()
             send.send_msg(id, vx, vy, 0)
             if shock:
-                sleep(0.5)
+                sleep(0.3)
                 shock = False
                 print('shock')
             else:
-                sleep(0.005)
+                sleep(0.008)
         except:
             continue
 
