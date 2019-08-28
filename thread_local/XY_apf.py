@@ -58,10 +58,10 @@ class XY_speed():
                 v_qiexiang = barrier[5]*sin(PI-barrier[7]+alpha)
                 vx_rtt = vx_rtt + self.v_k * (v_jingxiang * cos(PI - now_ori + alpha) - v_qiexiang * cos(alpha - (PI / 2) - now_ori))
                 vy_rtt = vy_rtt + self.v_k * (v_jingxiang * sin(PI - now_ori + alpha) - v_qiexiang * sin(alpha - (PI / 2) - now_ori))
-                # vx_rtt = vx_rtt - self.d_k*cos(now_ori-alpha)/(d*d)
-                # vy_rtt = vy_rtt - self.d_k*sin(now_ori-alpha)/(d*d)
-        print(vx_rtt,vy_rtt)
-        return vx_rtt, vy_rtt, False
+                vx_rtt = vx_rtt - self.d_k*cos(now_ori-alpha)/(d*d)
+                vy_rtt = vy_rtt - self.d_k*sin(now_ori-alpha)/(d*d)
+        # print(vx_rtt,vy_rtt)
+        # return vx_rtt, vy_rtt, False
 
         if abs(now_x - self.w) <= self.wallthreshold:
             dx = -abs(self.wall_k / (now_x - self.w))
