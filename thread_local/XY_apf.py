@@ -20,6 +20,9 @@ class XY_speed():
         self.up = 60
         self.rtt_distance = 40
         self.wallthreshold = 30
+        self.wall_k = 800
+        self.w = 300
+        self.h = 200
 
 
     def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
@@ -53,17 +56,16 @@ class XY_speed():
                 vx_rtt = vx_rtt + v*cos(now_ori-alpha)/10 + 400*cos(now_ori-alpha)/(d*d)
                 vy_rtt = vy_rtt + v*sin(now_ori-alpha)/10 + 400*sin(now_ori-alpha)/(d*d)
 
-        if abs(now_x-300) <= self.wallthreshold:
-            dx = 800/(now_x-300)
-        if abs(now_x+300) <= self.wallthreshold:
-            dx = 800/(300+now_x)
-        if abs(now_y - 225) <= self.wallthreshold:
-            dy = 800/(225-now_y) # y是正的时候是向右，这里我目前以为靠近上边沿读进的y是正的
-        if abs(now_y + 225) <= self.wallthreshold:
-            dy = 800/(225+now_y)
-        vx_wall = dx*cos(now_ori) + dy*sin(now_ori)
-        vy_wall = -dy*cos(now_ori) + dx*sin(now_ori)
-        print(vx_wall, vy_wall)
+        if abs(now_x - self.w) <= self.wallthreshold:
+            dx = -abs(self.wall_k / (now_x - self.w))
+        if abs(now_x+self.w) <= self.wallthreshold:
+            dx = abs(self.wall_k / (self.w + now_x))
+        if abs(now_y - self.h) <= self.wallthreshold:
+            dy = abs(self.wall_k / (self.h - now_y)) # y是正的时候是向右，这里我目前以为靠近上边沿读进的y是正的
+        if abs(now_y + self.h) <= self.wallthreshold:
+            dy = -abs(self.wall_k / (self.h + now_y))
+        vx_wall = dx*cos(now_ori) - dy*sin(now_ori)
+        vy_wall = dy*cos(now_ori) - dx*sin(now_ori)
 
         return vx_wall, vy_wall, False
         orientation_need_now = atan2((path[i + 1][1] - now_y), (path[i + 1][0] - now_x))
