@@ -25,11 +25,11 @@ class XY_speed():
         self.h = 200
         self.d_k = 360000
         self.v_k = 0.7
-        self.time_threshold = 0.5
+        self.time_threshold = 1
 
 
     def line_control(self, now_x, now_y, now_ori, path, ind, N, target_x, target_y, infos=None, color='blue',
-                     robot_id=4, threshold=30, index=1, start_time=None):
+                     robot_id=4, threshold=30, index=1, start_time=None, shock_time=None):
         point_now = [now_x, now_y]
         barriers = infos.copy()
         my_info = []
@@ -83,16 +83,15 @@ class XY_speed():
         vy_att = self.v*sin(theta)/(error)
 
         dis = distance(point_now, [target_x, target_y])
-        # end_time = time.time()
+        end_time = time.time()
         if dis > 7:
-            # print(my_info[5])
-            if my_info[5] < -1:
-                lamda = atan(4/3)-now_ori
+            if dis > 40 and my_info[5] < 20 and (end_time - start_time) > self.time_threshold and (end_time - shock_time) > 3:
+                lamda = atan(3/5)+now_ori
                 sign = np.random.rand()
                 random_v = np.random.randint(300, 400)
                 if sign >= 0.5:
                     random_v = -random_v
-                return random_v*cos(lamda), -random_v*sin(lamda), True
+                return random_v*sin(lamda), -random_v*cos(lamda), True, end_time
                 # return vx_rtt + random_v*cos(lamda), vy_rtt - random_v*sin(lamda), True
                 # return vx_rtt + np.random.randint(-100, 100), vy_rtt + np.random.randint(-100, 100), True
             if dis > 60:
@@ -110,20 +109,20 @@ class XY_speed():
                     vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
                     vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
 
-                    return vx_now, vy_now, False
+                    return vx_now, vy_now, False, start_time
                 else:
                     p = 0.2
                     vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
                     vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-                    return vx_now, vy_now, False
+                    return vx_now, vy_now, False, start_time
             else:
                 p = 0.2
                 vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
                 vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-                return vx_now, vy_now, False
+                return vx_now, vy_now, False, start_time
 
         else:
             p = 0.05
             vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
             vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-            return vx_now, vy_now, False
+            return vx_now, vy_now, False, start_time
