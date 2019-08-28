@@ -20,18 +20,20 @@ class XY_speed():
         self.up = 60
         self.rtt_distance = 60
         self.wallthreshold = 30
-        self.wall_k = 800
+        self.wall_k = 2400
         self.w = 300
         self.h = 200
-        self.d_k = 80000
+        self.d_k = 240000
         self.v_k = 0.5
 
 
-    def line_control(self, now_x, now_y, now_ori, path, i, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
+    def line_control(self, now_x, now_y, now_ori, path, ind, N, target_x, target_y, infos=None, color='blue', robot_id=4, threshold=30, index=1):
         point_now = [now_x, now_y]
         barriers = infos.copy()
+        my_info = []
         for i in range(len(barriers)):
             if barriers[i][2]==color and barriers[i][3]==robot_id:
+                my_info = barriers[i].copy()
                 barriers.pop(i)
                 break
 
@@ -80,6 +82,8 @@ class XY_speed():
 
         dis = distance(point_now, [target_x, target_y])
         if dis > 7:
+            if my_info[5] < 10:
+                return vx_rtt + np.random.randint(-100, 100), vy_rtt + np.random.randint(-100, 100), True
             if dis > 60:
                 if error > 20:
                     p = 1
@@ -100,14 +104,15 @@ class XY_speed():
                     p = 0.2
                     vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
                     vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-                    return vx_now, vy_now, True
+                    return vx_now, vy_now, False
             else:
                 p = 0.2
                 vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
                 vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-                return vx_now, vy_now, True
+                return vx_now, vy_now, False
+
         else:
             p = 0.05
             vx_now = (self.v * cos(theta) + vx_att + vx_wall + vx_rtt)*p
             vy_now = (self.v * sin(theta) + vy_att + vy_wall + vy_rtt)*p
-            return vx_now, vy_now, True
+            return vx_now, vy_now, False

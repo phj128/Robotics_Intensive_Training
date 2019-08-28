@@ -23,7 +23,7 @@ global vx, vy
 global i
 global color, id
 global threshold
-global status_coll, status, finish
+global status_coll, status, finish, shock
 global barrier
 
 barrier = []
@@ -75,14 +75,14 @@ def local_module():
     global i
     global target_x, target_y
     global path
-    global status_coll, status, finish
+    global status_coll, status, finish, shock
     local_planner = XY_apf
-    finish = False
+    shock = False
     while True:
         try:
             if distance((x, y), (target_x, target_y)) > 7:
                 motion = local_planner()
-                vx, vy, finish = motion.line_control(x, y, ori, path, i, 2, target_x, target_y, infos=infos,
+                vx, vy, shock = motion.line_control(x, y, ori, path, i, 2, target_x, target_y, infos=infos,
                                                      color=color, robot_id=id)
             else:
                 target_x = -target_x
@@ -93,11 +93,17 @@ def local_module():
 
 def send_module():
     # vx, vy = 10, 10
+    global shock
     while True:
         try:
             send = Send()
             send.send_msg(id, vx, vy, 0)
-            sleep(0.005)
+            if shock:
+                sleep(0.5)
+                shock = False
+                print('shock')
+            else:
+                sleep(0.005)
         except:
             continue
 
