@@ -26,23 +26,32 @@ class XY_speed():
         point_now = [now_x, now_y]
         if i >= len(path)-1:
             return 0, 0, False
+        barriers = infos.copy()
+        for i in range(len(barriers)):
+            if barriers[i][2]==color and barriers[i][3]==robot_id:
+                barriers.pop(i)
+                break
+
         error = distance(point_now, path[i+1])
         error_max = distance(path[i], path[i+1])
-        vx_rtt = 0.0 # 机器人x方向受到斥力整合的速度
-        vy_rtt = 0.0 # 机器人y方向受到斥力整合的速度
+        vx_rtt = 0.0 # 机器人x方向受到斥力整合的速度，与速度有关
+        vy_rtt = 0.0 # 机器人y方向受到斥力整合的速度，与速度有关
+        # vx_rdt = 0.0 # 机器人x方向受到斥力整合的速度，与距离有关
+        # vy_rdt = 0.0 # 机器人x方向受到斥力整合的速度，与距离有关
         vx_wall = 0.0 #机器人x方向受墙整合的速度
         dx = 0.0
         vy_wall = 0.0 #机器人y方向受墙整合的速度
         dy = 0.0
         vx_att = 0.0
         vy_att = 0.0
-        for barrier in infos:
+
+        for barrier in barriers:
             d = distance(point_now, [barrier[0], barrier[1]])
             if d < self.rtt_distance:
                 alpha = atan2(barrier[1]-now_y, barrier[0]-now_x)
                 v = barrier[5]*cos(barrier[7]-alpha)
-                vx_rtt = vx_rtt + v*cos(now_ori-alpha)/(d*d+10)
-                vy_rtt = vy_rtt + v*sin(now_ori-alpha)/(d*d+10)
+                vx_rtt = vx_rtt + v*cos(now_ori-alpha)/10 + 400*cos(now_ori-alpha)/(d*d)
+                vy_rtt = vy_rtt + v*sin(now_ori-alpha)/10 + 400*sin(now_ori-alpha)/(d*d)
 
         if abs(now_x-300) <= self.wallthreshold:
             dx = 800/(now_x-300)
@@ -53,7 +62,7 @@ class XY_speed():
         if abs(now_y + 225) <= self.wallthreshold:
             dy = 800/(225+now_y)
         vx_wall = dx*cos(now_ori) + dy*sin(now_ori)
-        vy_wall = dy*cos(now_ori) - dx*sin(now_ori)
+        vy_wall = -dy*cos(now_ori) + dx*sin(now_ori)
         print(vx_wall, vy_wall)
 
         return vx_wall, vy_wall, False
