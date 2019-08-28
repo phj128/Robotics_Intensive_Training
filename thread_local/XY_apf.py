@@ -1,7 +1,7 @@
 from message.send import Send
 from message.send_debug import SendDebug
 from time import sleep
-from math import sin, cos, atan2
+from math import sin, cos, atan2, atan
 import numpy as np
 import time
 from utils import distance, interpolate_path, check_two_points_l, check_path_l, sigmoid
@@ -83,7 +83,11 @@ class XY_speed():
         dis = distance(point_now, [target_x, target_y])
         if dis > 7:
             if my_info[5] < 10:
-                return vx_rtt + np.random.randint(-100, 100), vy_rtt + np.random.randint(-100, 100), True
+                lamda = atan(4/3)-now_ori
+                random_v = np.random.randint(-300, 300)
+                return random_v*cos(lamda), -random_v*sin(lamda), True
+                # return vx_rtt + random_v*cos(lamda), vy_rtt - random_v*sin(lamda), True
+                # return vx_rtt + np.random.randint(-100, 100), vy_rtt + np.random.randint(-100, 100), True
             if dis > 60:
                 if error > 20:
                     p = 1
