@@ -32,7 +32,7 @@ barrier = []
 circles = []
 
 color = 'blue'
-id = 0
+id = 4
 start_time = 0
 shock_time = 0
 
@@ -110,7 +110,7 @@ def send_module():
             send.send_msg(id, vx, vy, 0)
             if shock:
                 print('shock{}'.format(randint(0, 100)))
-                if time.time() - shock_time > 0.2:
+                if time.time() - shock_time > 0.3:
                     shock = False
             sleep(0.013)
         except:
