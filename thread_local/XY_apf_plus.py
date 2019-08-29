@@ -60,8 +60,8 @@ class XY_speed():
                 v_qiexiang = barrier[5]*sin(PI-barrier[7]+alpha)
                 vx_rtt = vx_rtt + self.v_k * (v_jingxiang * cos(PI - now_ori + alpha) - v_qiexiang * cos(alpha - (PI / 2) - now_ori))
                 vy_rtt = vy_rtt + self.v_k * (v_jingxiang * sin(PI - now_ori + alpha) - v_qiexiang * sin(alpha - (PI / 2) - now_ori))
-                vx_rtt = vx_rtt - self.d_k*cos(now_ori-alpha)/(d*d)
-                vy_rtt = vy_rtt - self.d_k*sin(now_ori-alpha)/(d*d)
+                vx_rtt = vx_rtt - self.d_k*cos(now_ori-alpha)/(d*d + 0.01)
+                vy_rtt = vy_rtt - self.d_k*sin(now_ori-alpha)/(d*d + 0.01)
         # print(vx_rtt,vy_rtt)
         # return vx_rtt, vy_rtt, False
 
@@ -79,8 +79,8 @@ class XY_speed():
         # return vx_wall, vy_wall, False
         orientation_need_now = atan2((target_y - now_y), (target_x - now_x))
         theta = now_ori - orientation_need_now
-        vx_att = self.v*cos(theta)/(error)
-        vy_att = self.v*sin(theta)/(error)
+        vx_att = self.v*cos(theta)/(error + 0.01)
+        vy_att = self.v*sin(theta)/(error + 0.01)
 
         dis = distance(point_now, [target_x, target_y])
         end_time = time.time()
