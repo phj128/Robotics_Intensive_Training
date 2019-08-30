@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the project of lesson **Robotics Intensive** Training in ZJU. 
+This is the project of lesson **Robotics Intensive Training** in ZJU. 
 
 We got the result: 17-3 in task_1, 7-14 in task_2, 7-23 in task_3.
 
