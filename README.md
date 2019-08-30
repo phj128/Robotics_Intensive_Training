@@ -22,7 +22,7 @@ The whole project is based on python3.
 
 - A easy **frame** to try your algorithm
 
-- A beautiful visualization of your predicting path
+- A beautiful **visualization** of your predicting path
 
 ## Installation
 
