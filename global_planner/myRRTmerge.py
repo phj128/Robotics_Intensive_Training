@@ -13,7 +13,7 @@ class RRT:
         self.color = color
         self.robot_id = id
         self.lines = []
-        self.draw = False
+        self.draw = True
         self.step = step
         self.inflateRadius = inflateRadius  # inflate radius
         self.limitation = limitation  # the max number of nodes

@@ -21,7 +21,7 @@ def filter_infos(infos, robot_id, color):
 
 
 class SendDebug():
-    def __init__(self, type='LINE', lines=[], color='YELLOW', circles=[], infos=[], id=0, color_rob='blue'):
+    def __init__(self, type='LINE', lines=[], color='YELLOW', circles=[], points=[[-250,150],[250,-150]], infos=[], id=0, color_rob='blue'):
         '''
         type: 'LINE', 'ARC', 'TEXT', 'ROBOT', 'CURVE', 'POLYGON', 'POINTS'
         lines: lists of line, and the line in lines contain [start_x, start_y, end_x, end_y]
@@ -32,6 +32,7 @@ class SendDebug():
         self.address = ('127.0.0.1', 20001)
         self.debug_type = type
         self.color = color
+        self.points = points
         if len(lines) == 2:
             self.num = len(lines[0]) + len(lines[1])
             self.num_yellow = len(lines[0])
@@ -42,8 +43,10 @@ class SendDebug():
             self.lines = lines
         # import ipdb;ipdb.set_trace()
         self.circles = circles
-        self.infos = filter_infos(infos, id, color)
+        # self.infos = infos
+        self.infos = filter_infos(infos, id, color_rob)
         self.draw_circles = []
+        self.draw_points = []
         self.debug_msg = {'start_x': 0, 'start_y': 0, 'end_x': 100, 'end_y': 100}
 
     def send(self):
@@ -144,29 +147,28 @@ class SendDebug():
                 print('No this kind of instruction')
                 return -1
 
-        for i in range(len(self.infos)):
-            self.draw_circles.append(package.msgs.add())
-            self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
-            self.draw_circles[i].type = debug_info.Debug_Msg.ARC
-            arc = self.draw_circles[i].arc
-            radius = 30
-            arc.rectangle.point1.x = self.infos[i][0] - radius
-            arc.rectangle.point1.y = self.infos[i][1] + radius
-            arc.rectangle.point2.x = self.infos[i][0] + radius
-            arc.rectangle.point2.y = self.infos[i][1] - radius
+        for i in range(len(self.points)):
+            self.draw_points.append(package.msgs.add())
+            self.draw_points[i].color = debug_info.Debug_Msg.ORANGE
+            self.draw_points[i].type = debug_info.Debug_Msg.ARC
+            arc = self.draw_points[i].arc
+            radius = 10
+            arc.rectangle.point1.x = self.points[i][0] - radius
+            arc.rectangle.point1.y = self.points[i][1] + radius
+            arc.rectangle.point2.x = self.points[i][0] + radius
+            arc.rectangle.point2.y = self.points[i][1] - radius
 
             arc.start = 0
             arc.end = 360
             arc.FILL = 1
 
 
-        # for i in range(len(self.circles)):
-        #     # theta = PI / 3
+        # for i in range(len(self.infos)):
         #     self.draw_circles.append(package.msgs.add())
         #     self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
         #     self.draw_circles[i].type = debug_info.Debug_Msg.ARC
         #     arc = self.draw_circles[i].arc
-        #     radius = self.circles[i]
+        #     radius = 10
         #     arc.rectangle.point1.x = self.infos[i][0] - radius
         #     arc.rectangle.point1.y = self.infos[i][1] + radius
         #     arc.rectangle.point2.x = self.infos[i][0] + radius
@@ -175,6 +177,23 @@ class SendDebug():
         #     arc.start = 0
         #     arc.end = 360
         #     arc.FILL = 1
+
+
+        for i in range(len(self.circles)):
+            # theta = PI / 3
+            self.draw_circles.append(package.msgs.add())
+            self.draw_circles[i].color = debug_info.Debug_Msg.GREEN
+            self.draw_circles[i].type = debug_info.Debug_Msg.ARC
+            arc = self.draw_circles[i].arc
+            radius = self.circles[i]
+            arc.rectangle.point1.x = self.infos[i][0] - radius
+            arc.rectangle.point1.y = self.infos[i][1] + radius
+            arc.rectangle.point2.x = self.infos[i][0] + radius
+            arc.rectangle.point2.y = self.infos[i][1] - radius
+
+            arc.start = 0
+            arc.end = 360
+            arc.FILL = 1
 
             # for k in range(6):
             #     self.draw_circles.append(package.msgs.add())

@@ -31,7 +31,7 @@ global status_coll, status, finish
 circles = []
 
 color = 'blue'
-id = 5
+id = 0
 
 
 def receive_module():

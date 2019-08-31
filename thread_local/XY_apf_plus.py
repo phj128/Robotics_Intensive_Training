@@ -13,7 +13,7 @@ class XY_speed():
     def __init__(self):
         self.send = Send()
         self.debug = SendDebug()
-        self.v = 350
+        self.v = 400
         self.threshold = 0.25
         self.time_turn = 0.3
         self.angle_threshold = 5 * PI / 6
@@ -85,7 +85,7 @@ class XY_speed():
         dis = distance(point_now, [target_x, target_y])
         end_time = time.time()
         if dis > 7:
-            if dis > 60 and my_info[5] < -1 and (end_time - start_time) > self.time_threshold and (end_time - shock_time) > 2:
+            if dis > 40 and my_info[5] < 20 and (end_time - start_time) > self.time_threshold and (end_time - shock_time) > 2:
                 lamda = atan(3/5)+now_ori
                 sign = np.random.rand()
                 random_v = np.random.randint(300, 400)

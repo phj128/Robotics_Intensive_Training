@@ -32,7 +32,7 @@ barrier = []
 circles = []
 
 color = 'blue'
-id = 4
+id = 0
 start_time = 0
 shock_time = 0
 
