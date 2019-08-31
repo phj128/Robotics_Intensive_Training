@@ -58,7 +58,35 @@ Run final.py to get better perfomance based on the algorithm in main.py and all 
 
 ## TEST
 
-At the end of the lesson, we finally use main.py with RRT for task_1, and task_final.py for task_2, and task_3 with different parameters and potential feild to calculate velocity based on multithreading. 
+At the end of the lesson, we finally use main.py with RRT for task_1, and task_final.py for task_2, and task_3 with different parameters and potential feild to calculate velocity based on multithreading.
+
+For task_1, run:
+
+~~~
+python main.py
+~~~
+
+For task_2 or task_3, run:
+
+~~~
+python task_final.py
+~~~
+
+In task_2, we use 
+
+~~~
+if dis > 40 and my_info[5] < -1 and (end_time - start_time)....
+~~~
+
+in line 88 of XY_apf_plus.py
+
+In task_3, we use
+
+~~~
+if dis > 40 and my_info[5] < 20 and (end_time - start_time)....
+~~~
+
+in line 88 of XY_apf_plus.py
 
 ## Collaborators
 The collaborators of this project are [BaixuLi](https://github.com/BaixuLi) and [kyleleey](https://github.com/kyleleey) and me. 
