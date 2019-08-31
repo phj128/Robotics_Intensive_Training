@@ -58,7 +58,7 @@ Run final.py to get better perfomance based on the algorithm in main.py and all 
 
 ## TEST
 
-At the end of the lesson, we finally use main.py with RRT for task_1, and biubiu.py for task_2, and task_3 with different parameters and potential feild to calculate velocity based on multithreading. 
+At the end of the lesson, we finally use main.py with RRT for task_1, and task_final.py for task_2, and task_3 with different parameters and potential feild to calculate velocity based on multithreading. 
 
 ## Collaborators
 The collaborators of this project are [BaixuLi](https://github.com/BaixuLi) and [kyleleey](https://github.com/kyleleey) and me. 
